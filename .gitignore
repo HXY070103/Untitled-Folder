@@ -27,3 +27,10 @@ ExportedObj/
 
 .DS_Store
 Thumbs.db
+
+# VS Code / local IDE files
+.vscode/
+*.csproj
+*.csproj.lscache
+*.sln
+*.slnx
