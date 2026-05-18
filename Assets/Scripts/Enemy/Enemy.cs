@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : Entity {
+public class Enemy : Entity, ISlowable{
     public EnemyIdleState idleState;
     public EnemyMoveState moveState;
     public EnemyAttackState attackState;
@@ -32,6 +32,25 @@ public class Enemy : Entity {
     [SerializeField] private Transform playerCheck;
 
     public Transform player { get; private set; }
+
+    public float GetBattleMoveSpeed() {
+        return battleMoveSpeed * speedMultiplier;
+    }
+
+    public float GetMoveSpeed() {
+        return moveSpeed * speedMultiplier;
+    }
+
+    public void SlowDown(float slowDownPercentage) {
+        float newSpeedMultiplier = 1 - slowDownPercentage;
+        speedMultiplier = newSpeedMultiplier;
+        anim.speed = newSpeedMultiplier;
+    }
+
+    public void RecoverSpeed() {
+        speedMultiplier = 1;
+        anim.speed = 1;
+    }
 
     public void SetCounterWindow(bool enable) {
         canBeStunned = enable;

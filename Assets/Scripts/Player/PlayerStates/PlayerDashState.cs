@@ -10,6 +10,8 @@ public class PlayerDashState : PlayerState {
     public override void Enter() {
         base.Enter();
 
+        vfx.DoImageEchoEffect(player.dashDuration);
+
         stateTimer = player.dashDuration;
         originalGravityScale = rb.gravityScale;
         rb.gravityScale = 0;
