@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 
 public class EntityVFX : MonoBehaviour {
-    private SpriteRenderer sr;
+    protected SpriteRenderer sr;
     private Entity entity;
 
     [Header("On Taking damage VFX")]

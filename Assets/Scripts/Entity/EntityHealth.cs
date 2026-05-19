@@ -8,7 +8,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     private Slider healthBar;
     private EntityVFX entityVFX;
     private Entity entity;
-    private EntityStats entityStats;
+    protected EntityStats entityStats;
 
     [Header("Health info")]
     [SerializeField] protected bool isDead = false;
@@ -69,7 +69,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         OnHealthUpdate?.Invoke();
     }
 
-    protected void ReduceHP(float damage) {
+    private void ReduceHP(float damage) {
         currentHP -= damage;
         OnHealthUpdate?.Invoke();
         if (currentHP <= 0) {
