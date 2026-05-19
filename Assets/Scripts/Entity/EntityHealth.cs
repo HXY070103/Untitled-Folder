@@ -5,7 +5,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     private Slider healthBar;
     private EntityVFX entityVFX;
     private Entity entity;
-    private EntityStats entityStats;
+    protected EntityStats entityStats;
 
     [Header("Health info")]
     [SerializeField] protected bool isDead = false;
@@ -32,6 +32,16 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         UpdateHealthBar();
     }
 
+    public void Healing(float healingHP) {
+        currentHP += healingHP;
+
+        if (currentHP > entityStats.GetMaxHP()) {
+            currentHP = entityStats.GetMaxHP();
+        }
+
+        UpdateHealthBar();
+    }
+
     public virtual void TakeDamage(float damage, Transform damageDealer) {
         if (isDead) {
             return;
@@ -54,7 +64,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         ReduceHP(finalDamage);
     }
 
-    protected void ReduceHP(float damage) {
+    private void ReduceHP(float damage) {
         currentHP -= damage;
         UpdateHealthBar();
         

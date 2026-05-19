@@ -9,7 +9,11 @@ public class Domain : MonoBehaviour {
         this.domainManager = domainManager;
         targetScale = Vector3.one * domainManager.maxSize;
         isShrinking = false;
-        Invoke(nameof(ShrinkDomain), domainManager.skillDuration);
+    }
+    
+    public void ShrinkDomain() {
+        targetScale = Vector3.zero;
+        isShrinking = true;
     }
 
     private void Update() {
@@ -27,11 +31,6 @@ public class Domain : MonoBehaviour {
         if (isShrinking && sizeDifference < 0.1f) {
             Destroy(gameObject);
         }
-    }
-
-    private void ShrinkDomain() {
-        targetScale = Vector3.zero;
-        isShrinking = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
