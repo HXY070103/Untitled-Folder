@@ -1,7 +1,10 @@
 using UnityEngine.UI;
 using UnityEngine;
+using System;
 
 public class EntityHealth : MonoBehaviour, IDamageable {
+
+    public event Action OnHealthUpdate;
     private Slider healthBar;
     private EntityVFX entityVFX;
     private Entity entity;
@@ -20,6 +23,8 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] private float heavyDamageThreshold = 0.3f;
     [SerializeField] private Vector2 onHeavyDamageKnockback = new Vector2(7, 7);
     [SerializeField] private float heavyKnockbackDuration = 0.5f;
+
+    public bool miniHealthBarActive;
     
 
     protected virtual void Awake() {
@@ -29,6 +34,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         entityStats = GetComponent<EntityStats>();
 
         currentHP = entityStats.GetMaxHP();
+        OnHealthUpdate += UpdateHealthBar;
         UpdateHealthBar();
     }
 
@@ -54,13 +60,22 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         ReduceHP(finalDamage);
     }
 
+    public void Healing(float healingHP) {
+        currentHP += healingHP;
+
+        if (currentHP > entityStats.GetMaxHP()) {
+            currentHP = entityStats.GetMaxHP();
+        }
+        OnHealthUpdate?.Invoke();
+    }
+
     protected void ReduceHP(float damage) {
         currentHP -= damage;
-        UpdateHealthBar();
-        
+        OnHealthUpdate?.Invoke();
         if (currentHP <= 0) {
             Die();
         }
+        
     }
 
     private void Die() {
@@ -69,11 +84,16 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     private void UpdateHealthBar() {
-        if (healthBar == null) {
+        if (healthBar == null && healthBar.gameObject.activeSelf) {
             return;
         }
 
         healthBar.value = currentHP / entityStats.GetMaxHP();
+    }
+
+    public void EnableHealthBar(bool enable)
+    {
+        healthBar?.gameObject.SetActive(enable);
     }
 
     private Vector2 CalculateKnockback(float damage, Transform damageDealer) {
@@ -90,5 +110,13 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     private bool IsHeavyDamage(float damage) {
         float healthPercentageTaken = damage / entityStats.GetMaxHP();
         return healthPercentageTaken > heavyDamageThreshold;
+    }
+
+    public float GetCurrentHP() {
+        return currentHP;
+    }
+
+    public float GetHPPercentage() {
+        return currentHP / entityStats.GetMaxHP();
     }
 }
