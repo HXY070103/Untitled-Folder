@@ -7,9 +7,19 @@ public class SkillBase : MonoBehaviour {
     
     private float lastTimeUsed;
     private Coroutine handleSkillCo;
+    private float remainingDuration;
+
+    private bool isSkillActive;
+
+    public float RemainingDuration => remainingDuration;
+
+    public bool IsSkillActive => isSkillActive;
+    public float SkillDuration => skillDuration;
 
     protected virtual void Awake() {
         lastTimeUsed = float.MinValue;
+        remainingDuration = 0;
+        isSkillActive = false;
     }
 
     public void ApplySkill() {
@@ -22,15 +32,25 @@ public class SkillBase : MonoBehaviour {
 
     public IEnumerator HanldeSkill() {
         StartSkill();
-        yield return new WaitForSeconds(skillDuration);
+        while(remainingDuration > 0) {
+            remainingDuration -= Time.deltaTime;
+            yield return null;
+        }
         EndSkill();
+        handleSkillCo = null;
     }
 
     protected virtual void StartSkill() {
         lastTimeUsed = Time.time;
+        isSkillActive = true;
+        remainingDuration = skillDuration;
     }
 
-    protected virtual void EndSkill() {}
+    protected virtual void EndSkill()
+    {
+        remainingDuration = 0;
+        isSkillActive = false;
+    }
 
     public bool OnCooldown() {
         return Time.time < lastTimeUsed + cooldown;
