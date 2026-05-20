@@ -3,7 +3,7 @@ using UnityEngine;
 public class EntityStats : MonoBehaviour {
     public StatSetupSO defaultStatSetup;
 
-    [Header("Resources")]
+    [Header("Resource")]
     public Stat maxHP;
 
     [Header("Offense")]

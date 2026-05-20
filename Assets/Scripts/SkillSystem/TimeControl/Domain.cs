@@ -1,13 +1,15 @@
 using UnityEngine;
 
 public class Domain : MonoBehaviour {
+    [SerializeField] private float expandSpeed = 2;
+
     private SkillTimeControl domainManager;
     private Vector3 targetScale;
     private bool isShrinking;
  
     public void SetUpDomain(SkillTimeControl domainManager) {
         this.domainManager = domainManager;
-        targetScale = Vector3.one * domainManager.maxSize;
+        targetScale = Vector3.one * domainManager.GetMaxSize();
         isShrinking = false;
     }
     
@@ -24,8 +26,8 @@ public class Domain : MonoBehaviour {
         float sizeDifference = Mathf.Abs(transform.lossyScale.x - targetScale.x);
 
         if (sizeDifference > 0.1f) {
-            transform.localScale = Vector3.Lerp(
-                transform.localScale, targetScale, domainManager.expandSpeed * Time.deltaTime);
+            transform.localScale = 
+                Vector3.Lerp(transform.localScale, targetScale, expandSpeed * Time.deltaTime);
         }
 
         if (isShrinking && sizeDifference < 0.1f) {
@@ -40,7 +42,7 @@ public class Domain : MonoBehaviour {
             return;
         }
 
-        target.SlowDown(domainManager.slowDownPercentage);
+        target.SlowDown(domainManager.GetSlowDownPercentage());
     }
 
     private void OnTriggerExit2D(Collider2D collision) {

@@ -9,7 +9,7 @@ public class Player : Entity {
     public PlayerVFX vfx { get; private set; }
     public PlayerSkillManager skillManager { get; private set; }
 
-    public EntityStats stats { get; private set; }
+    public PlayerStats stats { get; private set; }
     public EntityHealth health { get; private set; }
 
     public PlayerIdleState idleState { get; private set; }
@@ -51,7 +51,7 @@ public class Player : Entity {
         base.Awake();
 
         input = new PlayerInputSet();
-        stats = GetComponent<EntityStats>();
+        stats = GetComponent<PlayerStats>();
         health = GetComponent<EntityHealth>();
         vfx = GetComponent<PlayerVFX>();
         skillManager = GetComponent<PlayerSkillManager>();
