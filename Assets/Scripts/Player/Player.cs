@@ -12,9 +12,6 @@ public class Player : Entity {
     public EntityStats stats { get; private set; }
     public EntityHealth health { get; private set; }
 
-    public EntityStats stats { get; private set; }
-    public EntityHealth health { get; private set; }
-
     public PlayerIdleState idleState { get; private set; }
     public PlayerMoveState moveState { get; private set; }
     public PlayerJumpState jumpState { get; private set; }
