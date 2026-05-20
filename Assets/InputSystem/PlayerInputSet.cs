@@ -872,28 +872,4 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
     /// </summary>
     /// <seealso cref="UIActions.AddCallbacks(IUIActions)" />
     /// <seealso cref="UIActions.RemoveCallbacks(IUIActions)" />
-    public interface IUIActions
-    {
-        /// <summary>
-        /// Method invoked when associated input action "OptionsUI" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnOptionsUI(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "AlternativeInput" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAlternativeInput(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "CharacterUI" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnCharacterUI(InputAction.CallbackContext context);
-    }
 }

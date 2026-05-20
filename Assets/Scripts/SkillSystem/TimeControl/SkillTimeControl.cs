@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class SkillTimeControl : SkillBase {
     [SerializeField] private GameObject domainPrefab;
-    public float maxSize = 20;
-    public float expandSpeed = 2;
-    public float slowDownPercentage = 0.8f;
+    [SerializeField] private float maxSize = 20;
+    [SerializeField] private float slowDownPercentage = 0.8f;
 
     private GameObject domain;
 
@@ -27,5 +26,13 @@ public class SkillTimeControl : SkillBase {
 
     private void DestroyDomain() {
         domain.GetComponent<Domain>().ShrinkDomain();
+    }
+
+    public float GetMaxSize() {
+        return maxSize * stats.GetSkillEffect();
+    }
+
+    public float GetSlowDownPercentage() {
+        return slowDownPercentage * stats.GetSkillEffect();
     }
 }
