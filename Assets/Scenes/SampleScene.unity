@@ -284,7 +284,6 @@ MonoBehaviour:
   heavyDamageThreshold: 0.3
   onHeavyDamageKnockback: {x: 7, y: 7}
   heavyKnockbackDuration: 0.5
-  miniHealthBarActive: 0
 --- !u!114 &38960028
 MonoBehaviour:
   m_ObjectHideFlags: 0
