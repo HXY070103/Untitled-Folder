@@ -2,13 +2,15 @@ using System.Collections;
 using UnityEngine;
 
 public class SkillBase : MonoBehaviour {
+    protected PlayerStats stats;
+
     [SerializeField] private float cooldown = 3;
-    public float skillDuration = 3;
     
     private float lastTimeUsed;
     private Coroutine handleSkillCo;
 
     protected virtual void Awake() {
+        stats = GetComponentInParent<PlayerStats>();
         lastTimeUsed = float.MinValue;
     }
 
@@ -22,7 +24,7 @@ public class SkillBase : MonoBehaviour {
 
     public IEnumerator HanldeSkill() {
         StartSkill();
-        yield return new WaitForSeconds(skillDuration);
+        yield return new WaitForSeconds(stats.GetSkillDuration());
         EndSkill();
     }
 

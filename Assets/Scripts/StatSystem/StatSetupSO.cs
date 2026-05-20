@@ -10,7 +10,10 @@ public class StatSetupSO : ScriptableObject {
     public float critPower = 2;
     public float critChance = 20;
 
-
     [Header("Defense")]
     public float armor = 0;
+
+    [Header("Player Skill")]
+    public float skillDuration = 3;
+    public float skillEffect = 1;
 }

@@ -1,14 +1,18 @@
-using System.Collections;
-using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class SkillLifeSteal : SkillBase {
     private EntityHealth health;
 
-    [SerializeField] private GameObject firePrefab;
+    [SerializeField] private GameObject fireVFXPrefab;
+    [SerializeField] private GameObject fireballPrefab;
     [SerializeField] private float coversionRate = 0.3f;
+    [Space]
+    [SerializeField] private float minFireballGenerationRadius = 1.5f;
+    [SerializeField] private float maxFireballGenerationRadius = 2;
+    [SerializeField] private int fireballAmount = 5;
 
-    public float totalDamage;
+    private float totalDamage;
     private GameObject fireVFX;
 
     protected override void Awake() {
@@ -29,20 +33,47 @@ public class SkillLifeSteal : SkillBase {
 
         EndAccumulateDamage();
         DestroyFireVFX();
+        CreateFireball();
     }
 
     public void Healing() {
-        float healingHP = totalDamage * coversionRate;
+        float totalHealingHP = totalDamage * GetConversionRate();
+        float healingHP = totalHealingHP / fireballAmount;
         health.Healing(healingHP);
     }
 
+    private void CreateFireball() {
+        for (int i = 0; i < fireballAmount; i += 1) {
+            Vector2 direction = CalculateDirection(i);
+            Vector3 randomPosition = GenerateRandomPosition(direction);
+            GameObject fireball = 
+                Instantiate(fireballPrefab, randomPosition, Quaternion.identity);
+            fireball.GetComponent<FireballController>().SetUpFireball(this);
+        }
+    }
+
+    private Vector2 CalculateDirection(int i) {
+        float angle = i * 360f / fireballAmount;
+        float rad = angle * Mathf.Deg2Rad;
+
+        return new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
+    }
+
+    private Vector3 GenerateRandomPosition(Vector2 direction) {
+        float randomDistance = 
+            Random.Range(minFireballGenerationRadius, maxFireballGenerationRadius);
+        Vector3 randomOffset = direction * randomDistance;
+
+        return transform.position + randomOffset;
+    }
+
     private void CreatFireVFX() {
-        fireVFX = Instantiate(firePrefab, transform.position, Quaternion.identity);
+        fireVFX = Instantiate(fireVFXPrefab, transform.position, Quaternion.identity);
         fireVFX.transform.SetParent(transform);
     }
 
     private void DestroyFireVFX() {
-        fireVFX.GetComponent<FireVFXController>().Shrink();
+        Destroy(fireVFX);
     }
 
     private void StartAccumulateDamage() {
@@ -56,5 +87,9 @@ public class SkillLifeSteal : SkillBase {
 
     private void AccumulateDamage(float damage) {
         totalDamage += damage;
+    }
+
+    private float GetConversionRate() {
+        return coversionRate * stats.GetSkillEffect();
     }
 }

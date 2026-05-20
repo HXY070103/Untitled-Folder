@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2553446003551234149}
-  - component: {fileID: 4818992624068305634}
   m_Layer: 0
   m_Name: FireVFX
   m_TagString: Untagged
@@ -33,18 +32,6 @@ Transform:
   - {fileID: 6236565940603317722}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4818992624068305634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 542231612166665799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfd27145fde2c42b79f410ac8e59c797, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Fire
 --- !u!1 &4493191270347423845
 GameObject:
   m_ObjectHideFlags: 0
@@ -56,7 +43,6 @@ GameObject:
   - component: {fileID: 6236565940603317722}
   - component: {fileID: 5036610146580672527}
   - component: {fileID: 8138886371439057649}
-  - component: {fileID: 7510444330946436073}
   m_Layer: 7
   m_Name: Animator
   m_TagString: Untagged
@@ -160,15 +146,3 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &7510444330946436073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4493191270347423845}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e68d994ff5a6e4363aea0090c507f714, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::FireShrinkTrigger
