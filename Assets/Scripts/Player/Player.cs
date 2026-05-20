@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class Player : Entity {
     public static event Action OnPlayerDeath;
+
     public PlayerInputSet input { get; private set; }
+    public PlayerVFX vfx { get; private set; }
+    public PlayerSkillManager skillManager { get; private set; }
+
+    public EntityStats stats { get; private set; }
+    public EntityHealth health { get; private set; }
 
     public EntityStats stats { get; private set; }
     public EntityHealth health { get; private set; }
@@ -22,25 +28,25 @@ public class Player : Entity {
     public PlayerCounterAttackState counterAttackState { get; private set; }
 
     [Header("Attack info")]
-    public Vector2 jumpAttackSpeed;
+    public Vector2 jumpAttackSpeed = new Vector2(5, -6);
     public Vector2[] attackSpped;
-    public float attackMovementDuration;
-    public float comboResetTime;
+    public float attackMovementDuration = 0.1f;
+    public float comboResetTime = 0.5f;
      
     private Coroutine queueAttackCo;
 
     [Header("Movement info")]
-    public float moveSpeed;
-    public float jumpSpeed;
-    public Vector2 wallJumpSpeed;
+    public float moveSpeed = 8;
+    public float jumpSpeed = 12;
+    public Vector2 wallJumpSpeed = new Vector2(6, 12);
     [Range(0, 1)]
-    public float inAirMoveMultiplier;
+    public float inAirMoveMultiplier = 0.8f;
     [Range(0, 1)]
-    public float wallSlideMultiplier;
+    public float wallSlideMultiplier = 0.7f;
 
     [Space]
-    public float dashDuration;
-    public float dashSpeed;
+    public float dashDuration = 0.25f;
+    public float dashSpeed = 20;
 
     public Vector2 moveInput { get; private set; }
 
@@ -50,6 +56,8 @@ public class Player : Entity {
         input = new PlayerInputSet();
         stats = GetComponent<EntityStats>();
         health = GetComponent<EntityHealth>();
+        vfx = GetComponent<PlayerVFX>();
+        skillManager = GetComponent<PlayerSkillManager>();
 
         idleState = new PlayerIdleState(this, stateMachine, "Idle");
         moveState = new PlayerMoveState(this, stateMachine, "Move");
@@ -66,6 +74,10 @@ public class Player : Entity {
 
     protected override void Start() {
         stateMachine.Initialize(idleState);
+    }
+
+    public float GetMoveSpeed() {
+        return moveSpeed * speedMultiplier;
     }
 
     public override void EntityDeath() {

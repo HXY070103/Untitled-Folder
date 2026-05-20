@@ -9,6 +9,8 @@ public class Entity : MonoBehaviour {
     public Rigidbody2D rb { get; private set; }
     protected StateMachine stateMachine;
 
+    protected float speedMultiplier = 1;
+
     private bool facingRight = true;
     public int facingDir { get; private set; } = 1;
 
