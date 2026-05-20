@@ -208,9 +208,9 @@ GameObject:
   - component: {fileID: 38960023}
   - component: {fileID: 38960028}
   - component: {fileID: 38960026}
+  - component: {fileID: 38960027}
+  - component: {fileID: 38960029}
   - component: {fileID: 38960030}
-  - component: {fileID: 38960032}
-  - component: {fileID: 38960031}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -360,6 +360,23 @@ MonoBehaviour:
   onHeavyDamageKnockback: {x: 7, y: 7}
   heavyKnockbackDuration: 0.5
   miniHealthBarActive: 0
+--- !u!114 &38960027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 38960019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31bbd6fcdb7d84bfaa456b13d785638b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EntityVFX
+  onDamageVFXMaterial: {fileID: 2100000, guid: c8bbf733d1f504c969c031f0379a1148, type: 2}
+  onDamageVFXDurarion: 0.2
+  onHitVFXColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  onHitVFX: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
+  onCritHitVFX: {fileID: 1321752846314756928, guid: b9426da7f34ab4e6dac992440f1c4583, type: 3}
 --- !u!114 &38960028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,7 +396,7 @@ MonoBehaviour:
     m_Bits: 256
   targetCheck: {fileID: 763558109}
   counterRecoveryDuration: 0.25
---- !u!114 &38960030
+--- !u!114 &38960029
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -388,22 +405,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 38960019}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92b71837b7b544c5e9755013f1c2dcf3, type: 3}
+  m_Script: {fileID: 11500000, guid: 290bd3954f3844d168f3032ef9ebeca0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillManager
-  currentSkillType: 1
---- !u!114 &38960031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 38960019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c689b46d32aa4fef876888f6c08311f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  m_EditorClassIdentifier: Assembly-CSharp::EntityStats
   defaultStatSetup: {fileID: 11400000, guid: b970993ca290b4cf4a0ece4687e71472, type: 2}
   maxHP:
     baseValue: 100
@@ -420,13 +424,7 @@ MonoBehaviour:
   armor:
     baseValue: 0
     modifiers: []
-  skillDuration:
-    baseValue: 3
-    modifiers: []
-  skillEffect:
-    baseValue: 1
-    modifiers: []
---- !u!114 &38960032
+--- !u!114 &38960030
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -435,16 +433,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 38960019}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1597de2df00e64cbdbd721dea216c5d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 92b71837b7b544c5e9755013f1c2dcf3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerVFX
-  onDamageVFXMaterial: {fileID: 2100000, guid: c8bbf733d1f504c969c031f0379a1148, type: 2}
-  onDamageVFXDurarion: 0.2
-  onHitVFXColor: {r: 1, g: 0.90713394, b: 0, a: 1}
-  onHitVFX: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
-  onCritHitVFX: {fileID: 1321752846314756928, guid: b9426da7f34ab4e6dac992440f1c4583, type: 3}
-  imageEchoInterval: 0.05
-  imageEchoVFX: {fileID: 2270825432934318720, guid: 4f1f4f8826d734b10b1ba186c9e19441, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillManager
+  currentSkillType: 1
 --- !u!1 &44584449
 GameObject:
   m_ObjectHideFlags: 0
@@ -600,7 +592,7 @@ MonoBehaviour:
   statType: 0
   statName: {fileID: 44584451}
   statValue: {fileID: 661578822}
-  entityStats: {fileID: 0}
+  entityStats: {fileID: 38960029}
 --- !u!1 &48491853
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,7 +701,7 @@ RectTransform:
   m_Father: {fileID: 447658948}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 6}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1023,6 +1015,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillPhase
   cooldown: 3
+  skillDuration: 3
 --- !u!114 &185028333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1036,8 +1029,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillTimeControl
   cooldown: 3
+  skillDuration: 3
   domainPrefab: {fileID: 8066122577892052930, guid: df04f63a1809d442482117ff6dbc340b, type: 3}
   maxSize: 20
+  expandSpeed: 2
   slowDownPercentage: 0.8
 --- !u!114 &185028334
 MonoBehaviour:
@@ -1052,12 +1047,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillLifeSteal
   cooldown: 3
-  fireVFXPrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
-  fireballPrefab: {fileID: 3718646501417209727, guid: 6b278988086d54af5bd66d7117ea45ea, type: 3}
+  skillDuration: 3
+  firePrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
   coversionRate: 0.3
-  minFireballGenerationRadius: 1.5
-  maxFireballGenerationRadius: 2
-  fireballAmount: 5
+  totalDamage: 0
 --- !u!1 &185166898
 GameObject:
   m_ObjectHideFlags: 0
@@ -1963,7 +1956,7 @@ MonoBehaviour:
   statType: 4
   statName: {fileID: 426388051}
   statValue: {fileID: 1849646905}
-  entityStats: {fileID: 0}
+  entityStats: {fileID: 38960029}
 --- !u!1 &429634950
 GameObject:
   m_ObjectHideFlags: 0
@@ -2189,7 +2182,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -1}
+  m_AnchoredPosition: {x: 0, y: 13}
   m_SizeDelta: {x: 301.71777, y: 60}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &457198242
@@ -2881,7 +2874,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 24}
+  m_AnchoredPosition: {x: 0, y: 38}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &604855949
@@ -4476,7 +4469,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1086392068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5158,7 +5151,7 @@ MonoBehaviour:
   statType: 6
   statName: {fileID: 1139755266}
   statValue: {fileID: 1087079699}
-  entityStats: {fileID: 0}
+  entityStats: {fileID: 38960029}
 --- !u!1 &1140457150
 GameObject:
   m_ObjectHideFlags: 0
@@ -5314,7 +5307,7 @@ MonoBehaviour:
   statType: 3
   statName: {fileID: 1140457152}
   statValue: {fileID: 1470875037}
-  entityStats: {fileID: 0}
+  entityStats: {fileID: 38960029}
 --- !u!1 &1141577763
 GameObject:
   m_ObjectHideFlags: 0
@@ -51704,7 +51697,7 @@ MonoBehaviour:
   statType: 5
   statName: {fileID: 1674503059}
   statValue: {fileID: 2142306941}
-  entityStats: {fileID: 0}
+  entityStats: {fileID: 38960029}
 --- !u!1 &1741057138
 GameObject:
   m_ObjectHideFlags: 0
@@ -52373,7 +52366,7 @@ MonoBehaviour:
   statType: 2
   statName: {fileID: 1799775148}
   statValue: {fileID: 1648944487}
-  entityStats: {fileID: 0}
+  entityStats: {fileID: 38960029}
 --- !u!1 &1813606928
 GameObject:
   m_ObjectHideFlags: 0
@@ -52997,10 +52990,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 1
+  m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ReferenceResolution: {x: 800, y: 600}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
