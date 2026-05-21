@@ -23,6 +23,8 @@ public class SkillBase : MonoBehaviour {
 
     protected PlayerStats stats;
 
+    protected PlayerStats stats;
+
     [SerializeField] private float cooldown = 3;
     
     private float lastTimeUsed;
@@ -35,8 +37,10 @@ public class SkillBase : MonoBehaviour {
 
     public bool IsSkillActive => isSkillActive;
     public float SkillDuration => stats.GetSkillDuration();
+    public float SkillDuration => stats.GetSkillDuration();
 
     protected virtual void Awake() {
+        stats = GetComponentInParent<PlayerStats>();
         stats = GetComponentInParent<PlayerStats>();
         lastTimeUsed = float.MinValue;
         remainingDuration = 0;
@@ -64,6 +68,7 @@ public class SkillBase : MonoBehaviour {
     protected virtual void StartSkill() {
         lastTimeUsed = Time.time;
         isSkillActive = true;
+        remainingDuration = stats.GetSkillDuration();
         remainingDuration = stats.GetSkillDuration();
     }
 
