@@ -7,6 +7,9 @@ public class SkillTimeControl : SkillBase {
 
     private GameObject domain;
 
+    public float MaxSize => maxSize * stats.GetSkillEffect();
+    public float SlowDownPercentage => slowDownPercentage * stats.GetSkillEffect();
+
     protected override void StartSkill() {
         base.StartSkill();
 
@@ -26,13 +29,5 @@ public class SkillTimeControl : SkillBase {
 
     private void DestroyDomain() {
         domain.GetComponent<Domain>().ShrinkDomain();
-    }
-
-    public float GetMaxSize() {
-        return maxSize * stats.GetSkillEffect();
-    }
-
-    public float GetSlowDownPercentage() {
-        return slowDownPercentage * stats.GetSkillEffect();
     }
 }

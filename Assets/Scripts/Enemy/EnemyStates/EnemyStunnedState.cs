@@ -11,7 +11,7 @@ public class EnemyStunnedState : EnemyState {
     public override void Enter() {
         base.Enter();
 
-        enemy.SetCounterWindow(false);
+        enemy.ExitAttackWindow();
         enemyVFX.SetAttackAlert(false);
 
         stateTimer = enemy.stunnedDuration;

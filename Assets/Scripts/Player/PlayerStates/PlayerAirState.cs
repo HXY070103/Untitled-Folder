@@ -19,7 +19,7 @@ public class PlayerAirState : PlayerState {
                 );
         }
 
-        if (input.Player.Attack.WasPressedThisFrame()) {
+        if (player.CanAttack && input.Player.Attack.WasPressedThisFrame()) {
             stateMachine.ChangeState(player.jumpAttackState);
         }
     }

@@ -9,7 +9,7 @@ public class Domain : MonoBehaviour {
  
     public void SetUpDomain(SkillTimeControl domainManager) {
         this.domainManager = domainManager;
-        targetScale = Vector3.one * domainManager.GetMaxSize();
+        targetScale = Vector3.one * domainManager.MaxSize;
         isShrinking = false;
     }
     
@@ -42,7 +42,7 @@ public class Domain : MonoBehaviour {
             return;
         }
 
-        target.SlowDown(domainManager.GetSlowDownPercentage());
+        target.SlowDown(domainManager.SlowDownPercentage);
     }
 
     private void OnTriggerExit2D(Collider2D collision) {

@@ -1,0 +1,60 @@
+using UnityEngine;
+
+public class PlayerHeavyAttackState : PlayerState {
+    private SkillPhase phase;
+    private float attackMovementTimer;
+    private int attackDir;
+
+    public PlayerHeavyAttackState(Player player, StateMachine stateMachine, string animBoolName) : 
+        base(player, stateMachine, animBoolName) {
+        phase = player.GetComponentInChildren<SkillPhase>();
+    }
+
+    public override void Enter() {
+        base.Enter();
+
+        phase.InterruptSkill();
+        IncreaseDamage(phase.DamageMultiplier);
+        attackDir = player.moveInput.x != 0 ? (int) player.moveInput.x : player.facingDir;
+    }
+
+    public override void Update() {
+        base.Update();
+
+        HandleAttackMovement();
+
+        if (triggerCalled) {
+            stateMachine.ChangeState(player.idleState);
+        }
+    }
+
+    public override void Exit() {
+        base.Exit();
+
+        ResetDamage();
+        player.ResetNextAttack();
+    }
+
+    private void IncreaseDamage(float damageMultiplier) {
+        float baseDamage = player.stats.damage.GetValue();
+        float bonusDamage = baseDamage * (damageMultiplier - 1);
+        player.stats.damage.addModifier(bonusDamage, "HeavyAttack");
+    }
+
+    private void ResetDamage() {
+        player.stats.damage.RemoveModifier("HeavyAttack");
+    }
+
+    public void ApplyAttackMovement() {
+        attackMovementTimer = player.attackMovementDuration;
+        player.SetVelocity(attackDir * player.heavyAttackSpeed.x, player.heavyAttackSpeed.y);
+    }
+
+    private void HandleAttackMovement() {
+        attackMovementTimer -= Time.deltaTime;
+
+        if (attackMovementTimer < 0) {
+            player.SetVelocity(0, rb.linearVelocity.y);
+        }
+    }
+}

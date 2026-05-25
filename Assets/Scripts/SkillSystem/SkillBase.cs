@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using TMPro;
 
 public class SkillBase : MonoBehaviour {
     [SerializeField] protected string skillName;
@@ -23,17 +22,16 @@ public class SkillBase : MonoBehaviour {
     protected PlayerStats stats;
 
     [SerializeField] private float cooldown = 3;
+    [SerializeField] private float skillDuration = 3;
     
     private float lastTimeUsed;
     private Coroutine handleSkillCo;
     private float remainingDuration;
-
     private bool isSkillActive;
 
     public float RemainingDuration => remainingDuration;
-
     public bool IsSkillActive => isSkillActive;
-    public float SkillDuration => stats.GetSkillDuration();
+    public float SkillDuration => skillDuration * stats.GetSkillEffect();
 
     protected virtual void Awake() {
         stats = GetComponentInParent<PlayerStats>();
@@ -63,14 +61,16 @@ public class SkillBase : MonoBehaviour {
     protected virtual void StartSkill() {
         lastTimeUsed = Time.time;
         isSkillActive = true;
-        remainingDuration = stats.GetSkillDuration();
-        remainingDuration = stats.GetSkillDuration();
+        remainingDuration = SkillDuration;
     }
 
-    protected virtual void EndSkill()
-    {
-        remainingDuration = 0;
+    protected virtual void EndSkill() {
         isSkillActive = false;
+        remainingDuration = 0;
+    }
+
+    public void InterruptSkill() {
+        remainingDuration = 0;
     }
 
     public bool OnCooldown() {

@@ -1,4 +1,3 @@
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class SkillLifeSteal : SkillBase {
@@ -6,7 +5,7 @@ public class SkillLifeSteal : SkillBase {
 
     [SerializeField] private GameObject fireVFXPrefab;
     [SerializeField] private GameObject fireballPrefab;
-    [SerializeField] private float coversionRate = 0.3f;
+    [SerializeField] private float conversionRate = 0.3f;
     [Space]
     [SerializeField] private float minFireballGenerationRadius = 1.5f;
     [SerializeField] private float maxFireballGenerationRadius = 2;
@@ -14,6 +13,8 @@ public class SkillLifeSteal : SkillBase {
 
     private float totalDamage;
     private GameObject fireVFX;
+
+    public float ConversionRate => conversionRate * stats.GetSkillEffect();
 
     protected override void Awake() {
         base.Awake();
@@ -37,7 +38,7 @@ public class SkillLifeSteal : SkillBase {
     }
 
     public void Healing() {
-        float totalHealingHP = totalDamage * GetConversionRate();
+        float totalHealingHP = totalDamage * ConversionRate;
         float healingHP = totalHealingHP / fireballAmount;
         health.Healing(healingHP);
     }
@@ -87,9 +88,5 @@ public class SkillLifeSteal : SkillBase {
 
     private void AccumulateDamage(float damage) {
         totalDamage += damage;
-    }
-
-    private float GetConversionRate() {
-        return coversionRate * stats.GetSkillEffect();
     }
 }
