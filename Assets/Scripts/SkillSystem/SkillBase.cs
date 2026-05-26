@@ -69,6 +69,10 @@ public class SkillBase : MonoBehaviour {
         remainingDuration = 0;
     }
 
+    public void ExtendSkillTime(float extendTime) {
+        remainingDuration += extendTime;
+    }
+
     public void InterruptSkill() {
         remainingDuration = 0;
     }

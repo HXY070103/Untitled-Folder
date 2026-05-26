@@ -30,4 +30,8 @@ public class SkillTimeControl : SkillBase {
     private void DestroyDomain() {
         domain.GetComponent<Domain>().ShrinkDomain();
     }
+
+    public void FreezeDomain() {
+        slowDownPercentage = 1;
+    }
 }
