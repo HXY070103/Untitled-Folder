@@ -223,7 +223,7 @@ Records all damage dealt during the skill and converts it into healing after the
 | War Discipline *(Mutually Exclusive with Bloodlust)* | Skill decay no longer reduces duration |
 | Blood Pact *(Mutually Exclusive with War Discipline)* | Skill decay no longer reduces healing conversion ratio |
 
-#### Phase
+### Phase
 
 #### Skill Effect
 Enter a phased state where the next attack becomes a heavy strike. During the phase state, the player is immune to damage and gains increased movement speed. If the player attacks, the phase state ends immediately. If the player times the phase just before an enemy attack, a perfect phase is triggered.
