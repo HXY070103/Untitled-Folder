@@ -1,25 +1,57 @@
+using System;
 using UnityEngine;
 
 public class SkillTimeControl : SkillBase {
+    public static event Action<float> OnSetFirstAttack;
+    public static event Action OnResetFirstAttack;
+
     [SerializeField] private GameObject domainPrefab;
     [SerializeField] private float maxSize = 20;
     [SerializeField] private float slowDownPercentage = 0.8f;
+    [SerializeField] private float bonusDuration = 1;
+    [SerializeField] private float damageMultiplier = 2;
 
     private GameObject domain;
 
-    public float MaxSize => maxSize * stats.GetSkillEffect();
-    public float SlowDownPercentage => slowDownPercentage * stats.GetSkillEffect();
+    public float GetMaxSize() {
+        return maxSize * stats.GetSkillEffect();
+    }
+
+    public float GetSlowDownPercentage() {
+        if (UnLocked("TemporalFreeze")) {
+            return 1;
+        }
+
+        return slowDownPercentage * stats.GetSkillEffect();
+    }
+
 
     protected override void StartSkill() {
         base.StartSkill();
 
         CreateDomain();
+
+        if (UnLocked("HuntingTime")) {
+            EnemyHealth.OnEnemyDeath += ExtendSkillDuration;
+        }
+
+        if (UnLocked("PrecisionTargeting")) {
+            OnSetFirstAttack?.Invoke(damageMultiplier);
+        }
     }
 
     protected override void EndSkill() {
         base.EndSkill();
 
         DestroyDomain();
+
+        if (UnLocked("HuntingTime")) {
+            EnemyHealth.OnEnemyDeath -= ExtendSkillDuration;
+        }
+
+        if (UnLocked("PrecisionTargeting")) {
+            OnResetFirstAttack?.Invoke();
+        }
     }
 
     private void CreateDomain() {
@@ -31,7 +63,7 @@ public class SkillTimeControl : SkillBase {
         domain.GetComponent<Domain>().ShrinkDomain();
     }
 
-    public void FreezeDomain() {
-        slowDownPercentage = 1;
+    private void ExtendSkillDuration() {
+        remainingDuration += bonusDuration;
     }
 }

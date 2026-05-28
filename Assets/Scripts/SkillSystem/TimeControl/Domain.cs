@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Domain : MonoBehaviour {
     [SerializeField] private float expandSpeed = 2;
+    [SerializeField] private float damage = 1;
+    [SerializeField] private float damageInterval = 0.5f;
 
     private SkillTimeControl domainManager;
     private Vector3 targetScale;
@@ -9,8 +11,12 @@ public class Domain : MonoBehaviour {
  
     public void SetUpDomain(SkillTimeControl domainManager) {
         this.domainManager = domainManager;
-        targetScale = Vector3.one * domainManager.MaxSize;
+        targetScale = Vector3.one * domainManager.GetMaxSize();
         isShrinking = false;
+
+        if (domainManager.UnLocked("SynchronizedField")) {
+            transform.SetParent(domainManager.transform);
+        }
     }
     
     public void ShrinkDomain() {
@@ -36,22 +42,38 @@ public class Domain : MonoBehaviour {
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        ISlowable target = collision.GetComponent<ISlowable>();
-        
-        if (target == null) {
-            return;
-        }
+        StartSlowDown(collision);
 
-        target.SlowDown(domainManager.SlowDownPercentage);
+        if (domainManager.UnLocked("TemporalCorrosion")) {
+            ApplyDomainDamage(collision);
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
-        ISlowable target = collision.GetComponent<ISlowable>();
+        EndSlowDown(collision);
 
-        if (target == null) {
-            return;
+        if (domainManager.UnLocked("TemporalCorrosion")) {
+            EndDomainDamage(collision);
         }
+    }
 
-        target.RecoverSpeed();
+    private void StartSlowDown(Collider2D collision) {
+        ISlowable target = collision.GetComponent<ISlowable>();
+        target?.SlowDown(domainManager.GetSlowDownPercentage());
+    }
+
+    private void EndSlowDown(Collider2D collision) {
+        ISlowable target = collision.GetComponent<ISlowable>();
+        target?.RecoverSpeed();
+    }
+
+    private void ApplyDomainDamage(Collider2D collision) {
+        EnemyHealth enemyHealth = collision.GetComponent<EnemyHealth>();
+        enemyHealth?.ApplyDot(damage, damageInterval);
+    }
+
+    private void EndDomainDamage(Collider2D collision) {
+        EnemyHealth enemyHealth = collision.GetComponent<EnemyHealth>();
+        enemyHealth?.EndDot();
     }
 }
