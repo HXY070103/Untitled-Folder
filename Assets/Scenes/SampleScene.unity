@@ -950,7 +950,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillPhase
   skillName: 
   description: 
-  evolutions: []
   upgrades: []
   cooldown: 3
   skillDuration: 3
@@ -974,7 +973,6 @@ MonoBehaviour:
   skillName: TimeControl
   description: Creates a domain that slows down enemies and enemy projectiles within
     its area
-  evolutions: []
   upgrades:
   - upgradeName: TemporalFreeze
     description: Enemies within the field are immobilized
@@ -1014,10 +1012,6 @@ MonoBehaviour:
   skillName: life steal
   description: heal yourself after the skill end. the more damage you make, the higher
     healing amount you have
-  evolutions:
-  - evolutionName: healing now
-    changeDescription: can heal yourself during the skill
-    unlocked: 0
   upgrades:
   - upgradeName: blood fight
     description: the lower HP, the higher damage
@@ -3237,7 +3231,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 69.90906, y: -6.261841}
+  m_AnchoredPosition: {x: 69.90918, y: -6.261841}
   m_SizeDelta: {x: -305.6589, y: -117.48}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &611082780
@@ -3411,7 +3405,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22638212c3aa649cbbf9c7fbfd0f9cac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Input
-  characterUI: {fileID: 698491940}
+  characterUI: {fileID: 698491944}
   optionsUI: {fileID: 1141577763}
 --- !u!114 &621807721
 MonoBehaviour:
@@ -3425,7 +3419,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d60b2351e6bf4d9cb0eade49031ae08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_SkillDuration
-  skill: {fileID: 185028334}
+  manager: {fileID: 38960030}
+  skill: {fileID: 0}
   durationGroup: {fileID: 584865850}
   durationText: {fileID: 1786182392}
   durationFillImage: {fileID: 1529912195}
@@ -4217,15 +4212,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3190096842149579963, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3190096842149579963, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_Name
       value: EnemySkeleton
+      objectReference: {fileID: 0}
+    - target: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4587777559165797030, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: maxHP.baseValue
@@ -50658,13 +50657,8 @@ MonoBehaviour:
   currentSkill:
     skillName: Life Steal
     description: 
-    evolutions: []
     upgrades: []
-  attributeUpgrade:
-  - attributeName: Damage Increase
-    percentages:
-    - 10
-    - 50
+  playerStats: {fileID: 0}
   skillManager: {fileID: 38960030}
 --- !u!1 &1456554232
 GameObject:
