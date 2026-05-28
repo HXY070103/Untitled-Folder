@@ -1,10 +1,9 @@
-using NUnit.Framework;
 using UnityEngine;
 
 public class UI_Input : MonoBehaviour
 {
     [Header("UI Panels")]
-    [SerializeField] private GameObject characterUI;
+    [SerializeField] private UI_Character characterUI;
     [SerializeField] private GameObject optionsUI;
     private PlayerInputSet input;
 
@@ -31,8 +30,9 @@ public class UI_Input : MonoBehaviour
         {
             return;
         }
-        bool nextState = !characterUI.activeSelf;
-        characterUI.SetActive(nextState);
+        bool nextState = !characterUI.gameObject.activeSelf;
+        characterUI.ToggleCharacterUI();
+        
         if (nextState && optionsUI != null)
         {
             optionsUI.SetActive(false);
@@ -49,14 +49,14 @@ public class UI_Input : MonoBehaviour
         optionsUI.SetActive(nextState);
         if (nextState && characterUI != null)
         {
-            characterUI.SetActive(false);
+            characterUI.gameObject.SetActive(false);
         }
         UpdateGamePausedState();
     }
 
     private void UpdateGamePausedState()
     {
-        bool isAnyUIOpen = (characterUI != null && characterUI.activeSelf) || (optionsUI != null && optionsUI.activeSelf);
+        bool isAnyUIOpen = (characterUI != null && characterUI.gameObject.activeSelf) || (optionsUI != null && optionsUI.activeSelf);
         if (isAnyUIOpen)
         {
             Time.timeScale = 0f; // Pause the game

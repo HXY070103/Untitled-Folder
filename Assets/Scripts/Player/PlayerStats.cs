@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerStats : EntityStats {
     private AttributeUpgrade[] upgrades;
+    private List<AttributeUpgrade> obtainAttributeUpgrades = new List<AttributeUpgrade>();
+    public List<AttributeUpgrade> ObtainAttributeUpgrades => obtainAttributeUpgrades;
 
     [Header("Skill")]
     public Stat skillEffect;
@@ -21,7 +23,15 @@ public class PlayerStats : EntityStats {
     }
 
     public void addUpgrade(AttributeUpgrageType upgrageType) {
-        upgrades[(int) upgrageType].ApplyUpgrade();
+        
+        AttributeUpgrade upgrade = upgrades[(int) upgrageType];
+        if (upgrade == null)
+        {
+            Debug.LogError("Attribute upgrade is null: " + upgrageType);
+            return;
+        }
+        upgrade.ApplyUpgrade();
+        obtainAttributeUpgrades.Add(upgrade);
     }
 
     [ContextMenu("Update Skill Default Stat Setup")]

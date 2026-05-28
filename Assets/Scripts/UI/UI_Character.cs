@@ -15,6 +15,7 @@ public class UI_Character : MonoBehaviour
 
         gameObject.SetActive(shouldOpen);
 
+        
         if (shouldOpen)
         {
             UpdateAllStatSlots();

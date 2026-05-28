@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class VatalityUpgrade : AttributeUpgrade {
     [SerializeField] private float bonusMaxHP = 5;
@@ -13,5 +14,13 @@ public class VatalityUpgrade : AttributeUpgrade {
 
         stats.maxHP.addModifier(bonusMaxHP, name);
         stats.armor.addModifier(bonusArmor, name);
+    }
+    public override List<AttributeUpgradeDisplay> GetDisplayEffects()
+    {
+        return new List<AttributeUpgradeDisplay>
+        {
+            new AttributeUpgradeDisplay("MaxHP", bonusMaxHP, false),
+            new AttributeUpgradeDisplay("Armor", bonusArmor, false)
+        };
     }
 }

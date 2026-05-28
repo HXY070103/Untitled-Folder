@@ -13,7 +13,8 @@ public class UI_UpgradePanel : MonoBehaviour
 
     [Header("Display Data")]
     [SerializeField] private SkillDisplayData currentSkill;
-    [SerializeField] private List<AttributeUpgradeDisplayData> attributeUpgrade = new List<AttributeUpgradeDisplayData>();
+    [SerializeField] private PlayerStats playerStats;
+    private List<AttributeUpgrade> attributeUpgrades = new List<AttributeUpgrade>();
 
     [SerializeField] private PlayerSkillManager skillManager;
 
@@ -25,6 +26,10 @@ public class UI_UpgradePanel : MonoBehaviour
         } else
         {
             ShowSkillDetails();
+        }
+        if (playerStats != null)
+        {
+            SetAttributeUpgrades(playerStats.ObtainAttributeUpgrades);
         }
     }
 
@@ -45,19 +50,6 @@ public class UI_UpgradePanel : MonoBehaviour
         sb.AppendLine(currentSkill.description);
         sb.AppendLine();
 
-        bool hasEvolution = false;
-        foreach (var evo in currentSkill.evolutions)
-        {
-            if (evo.unlocked)
-            {   
-                if (!hasEvolution)
-                {
-                    sb.AppendLine("Evolution Effects:");
-                    hasEvolution = true;
-                }
-                sb.AppendLine($"- {evo.evolutionName}: {evo.changeDescription}");
-            }
-        }
         contentText.text = sb.ToString();
     }
 
@@ -104,17 +96,50 @@ public class UI_UpgradePanel : MonoBehaviour
         descriptionText.text = "Current attribute upgrades:";
 
         StringBuilder sb = new StringBuilder();
-        if (attributeUpgrade.Count == 0)
+
+        if (attributeUpgrades == null || attributeUpgrades.Count == 0)
         {
-            sb.AppendLine("No attribute upgrades available.");
+            sb.AppendLine("No attribute upgrades yet.");
+            contentText.text = sb.ToString();
+            return;
         }
-        else
+
+        Dictionary<string, List<string>> detailMap = new Dictionary<string, List<string>>();
+        Dictionary<string, float> totalMap = new Dictionary<string, float>();
+        Dictionary<string, bool> percentMap = new Dictionary<string, bool>();
+
+        foreach (AttributeUpgrade upgrade in attributeUpgrades)
         {
-            foreach (var attr in attributeUpgrade)
+            foreach (AttributeUpgradeDisplay effect in upgrade.GetDisplayEffects())
             {
-                sb.AppendLine(attr.GetDisplayText());
+                if (!detailMap.ContainsKey(effect.attributeName))
+                {
+                    detailMap[effect.attributeName] = new List<string>();
+                    totalMap[effect.attributeName] = 0f;
+                    percentMap[effect.attributeName] = effect.isPercent;
+                }
+
+                detailMap[effect.attributeName].Add(effect.GetValueText());
+                totalMap[effect.attributeName] += effect.value;
             }
         }
+
+        foreach (var pair in detailMap)
+        {
+            string attributeName = pair.Key;
+            string detail = string.Join(" + ", pair.Value);
+            float total = totalMap[attributeName];
+
+            if (percentMap[attributeName])
+            {
+                sb.AppendLine($"{attributeName} increases {total}% ({detail})");
+            }
+            else
+            {
+                sb.AppendLine($"{attributeName} increases {total} ({detail})");
+            }
+        }
+
         contentText.text = sb.ToString();
     }
 
@@ -130,9 +155,6 @@ public class UI_UpgradePanel : MonoBehaviour
         {
             skillName = skill.SkillName,
             description = skill.Description,
-            evolutions = skill.Evolutions != null 
-                ? new List<SkillEvolutionDisplayData>(skill.Evolutions)
-                : new List<SkillEvolutionDisplayData>(),
 
             upgrades = skill.Upgrades != null 
                 ? new List<SkillUpgradeDisplayData>(skill.Upgrades)
@@ -142,9 +164,8 @@ public class UI_UpgradePanel : MonoBehaviour
         ShowSkillDetails();
     }
 
-    public void SetAttributeUpgrades(List<AttributeUpgradeDisplayData> upgrades)
+    public void SetAttributeUpgrades(List<AttributeUpgrade> upgrades)
     {
-        attributeUpgrade = upgrades;
-        ShowAttributeUpgrades();
+        attributeUpgrades = upgrades;
     }
 }
