@@ -14,6 +14,5 @@ public class StatSetupSO : ScriptableObject {
     public float armor = 0;
 
     [Header("Player Skill")]
-    public float skillDuration = 3;
     public float skillEffect = 1;
 }

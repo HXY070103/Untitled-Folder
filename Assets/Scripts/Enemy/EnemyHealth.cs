@@ -12,18 +12,19 @@ public class EnemyHealth : EntityHealth {
         enemy = GetComponent<Enemy>();
     }
 
-    public override void TakeDamage(float damage, Transform damageDealer) {
+    public override void TakeDamage(Damage damage, Transform damageDealer) {
         base.TakeDamage(damage, damageDealer);
 
-        float mitigation = entityStats.GetArmorMitigation();
-        float finalDamage = damage * (1 - mitigation);
-
-        if (OnDamageTaken != null) {
-            OnDamageTaken.Invoke(finalDamage);
-        }
+        float finalDamage = CalculateFinalDamage(damage);
+        OnDamageTaken?.Invoke(finalDamage);
 
         if (damageDealer.GetComponent<Player>() != null) {
             enemy.TryToEnterBattleState(damageDealer);
         }
+    }
+
+    private float CalculateFinalDamage(Damage damage) {
+        float mitigation = stats.GetArmorMitigation();
+        return damage.value * (1 - mitigation);
     }
 }

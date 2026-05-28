@@ -3,16 +3,18 @@ using UnityEngine;
 using System;
 
 public class EntityHealth : MonoBehaviour, IDamageable {
-
     public event Action OnHealthUpdate;
+
     private Slider healthBar;
-    private EntityVFX entityVFX;
+    private EntityVFX vfx;
     private Entity entity;
-    protected EntityStats entityStats;
+    protected EntityStats stats;
 
     [Header("Health info")]
     [SerializeField] protected bool isDead = false;
     [SerializeField] private float currentHP;
+
+    private bool isInvulnerable = false;
 
     [Header("On damage knockback info")]
     [SerializeField] private Vector2 onDamageKnockback = new Vector2(1.5f, 2.5f);
@@ -26,45 +28,54 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public bool miniHealthBarActive;
     
-
     protected virtual void Awake() {
         healthBar = GetComponentInChildren<Slider>();
-        entityVFX = GetComponent<EntityVFX>();
+        vfx = GetComponent<EntityVFX>();
         entity = GetComponent<Entity>();
-        entityStats = GetComponent<EntityStats>();
+        stats = GetComponent<EntityStats>();
 
-        currentHP = entityStats.GetMaxHP();
+        currentHP = stats.GetMaxHP();
         OnHealthUpdate += UpdateHealthBar;
         UpdateHealthBar();
     }
 
-    public virtual void TakeDamage(float damage, Transform damageDealer) {
-        if (isDead) {
+    public void EnterInvulnerableState() {
+        isInvulnerable = true;
+    }
+
+    public void ExitInvulnerableState() {
+        isInvulnerable = false;
+    }
+
+    public bool IsInvulnerable() {
+        return isInvulnerable;
+    }
+ 
+    public virtual void TakeDamage(Damage damage, Transform damageDealer) {
+        if (isDead || isInvulnerable) {
             return;
         }
 
-        float mitigation = entityStats.GetArmorMitigation();
-        float finalDamage = damage * (1 - mitigation);
+        float finalDamage = CalculateFinalDamage(damage);
+        ReduceHP(finalDamage);
 
         Vector2 knockback = CalculateKnockback(finalDamage, damageDealer);
         float duration = CalculateDuration(finalDamage);
+        entity.ReceiveKnockback(knockback, duration);
 
-        if (entity != null) {
-            entity.ReceiveKnockback(knockback, duration);
-        }
+        vfx.PlayOnDamageVFX();
+    }
 
-        if (entityVFX != null) {
-            entityVFX.PlayOnDamageVFX();
-        }
-
-        ReduceHP(finalDamage);
+    private float CalculateFinalDamage(Damage damage) {
+        float mitigation = stats.GetArmorMitigation();
+        return damage.value * (1 - mitigation);
     }
 
     public void Healing(float healingHP) {
         currentHP += healingHP;
 
-        if (currentHP > entityStats.GetMaxHP()) {
-            currentHP = entityStats.GetMaxHP();
+        if (currentHP > stats.GetMaxHP()) {
+            currentHP = stats.GetMaxHP();
         }
         OnHealthUpdate?.Invoke();
     }
@@ -88,11 +99,10 @@ public class EntityHealth : MonoBehaviour, IDamageable {
             return;
         }
 
-        healthBar.value = currentHP / entityStats.GetMaxHP();
+        healthBar.value = currentHP / stats.GetMaxHP();
     }
 
-    public void EnableHealthBar(bool enable)
-    {
+    public void EnableHealthBar(bool enable) {
         healthBar?.gameObject.SetActive(enable);
     }
 
@@ -108,7 +118,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     private bool IsHeavyDamage(float damage) {
-        float healthPercentageTaken = damage / entityStats.GetMaxHP();
+        float healthPercentageTaken = damage / stats.GetMaxHP();
         return healthPercentageTaken > heavyDamageThreshold;
     }
 
@@ -117,6 +127,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     public float GetHPPercentage() {
-        return currentHP / entityStats.GetMaxHP();
+        return currentHP / stats.GetMaxHP();
     }
 }

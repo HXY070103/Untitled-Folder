@@ -18,7 +18,6 @@ public class Enemy : Entity, ISlowable{
     [Header("Stunned info")]
     public Vector2 stunnedSpeed = new Vector2(7, 7);
     public float stunnedDuration = 1;
-    protected bool canBeStunned;
 
     [Header("Movement info")]
     public float idleDurarion = 2;
@@ -32,6 +31,9 @@ public class Enemy : Entity, ISlowable{
     [SerializeField] private Transform playerCheck;
 
     public Transform player { get; private set; }
+
+    private bool inAttackWindow = false;
+    public bool InAttackWindow => inAttackWindow;
 
     public float GetBattleMoveSpeed() {
         return battleMoveSpeed * speedMultiplier;
@@ -52,8 +54,12 @@ public class Enemy : Entity, ISlowable{
         anim.speed = 1;
     }
 
-    public void SetCounterWindow(bool enable) {
-        canBeStunned = enable;
+    public void EnterAttackWindow() {
+        inAttackWindow = true;
+    }
+
+    public void ExitAttackWindow() {
+        inAttackWindow = false;
     }
 
     public override void EntityDeath() {
@@ -67,7 +73,8 @@ public class Enemy : Entity, ISlowable{
     }
 
     public void TryToEnterBattleState(Transform player) {
-        if (stateMachine.currentState == battleState || stateMachine.currentState == attackState) {
+        if (stateMachine.currentState == battleState 
+            || stateMachine.currentState == attackState) {
             return;
         }
 
