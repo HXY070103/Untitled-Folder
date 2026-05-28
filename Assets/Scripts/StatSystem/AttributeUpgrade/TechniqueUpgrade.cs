@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class TechniqueUpgrade : AttributeUpgrade {
     [SerializeField] private float bonusSkillEffect;
@@ -9,5 +10,12 @@ public class TechniqueUpgrade : AttributeUpgrade {
         base.ApplyUpgrade();
         
         stats.skillEffect.addModifier(bonusSkillEffect, name);
+    }
+    public override List<AttributeUpgradeDisplay> GetDisplayEffects()
+    {
+        return new List<AttributeUpgradeDisplay>
+        {
+            new AttributeUpgradeDisplay("SkillEffect", bonusSkillEffect, false)
+        };
     }
 }

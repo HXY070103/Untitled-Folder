@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 public class PowerUpgrage : AttributeUpgrade {
     [SerializeField] private float bonusDamage = 10;
 
@@ -11,5 +11,13 @@ public class PowerUpgrage : AttributeUpgrade {
         base.ApplyUpgrade();
 
         stats.damage.addModifier(bonusDamage, name);
+    }
+
+    public override List<AttributeUpgradeDisplay> GetDisplayEffects()
+    {
+        return new List<AttributeUpgradeDisplay>
+        {
+            new AttributeUpgradeDisplay("Damage", bonusDamage, false)
+        };
     }
 }

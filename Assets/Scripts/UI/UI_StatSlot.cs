@@ -29,26 +29,26 @@ public class UI_StatSlot : MonoBehaviour
         switch (statType) 
         {
             case StatType.MaxHealth:
-                value = entityStats.maxHP.GetValue();
+                value = entityStats.maxHP.GetFinalValue();
                 break;
             case StatType.Damage:
-                value = entityStats.damage.GetValue(); // Get base damage without crit
+                value = entityStats.damage.GetFinalValue(); // Get base damage without crit
                 break;
             case StatType.CritChance:
-                value = entityStats.critChance.GetValue();
+                value = entityStats.critChance.GetFinalValue();
                 break;
             case StatType.CritPower:
-                value = entityStats.critPower.GetValue();
+                value = entityStats.critPower.GetFinalValue() * 100;
                 break;
             case StatType.ArmorReduction:
                 value = entityStats.GetArmorMitigation() * 100; // Convert to percentage
                 break;
             case StatType.Armor:
-                value = entityStats.armor.GetValue();
+                value = entityStats.armor.GetFinalValue();
                 break;
         }
         statValue.text = value.ToString("F1"); // Format to 1 decimal place
-        if (statType == StatType.CritChance || statType == StatType.ArmorReduction) 
+        if (statType == StatType.CritChance || statType == StatType.ArmorReduction || statType == StatType.CritPower) 
         {
             statValue.text += "%"; // Append percentage sign for relevant stats
         }
