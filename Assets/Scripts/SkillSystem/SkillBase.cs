@@ -26,7 +26,7 @@ public class SkillBase : MonoBehaviour {
     
     private float lastTimeUsed;
     private Coroutine handleSkillCo;
-    private float remainingDuration;
+    protected float remainingDuration;
     private bool isSkillActive;
 
     public float RemainingDuration => remainingDuration;
@@ -55,7 +55,6 @@ public class SkillBase : MonoBehaviour {
             yield return null;
         }
         EndSkill();
-        handleSkillCo = null;
     }
 
     protected virtual void StartSkill() {
@@ -69,8 +68,14 @@ public class SkillBase : MonoBehaviour {
         remainingDuration = 0;
     }
 
-    public void ExtendSkillTime(float extendTime) {
-        remainingDuration += extendTime;
+    public bool UnLocked(string upgradeName) {
+        foreach (var upgrade in upgrades) {
+            if (upgrade.upgradeName.Equals(upgradeName)) {
+                return upgrade.unlocked;
+            }
+        }
+
+        return false;
     }
 
     public void InterruptSkill() {

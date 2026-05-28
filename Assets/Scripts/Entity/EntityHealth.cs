@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using System.Collections;
 
 public class EntityHealth : MonoBehaviour, IDamageable {
     public event Action OnHealthUpdate;
@@ -27,6 +28,9 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] private float heavyKnockbackDuration = 0.5f;
 
     public bool miniHealthBarActive;
+
+    private Coroutine dotCo;
+    private bool isInDot = false;
     
     protected virtual void Awake() {
         healthBar = GetComponentInChildren<Slider>();
@@ -49,6 +53,27 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public bool IsInvulnerable() {
         return isInvulnerable;
+    }
+
+    public void ApplyDot(float damage, float dotInterval) {
+        if (dotCo != null) {
+            StopCoroutine(dotCo);
+        }
+
+        isInDot = true;
+        dotCo = StartCoroutine(DotCo(damage, dotInterval));
+    }
+
+    public void EndDot() {
+        isInDot = false;
+    }
+
+    private IEnumerator DotCo(float damage, float dotInterval) {
+        while (isInDot) {
+            ReduceHP(damage);
+            vfx.PlayOnDamageVFX();
+            yield return new WaitForSeconds(dotInterval);
+        }
     }
  
     public virtual void TakeDamage(Damage damage, Transform damageDealer) {
@@ -80,7 +105,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         OnHealthUpdate?.Invoke();
     }
 
-    private void ReduceHP(float damage) {
+    protected void ReduceHP(float damage) {
         currentHP -= damage;
         OnHealthUpdate?.Invoke();
         if (currentHP <= 0) {

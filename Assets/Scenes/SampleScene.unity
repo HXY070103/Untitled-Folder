@@ -372,7 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b71837b7b544c5e9755013f1c2dcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillManager
-  currentSkillType: 2
+  currentSkillType: 0
 --- !u!114 &38960031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -971,15 +971,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb984b9659922422289d138524dd1324, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillTimeControl
-  skillName: 
-  description: 
+  skillName: TimeControl
+  description: Creates a domain that slows down enemies and enemy projectiles within
+    its area
   evolutions: []
-  upgrades: []
+  upgrades:
+  - upgradeName: TemporalFreeze
+    description: Enemies within the field are immobilized
+    unlocked: 0
+  - upgradeName: HuntingTime
+    description: Killing enemies during the skill extends its duration
+    unlocked: 0
+  - upgradeName: SynchronizedField
+    description: "The field follows the player\u2019s movement"
+    unlocked: 0
+  - upgradeName: TemporalCorrosion
+    description: Enemies within the field take continuous damage over time
+    unlocked: 0
+  - upgradeName: PrecisionTargeting
+    description: The first attack against each enemy during the skill deals increased
+      damage
+    unlocked: 0
   cooldown: 3
   skillDuration: 3
   domainPrefab: {fileID: 8066122577892052930, guid: df04f63a1809d442482117ff6dbc340b, type: 3}
   maxSize: 20
   slowDownPercentage: 0.8
+  bonusDuration: 1
+  damageMultiplier: 2
 --- !u!114 &185028334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4207,6 +4226,10 @@ PrefabInstance:
     - target: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_Name
       value: EnemySkeleton
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587777559165797030, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
+      propertyPath: maxHP.baseValue
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 5939796045182456773, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_LocalPosition.x
