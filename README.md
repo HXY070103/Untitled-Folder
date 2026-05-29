@@ -355,7 +355,7 @@ Records all damage dealt during the skill and converts it into healing after the
 | Upgrade Name | Rarity | Effect |
 |---|---|---|
 | Unshakable Resolve | Rare | If the player takes fatal damage during the skill, instantly restore 20% max HP, but cannot heal after the skill ends |
-| Stable Gain | Uncommon | Gradually restores HP in real time during the skill |
+| Stable Gain | Uncommon | Restores HP over time during the skill, but cannot heal after the skill ends |
 | Desperate Gambit | Uncommon | Damage conversion ratio increases as HP decreases during the skill |
 | Blood Growth | Common | If post-skill healing exceeds 20% max HP, permanently increases max HP |
 | Blood Frenzy | Common | Increases damage taken during the skill, but also increases damage and attack speed |
