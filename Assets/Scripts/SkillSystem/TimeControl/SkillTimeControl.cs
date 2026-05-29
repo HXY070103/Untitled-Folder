@@ -8,6 +8,7 @@ public class SkillTimeControl : SkillBase {
     [SerializeField] private GameObject domainPrefab;
     [SerializeField] private float maxSize = 20;
     [SerializeField] private float slowDownPercentage = 0.8f;
+    [Space]
     [SerializeField] private float bonusDuration = 1;
     [SerializeField] private float damageMultiplier = 2;
 
@@ -18,7 +19,7 @@ public class SkillTimeControl : SkillBase {
     }
 
     public float GetSlowDownPercentage() {
-        if (UnLocked("TemporalFreeze")) {
+        if (UnLocked("Temporal Freeze")) {
             return 1;
         }
 
@@ -31,11 +32,11 @@ public class SkillTimeControl : SkillBase {
 
         CreateDomain();
 
-        if (UnLocked("HuntingTime")) {
+        if (UnLocked("Hunting Time")) {
             EnemyHealth.OnEnemyDeath += ExtendSkillDuration;
         }
 
-        if (UnLocked("PrecisionTargeting")) {
+        if (UnLocked("Precision Targeting")) {
             OnSetFirstAttack?.Invoke(damageMultiplier);
         }
     }
@@ -45,11 +46,11 @@ public class SkillTimeControl : SkillBase {
 
         DestroyDomain();
 
-        if (UnLocked("HuntingTime")) {
+        if (UnLocked("Hunting Time")) {
             EnemyHealth.OnEnemyDeath -= ExtendSkillDuration;
         }
 
-        if (UnLocked("PrecisionTargeting")) {
+        if (UnLocked("Precision Targeting")) {
             OnResetFirstAttack?.Invoke();
         }
     }

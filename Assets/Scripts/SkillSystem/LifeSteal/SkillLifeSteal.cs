@@ -10,11 +10,24 @@ public class SkillLifeSteal : SkillBase {
     [SerializeField] private float minFireballGenerationRadius = 1.5f;
     [SerializeField] private float maxFireballGenerationRadius = 2;
     [SerializeField] private int fireballAmount = 5;
+    [Space]
+    [SerializeField] private float reviveHPMultiplier = 0.2f;
+    [SerializeField] private float maxConversionRate = 2;
+    [SerializeField] private float healingHPThreshold = 0.2f;
+    [SerializeField] private float bonusMaxHP = 10;
 
-    private float totalDamage;
+    private float totalHealingHP;
     private GameObject fireVFX;
 
-    public float ConversionRate => conversionRate * stats.GetSkillEffect();
+    public float GetConversionRate() {
+        if (UnLocked("Desperate Gambit")) {
+            float bonusConversionRate = 
+                (maxConversionRate - conversionRate) * (1 - health.GetHPPercentage());
+            return conversionRate + bonusConversionRate;
+        }
+
+        return conversionRate * stats.GetSkillEffect();
+    }
 
     protected override void Awake() {
         base.Awake();
@@ -27,6 +40,10 @@ public class SkillLifeSteal : SkillBase {
 
         StartAccumulateDamage();
         CreatFireVFX();
+
+        if (UnLocked("Unshakable Resolve")) {
+            health.StartDeathPrevention(reviveHPMultiplier);
+        }
     }
 
     protected override void EndSkill() {
@@ -34,13 +51,31 @@ public class SkillLifeSteal : SkillBase {
 
         EndAccumulateDamage();
         DestroyFireVFX();
-        CreateFireball();
+
+        if (!UnLocked("Unshakable Resolve") && !UnLocked("Stable Gain")) {
+            CreateFireball();
+        }
+
+        if (UnLocked("Unshakable Resolve")) {
+            health.EndDeathPrevention();
+        }
+
+        if (UnLocked("Blood Growth")) {
+            HandleMaxHPIncrease();
+        }
+
+        Debug.Log(stats.GetMaxHP());
     }
 
-    public void Healing() {
-        float totalHealingHP = totalDamage * ConversionRate;
+    public void HealingAtEnd() {
         float healingHP = totalHealingHP / fireballAmount;
         health.Healing(healingHP);
+    }
+
+    private void HandleMaxHPIncrease() {
+        if (totalHealingHP > stats.GetMaxHP() * healingHPThreshold) {
+            health.IncreaseMaxHP(bonusMaxHP, "BloodGrowth");
+        }
     }
 
     private void CreateFireball() {
@@ -78,7 +113,7 @@ public class SkillLifeSteal : SkillBase {
     }
 
     private void StartAccumulateDamage() {
-        totalDamage = 0;
+        totalHealingHP = 0;
         EnemyHealth.OnDamageTaken += AccumulateDamage;
     }
 
@@ -87,6 +122,11 @@ public class SkillLifeSteal : SkillBase {
     }
 
     private void AccumulateDamage(float damage) {
-        totalDamage += damage;
+        float healingHP = damage * GetConversionRate();
+        totalHealingHP += healingHP;
+
+        if (UnLocked("Stable Gain")) {
+            health.Healing(healingHP);
+        }
     }
 }

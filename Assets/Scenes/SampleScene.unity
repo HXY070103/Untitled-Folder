@@ -372,7 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b71837b7b544c5e9755013f1c2dcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillManager
-  currentSkillType: 0
+  currentSkillType: 1
 --- !u!114 &38960031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -974,19 +974,19 @@ MonoBehaviour:
   description: Creates a domain that slows down enemies and enemy projectiles within
     its area
   upgrades:
-  - upgradeName: TemporalFreeze
+  - upgradeName: Temporal Freeze
     description: Enemies within the field are immobilized
     unlocked: 0
-  - upgradeName: HuntingTime
+  - upgradeName: Hunting Time
     description: Killing enemies during the skill extends its duration
     unlocked: 0
-  - upgradeName: SynchronizedField
+  - upgradeName: Synchronized Field
     description: "The field follows the player\u2019s movement"
     unlocked: 0
-  - upgradeName: TemporalCorrosion
+  - upgradeName: Temporal Corrosion
     description: Enemies within the field take continuous damage over time
     unlocked: 0
-  - upgradeName: PrecisionTargeting
+  - upgradeName: Precision Targeting
     description: The first attack against each enemy during the skill deals increased
       damage
     unlocked: 0
@@ -1013,12 +1013,21 @@ MonoBehaviour:
   description: heal yourself after the skill end. the more damage you make, the higher
     healing amount you have
   upgrades:
-  - upgradeName: blood fight
-    description: the lower HP, the higher damage
-    unlocked: 1
-  - upgradeName: blood fight
-    description: the lower HP, the higher damage
-    unlocked: 1
+  - upgradeName: Unshakable Resolve
+    description: If the player takes fatal damage during the skill, instantly restore
+      20% max HP, but cannot heal after the skill ends
+    unlocked: 0
+  - upgradeName: Stable Gain
+    description: Restores HP over time during the skill, but cannot heal after the
+      skill ends
+    unlocked: 0
+  - upgradeName: Desperate Gambit
+    description: Damage conversion ratio increases as HP decreases during the skill
+    unlocked: 0
+  - upgradeName: Blood Growth
+    description: If post-skill healing exceeds 20% max HP, permanently increases
+      max HP
+    unlocked: 0
   cooldown: 3
   skillDuration: 3
   fireVFXPrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
@@ -1027,6 +1036,10 @@ MonoBehaviour:
   minFireballGenerationRadius: 1.5
   maxFireballGenerationRadius: 2
   fireballAmount: 5
+  reviveHPMultiplier: 0.2
+  maxConversionRate: 2
+  healingHPThreshold: 0.2
+  bonusMaxHP: 10
 --- !u!1 &185166898
 GameObject:
   m_ObjectHideFlags: 0
@@ -4212,11 +4225,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3190096842149579963, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3190096842149579963, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_Name
@@ -4224,11 +4237,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4587777559165797030, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: maxHP.baseValue
       value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4587777559165797030, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
+      propertyPath: damage.baseValue
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5939796045182456773, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_LocalPosition.x

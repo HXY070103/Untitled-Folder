@@ -14,7 +14,7 @@ public class Domain : MonoBehaviour {
         targetScale = Vector3.one * domainManager.GetMaxSize();
         isShrinking = false;
 
-        if (domainManager.UnLocked("SynchronizedField")) {
+        if (domainManager.UnLocked("Synchronized Field")) {
             transform.SetParent(domainManager.transform);
         }
     }
@@ -44,7 +44,7 @@ public class Domain : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision) {
         StartSlowDown(collision);
 
-        if (domainManager.UnLocked("TemporalCorrosion")) {
+        if (domainManager.UnLocked("Temporal Corrosion")) {
             ApplyDomainDamage(collision);
         }
     }
@@ -52,7 +52,7 @@ public class Domain : MonoBehaviour {
     private void OnTriggerExit2D(Collider2D collision) {
         EndSlowDown(collision);
 
-        if (domainManager.UnLocked("TemporalCorrosion")) {
+        if (domainManager.UnLocked("Temporal Corrosion")) {
             EndDomainDamage(collision);
         }
     }
