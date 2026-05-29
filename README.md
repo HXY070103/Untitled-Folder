@@ -212,6 +212,8 @@ Transition bewteen states:
 
 ![FSM Diagram](Images/StateTransition.png)
 
+---
+
 ## Attribute Stats
 
 ### Resource Stats
@@ -282,6 +284,8 @@ finalDamage = producedDamage \times (1 - damageMitigation)
   - Enhances overall skill efficiency and scaling.
   - Gives +0.2 Skill Effectiveness.
 
+---
+
 ## Skill System
 
 The player begins the game by selecting one of three core skills:
@@ -296,19 +300,7 @@ Each skill defines a distinct playstyle and has its own augment paths and scalin
 
 [Q] is used as the primary skill activation input.
 
-### Skill Overview
-
-#### Time Control
-- Core Experience: Make enemies and projectiles slow down
-- Feature: Safe area control and battlefield pacing manipulation
-
-#### Life Steal
-- Core Experience: The more dangerous the situation, the more aggressive you become by converting damage dealt into healing
-- Feature: Risk-based survival and low-HP counterplay
-
-#### Phase
-- Core Experience: Use precise dodges to trigger devastating counterattacks
-- Feature: Combines burst damage with high-skill evasion timing
+___
 
 ### Time Control
 
@@ -343,6 +335,8 @@ Creates a domain that slows down enemies and enemy projectiles within its area.
 | Low Temperature Domain *(Mutually Exclusive with Compression Field)* | Skill decay only reduces duration |
 | Compression Domain *(Mutually Exclusive with Low Temperature Field)* | Skill decay only reduces slow strength and domain range |
 
+---
+
 ### Life Steal
 
 #### Skill Effect
@@ -374,6 +368,8 @@ Records all damage dealt during the skill and converts it into healing after the
 | Blood Reparation | If sufficient damage is dealt during the skill, no skill decay is gained for that activation |
 | War Discipline *(Mutually Exclusive with Bloodlust)* | Skill decay no longer reduces duration |
 | Blood Pact *(Mutually Exclusive with War Discipline)* | Skill decay no longer reduces healing conversion ratio |
+
+---
 
 ### Phase
 
