@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Player : Entity {
     public static event Action OnPlayerDeath;
+
     public PlayerInputSet input { get; private set; }
+    public PlayerVFX vfx { get; private set; }
+    public PlayerSkillManager skillManager { get; private set; }
+    public PlayerStats stats { get; private set; }
+    public EntityHealth health { get; private set; }
 
     public PlayerIdleState idleState { get; private set; }
     public PlayerMoveState moveState { get; private set; }
@@ -17,27 +22,35 @@ public class Player : Entity {
     public PlayerJumpAttackState jumpAttackState { get; private set; }
     public PlayerDeadState deadState { get; private set;}
     public PlayerCounterAttackState counterAttackState { get; private set; }
+    public PlayerHeavyAttackState heavyAttackState { get; private set; }
 
     [Header("Attack info")]
-    public Vector2 jumpAttackSpeed;
+    public Vector2 heavyAttackSpeed = new Vector2(5, 1.5f);
+    public Vector2 jumpAttackSpeed = new Vector2(5, -6);
     public Vector2[] attackSpped;
-    public float attackMovementDuration;
-    public float comboResetTime;
-     
+    public float attackMovementDuration = 0.1f;
+    public float comboResetTime = 0.5f;
+    
     private Coroutine queueAttackCo;
+    private bool isHeavyAttack = false;
+    private bool canAttack = true;
+    private Coroutine lockAttackCo;
+
+    public bool IsHeavyAttack => isHeavyAttack;
+    public bool CanAttack => canAttack;
 
     [Header("Movement info")]
-    public float moveSpeed;
-    public float jumpSpeed;
-    public Vector2 wallJumpSpeed;
+    public float moveSpeed = 8;
+    public float jumpSpeed = 12;
+    public Vector2 wallJumpSpeed = new Vector2(6, 12);
     [Range(0, 1)]
-    public float inAirMoveMultiplier;
+    public float inAirMoveMultiplier = 0.8f;
     [Range(0, 1)]
-    public float wallSlideMultiplier;
+    public float wallSlideMultiplier = 0.7f;
 
     [Space]
-    public float dashDuration;
-    public float dashSpeed;
+    public float dashDuration = 0.25f;
+    public float dashSpeed = 20;
 
     public Vector2 moveInput { get; private set; }
 
@@ -45,6 +58,10 @@ public class Player : Entity {
         base.Awake();
 
         input = new PlayerInputSet();
+        stats = GetComponent<PlayerStats>();
+        health = GetComponent<EntityHealth>();
+        vfx = GetComponent<PlayerVFX>();
+        skillManager = GetComponent<PlayerSkillManager>();
 
         idleState = new PlayerIdleState(this, stateMachine, "Idle");
         moveState = new PlayerMoveState(this, stateMachine, "Move");
@@ -57,6 +74,7 @@ public class Player : Entity {
         jumpAttackState = new PlayerJumpAttackState(this, stateMachine, "JumpAttack");
         deadState = new PlayerDeadState(this, stateMachine, "Dead");
         counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
+        heavyAttackState = new PlayerHeavyAttackState(this, stateMachine, "HeavyAttack");
     }
 
     protected override void Start() {
@@ -73,6 +91,42 @@ public class Player : Entity {
         stateMachine.ChangeState(deadState);
     }
 
+    public float GetMoveSpeed() {
+        return moveSpeed * speedMultiplier;
+    }
+
+    public void SpeedUp(float speedUpPercentage) {
+        speedMultiplier = speedUpPercentage;
+        anim.speed = speedUpPercentage;
+    }
+
+    public void RecoverSpeed() {
+        speedMultiplier = 1;
+        anim.speed = 1;
+    }
+
+    public void SetNextAttackToHeavyAttack() {
+        isHeavyAttack = true;
+    }
+
+    public void ResetNextAttack() {
+        isHeavyAttack = false;
+    }
+
+    public void LockAttack(float duration) {
+        if (lockAttackCo != null) {
+            StopCoroutine(lockAttackCo);
+        }
+
+        lockAttackCo = StartCoroutine(LockAttackCo(duration));
+    }
+
+    private IEnumerator LockAttackCo(float duration) {
+        canAttack = false;
+        yield return new WaitForSeconds(duration);
+        canAttack = true;
+    }
+
     public void EnterBasicAttackStateWithDelay() {
         if (queueAttackCo != null) {
             StopCoroutine(queueAttackCo);
@@ -83,7 +137,7 @@ public class Player : Entity {
     
     private IEnumerator EnterBasicAttackStateWithDelayCo() {
         yield return new WaitForEndOfFrame();
-        stateMachine.ChangeState(basicAttackState); 
+        stateMachine.ChangeState(basicAttackState);
     }
 
     private void OnEnable() {

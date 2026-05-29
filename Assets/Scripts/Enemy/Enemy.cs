@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Enemy : Entity {
+public class Enemy : Entity, ISlowable{
     public EnemyIdleState idleState;
     public EnemyMoveState moveState;
     public EnemyAttackState attackState;
@@ -18,7 +18,6 @@ public class Enemy : Entity {
     [Header("Stunned info")]
     public Vector2 stunnedSpeed = new Vector2(7, 7);
     public float stunnedDuration = 1;
-    protected bool canBeStunned;
 
     [Header("Movement info")]
     public float idleDurarion = 2;
@@ -33,8 +32,34 @@ public class Enemy : Entity {
 
     public Transform player { get; private set; }
 
-    public void SetCounterWindow(bool enable) {
-        canBeStunned = enable;
+    private bool inAttackWindow = false;
+    public bool InAttackWindow => inAttackWindow;
+
+    public float GetBattleMoveSpeed() {
+        return battleMoveSpeed * speedMultiplier;
+    }
+
+    public float GetMoveSpeed() {
+        return moveSpeed * speedMultiplier;
+    }
+
+    public void SlowDown(float slowDownPercentage) {
+        float newSpeedMultiplier = 1 - slowDownPercentage;
+        speedMultiplier = newSpeedMultiplier;
+        anim.speed = newSpeedMultiplier;
+    }
+
+    public void RecoverSpeed() {
+        speedMultiplier = 1;
+        anim.speed = 1;
+    }
+
+    public void EnterAttackWindow() {
+        inAttackWindow = true;
+    }
+
+    public void ExitAttackWindow() {
+        inAttackWindow = false;
     }
 
     public override void EntityDeath() {
@@ -48,7 +73,8 @@ public class Enemy : Entity {
     }
 
     public void TryToEnterBattleState(Transform player) {
-        if (stateMachine.currentState == battleState || stateMachine.currentState == attackState) {
+        if (stateMachine.currentState == battleState 
+            || stateMachine.currentState == attackState) {
             return;
         }
 

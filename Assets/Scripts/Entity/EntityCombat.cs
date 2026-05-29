@@ -1,8 +1,8 @@
 using UnityEngine;
 
 public class EntityCombat : MonoBehaviour {
-    private EntityVFX entityVFX;
-    private EntityStats entityStats;
+    private EntityVFX vfx;
+    private EntityStats stats;
 
     [Header("Damage info")]
     public float damage = 10;
@@ -13,8 +13,8 @@ public class EntityCombat : MonoBehaviour {
     [SerializeField] private Transform targetCheck;
 
     private void Awake() {
-        entityVFX = GetComponent<EntityVFX>();
-        entityStats = GetComponent<EntityStats>();
+        vfx = GetComponent<EntityVFX>();
+        stats = GetComponent<EntityStats>();
     }
 
     public void PerformAttack() {
@@ -25,11 +25,11 @@ public class EntityCombat : MonoBehaviour {
                 continue;
             }
 
-            float damage = entityStats.GetDamage(out bool isCrit);
+            Damage damage = stats.GetDamage();
             damageable.TakeDamage(damage, transform);
 
-            if (entityVFX != null) {
-                entityVFX.CreateOnHitVFX(target.transform, isCrit);
+            if (!damageable.IsInvulnerable()) {
+                vfx.CreateOnHitVFX(target.transform, damage.isCrit);
             }
         }
     } 

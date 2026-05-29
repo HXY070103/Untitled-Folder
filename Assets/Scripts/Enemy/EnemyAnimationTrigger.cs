@@ -12,12 +12,12 @@ public class EnemyAnimationTrigger : EntityAnimationTrigger {
     }
 
     private void EnableCounterWindow() {
-        enemy.SetCounterWindow(true);
+        enemy.EnterAttackWindow();
         enemyVFX.SetAttackAlert(true);
     }
 
     private void DisableCounterWindow() {
-        enemy.SetCounterWindow(false);
+        enemy.ExitAttackWindow();
         enemyVFX.SetAttackAlert(false);
     }
 }

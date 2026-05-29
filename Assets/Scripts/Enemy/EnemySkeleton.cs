@@ -19,7 +19,7 @@ public class EnemySkeleton : Enemy, ICounterable {
     }
 
     public bool CanBeCountered() {
-        return canBeStunned;
+        return InAttackWindow;
     }
     
     public void HandleCounter() {

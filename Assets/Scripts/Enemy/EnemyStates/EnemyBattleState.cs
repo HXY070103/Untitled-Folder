@@ -32,15 +32,7 @@ public class EnemyBattleState : EnemyState {
             UpdateBattleTimer();
         }
 
-        if (BattleTimeIsOver()) {
-            stateMachine.ChangeState(enemy.idleState);
-        } else {
-            if (WithInAttackRange() && enemy.PlayerDetected()) {
-                stateMachine.ChangeState(enemy.attackState);
-            } else {
-                enemy.SetVelocity(DirectionToPlayer() * enemy.battleMoveSpeed, rb.linearVelocity.y);
-            }
-        }
+        HandleBattle();
     }
 
     public override void Exit() {
@@ -49,6 +41,21 @@ public class EnemyBattleState : EnemyState {
 
     private void UpdateBattleTimer() {
         lastTimeWasInBattle = Time.time;
+    }
+
+    private void HandleBattle() {
+        if (BattleTimeIsOver()) {
+            stateMachine.ChangeState(enemy.idleState);
+        } else {
+            if (WithInAttackRange() && enemy.PlayerDetected()) {
+                stateMachine.ChangeState(enemy.attackState);
+            } else {
+                enemy.SetVelocity(
+                        DirectionToPlayer() * enemy.GetBattleMoveSpeed(), 
+                        rb.linearVelocity.y
+                    );
+            }
+        }
     }
 
     private bool BattleTimeIsOver() {

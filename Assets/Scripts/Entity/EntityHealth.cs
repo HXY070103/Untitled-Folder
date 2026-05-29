@@ -1,15 +1,21 @@
 using UnityEngine.UI;
 using UnityEngine;
+using System;
+using System.Collections;
 
 public class EntityHealth : MonoBehaviour, IDamageable {
+    public event Action OnHealthUpdate;
+
     private Slider healthBar;
-    private EntityVFX entityVFX;
+    private EntityVFX vfx;
     private Entity entity;
-    private EntityStats entityStats;
+    protected EntityStats stats;
 
     [Header("Health info")]
     [SerializeField] protected bool isDead = false;
     [SerializeField] private float currentHP;
+
+    private bool isInvulnerable = false;
 
     [Header("On damage knockback info")]
     [SerializeField] private Vector2 onDamageKnockback = new Vector2(1.5f, 2.5f);
@@ -20,60 +26,133 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] private float heavyDamageThreshold = 0.3f;
     [SerializeField] private Vector2 onHeavyDamageKnockback = new Vector2(7, 7);
     [SerializeField] private float heavyKnockbackDuration = 0.5f;
-    
 
+    public bool miniHealthBarActive;
+
+    private Coroutine dotCo;
+    private bool isInDot = false;
+
+    private bool canRevival = false;
+    private float reviveHPMultiplier;
+    
     protected virtual void Awake() {
         healthBar = GetComponentInChildren<Slider>();
-        entityVFX = GetComponent<EntityVFX>();
+        vfx = GetComponent<EntityVFX>();
         entity = GetComponent<Entity>();
-        entityStats = GetComponent<EntityStats>();
+        stats = GetComponent<EntityStats>();
 
-        currentHP = entityStats.GetMaxHP();
+        currentHP = stats.GetMaxHP();
+        OnHealthUpdate += UpdateHealthBar;
         UpdateHealthBar();
     }
 
-    public virtual void TakeDamage(float damage, Transform damageDealer) {
-        if (isDead) {
+    public void EnterInvulnerableState() {
+        isInvulnerable = true;
+    }
+
+    public void ExitInvulnerableState() {
+        isInvulnerable = false;
+    }
+
+    public bool IsInvulnerable() {
+        return isInvulnerable;
+    }
+
+    public void StartDeathPrevention(float reviveHPMultiplier) {
+        canRevival = true;
+        this.reviveHPMultiplier = reviveHPMultiplier;
+    }
+
+    public void EndDeathPrevention() {
+        canRevival = false;
+    }
+
+    public void ApplyDot(float damage, float dotInterval) {
+        if (dotCo != null) {
+            StopCoroutine(dotCo);
+        }
+
+        isInDot = true;
+        dotCo = StartCoroutine(DotCo(damage, dotInterval));
+    }
+
+    public void EndDot() {
+        isInDot = false;
+    }
+
+    private IEnumerator DotCo(float damage, float dotInterval) {
+        while (isInDot) {
+            ReduceHP(damage);
+            vfx.PlayOnDamageVFX();
+            yield return new WaitForSeconds(dotInterval);
+        }
+    }
+ 
+    public virtual void TakeDamage(Damage damage, Transform damageDealer) {
+        if (isDead || isInvulnerable) {
             return;
         }
 
-        float mitigation = entityStats.GetArmorMitigation();
-        float finalDamage = damage * (1 - mitigation);
+        float finalDamage = CalculateFinalDamage(damage);
+        ReduceHP(finalDamage);
 
         Vector2 knockback = CalculateKnockback(finalDamage, damageDealer);
         float duration = CalculateDuration(finalDamage);
+        entity.ReceiveKnockback(knockback, duration);
 
-        if (entity != null) {
-            entity.ReceiveKnockback(knockback, duration);
+        vfx.PlayOnDamageVFX();
+    }
+
+    private float CalculateFinalDamage(Damage damage) {
+        float mitigation = stats.GetArmorMitigation();
+        return damage.value * (1 - mitigation);
+    }
+
+    public void IncreaseMaxHP(float bonusMaxHP, string source) {
+        stats.maxHP.AddModifier(bonusMaxHP, source);
+        OnHealthUpdate?.Invoke();
+    }
+
+    public void Healing(float healingHP) {
+        currentHP += healingHP;
+
+        if (currentHP > stats.GetMaxHP()) {
+            currentHP = stats.GetMaxHP();
         }
-
-        if (entityVFX != null) {
-            entityVFX.PlayOnDamageVFX();
-        }
-
-        ReduceHP(finalDamage);
+        OnHealthUpdate?.Invoke();
     }
 
     protected void ReduceHP(float damage) {
         currentHP -= damage;
-        UpdateHealthBar();
-        
+        OnHealthUpdate?.Invoke();
         if (currentHP <= 0) {
             Die();
         }
+        
     }
 
     private void Die() {
+        if (canRevival) {
+            currentHP = stats.GetMaxHP() * reviveHPMultiplier;
+            OnHealthUpdate?.Invoke();
+            canRevival = false;
+            return;
+        }
+
         isDead = true;
         entity.EntityDeath();
     }
 
     private void UpdateHealthBar() {
-        if (healthBar == null) {
+        if (healthBar == null && healthBar.gameObject.activeSelf) {
             return;
         }
 
-        healthBar.value = currentHP / entityStats.GetMaxHP();
+        healthBar.value = currentHP / stats.GetMaxHP();
+    }
+
+    public void EnableHealthBar(bool enable) {
+        healthBar?.gameObject.SetActive(enable);
     }
 
     private Vector2 CalculateKnockback(float damage, Transform damageDealer) {
@@ -88,7 +167,15 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     private bool IsHeavyDamage(float damage) {
-        float healthPercentageTaken = damage / entityStats.GetMaxHP();
+        float healthPercentageTaken = damage / stats.GetMaxHP();
         return healthPercentageTaken > heavyDamageThreshold;
+    }
+
+    public float GetCurrentHP() {
+        return currentHP;
+    }
+
+    public float GetHPPercentage() {
+        return currentHP / stats.GetMaxHP();
     }
 }

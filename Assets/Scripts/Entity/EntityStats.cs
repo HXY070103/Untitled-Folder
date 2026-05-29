@@ -3,7 +3,7 @@ using UnityEngine;
 public class EntityStats : MonoBehaviour {
     public StatSetupSO defaultStatSetup;
 
-    [Header("Resources")]
+    [Header("Resource")]
     public Stat maxHP;
 
     [Header("Offense")]
@@ -19,11 +19,12 @@ public class EntityStats : MonoBehaviour {
         return maxHP.GetValue();
     }
 
-    public float GetDamage(out bool isCrit) {
+    public Damage GetDamage() {
         float chance = Mathf.Clamp(critChance.GetValue(), 0, 85);
-        isCrit = Random.Range(0, 100) < chance;
+        bool isCrit = Random.Range(0, 100) < chance;
+        float finalDamage = isCrit ? damage.GetValue() * critPower.GetValue() : damage.GetValue();
 
-        return isCrit ? damage.GetValue() * critPower.GetValue() : damage.GetValue();
+        return new Damage(finalDamage, isCrit);
     }
 
     public float GetArmorMitigation() {

@@ -23,7 +23,7 @@ public class Stat {
         this.baseValue = baseValue;
     }
 
-    public void addModifier(float value, string source) {
+    public void AddModifier(float value, string source) {
         StatModifier modToAdd = new StatModifier(value, source);
         modifiers.Add(modToAdd);
         needToCalculate = true;
@@ -34,7 +34,7 @@ public class Stat {
         needToCalculate = true;
     }
 
-    private float GetFinalValue() {
+    public float GetFinalValue() {
         float finalValue = baseValue;
 
         foreach (var mod in modifiers) {

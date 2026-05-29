@@ -3,6 +3,8 @@ using UnityEngine;
 public abstract class PlayerState : EntityState{
     protected Player player;
     protected PlayerInputSet input;
+    protected PlayerVFX vfx;
+    protected PlayerSkillManager skillManager;
 
     public PlayerState(Player player, StateMachine stateMachine, string animBoolName) 
         : base(stateMachine, animBoolName) {
@@ -11,17 +13,23 @@ public abstract class PlayerState : EntityState{
         anim = player.anim;
         rb = player.rb;
         input = player.input;
+        vfx = player.vfx;
+        skillManager = player.skillManager;
     }
 
     public override void Enter() {
         base.Enter();
     }
 
-    public override void Update() {
+    public override void Update() { 
         base.Update();
 
         if (input.Player.Dash.WasPressedThisFrame() && CanDash()) {
             stateMachine.ChangeState(player.dashState);
+        }
+
+        if (input.Player.Skill.WasPressedThisFrame()) {
+            skillManager.HandleSkill();
         }
     }
 

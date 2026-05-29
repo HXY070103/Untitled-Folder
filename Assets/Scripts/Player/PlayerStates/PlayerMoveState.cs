@@ -15,7 +15,7 @@ public class PlayerMoveState : PlayerGroundedState {
             stateMachine.ChangeState(player.idleState);
         }
 
-        player.SetVelocity(player.moveInput.x * player.moveSpeed, rb.linearVelocity.y);
+        player.SetVelocity(player.moveInput.x * player.GetMoveSpeed(), rb.linearVelocity.y);
     }
 
     public override void Exit() {
