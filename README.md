@@ -1,3 +1,155 @@
+# Evolve or Fall
+
+**Evolve or Fall** is a 2D action roguelite game developed with Unity.
+
+The title reflects the core idea of the game: the player can become stronger by exploring more rooms, but the Boss will also grow stronger at the same time. Every choice affects the final fight.
+
+> You grow. The Boss grows. Every choice shapes the fight.
+
+---
+
+## Short Introduction
+
+**Evolve or Fall** is a fast-paced 2D action roguelite game inspired by games such as *BlazBlue Entropy Effect*. The game focuses on action combat, build-making, and meaningful risk-reward decisions.
+
+At the start of each run, the player chooses one combat style: **Time Control**, **Life Steal**, or **Phase**. Each style has its own core skill, upgrade options, and evolution paths.
+
+During the run, the player can choose to fight the Boss directly or explore more rooms to gain more upgrades, purification chances, and evolutions. However, every extra room also makes the Boss stronger. This means the player must decide whether to challenge the Boss early or take the risk of becoming stronger while also empowering the Boss.
+
+---
+
+## Core Features
+
+### Three Combat Skill
+
+The game includes three different combat skills. Each skill gives the player a different way to fight and survive.
+
+#### Time Control
+
+Time Control slows down enemies and projectiles, giving the player more time to dodge, aim, and attack.
+
+Main ideas:
+
+- Slow enemies
+- Slow projectiles
+- Create openings for attacks
+- Control the pace of combat
+
+#### Life Steal
+
+Life Steal allows the player to recover health by dealing damage. This style encourages aggressive and risky combat.
+
+Main ideas:
+
+- Deal damage to recover health
+- Fight more aggressively
+- Survive dangerous situations
+- Become stronger when taking risks
+
+#### Phase
+
+Phase allows the player to become temporarily untouchable, avoid attacks, and strike back with a powerful counterattack.
+
+Main ideas:
+
+- Avoid enemy attacks
+- Become temporarily untouchable
+- Create counterattack chances
+- Reward precise timing
+
+The more details about the three skills will be introduced later.
+
+---
+
+### Skill Decay System
+
+Each combat style has a core skill that can be used repeatedly. However, every use increases the skill decay level, making the skill weaker over time.
+
+This creates an important decision during combat:
+
+- Use the skill now to survive.
+- Save the skill strength for a harder fight later.
+
+The player can reduce skill decay by clearing rooms or choosing purification rewards. This system prevents the player from using powerful skills without thinking and makes every skill activation more meaningful.
+
+Example:
+
+| Decay Level | Skill Effect |
+|---|---|
+| 0 | 100% |
+| 1 | 85% |
+| 2 | 70% |
+| 3 | 55% |
+| 4 | 40% |
+| 5+ | 30% |
+
+Ways to reduce decay:
+
+| Method | Effect |
+|---|---|
+| Clear Room | -1 Decay |
+| Purify | -2 Decay |
+
+---
+
+### Boss Growth System
+
+Before fighting the Boss, the player can choose to enter more normal or elite rooms. These rooms can give the player more upgrades or purification.
+
+However, every extra room also strengthens the Boss. The Boss may gain:
+
+- More health
+- Higher damage
+- Faster attacks
+- Stronger abilities
+
+This creates the main risk-reward loop of the game:
+
+> The player becomes stronger, but the Boss also evolves.
+
+---
+
+### Upgrade, Purification, and Evolution
+
+After clearing rooms, the player can receive different types of rewards.
+
+#### Upgrades
+
+Upgrades improve the player's current combat style. The player usually chooses one upgrade from several options.
+
+#### Purification
+
+Purification reduces skill decay. Choosing purification can help the player keep their core skill powerful, but it may also mean giving up an upgrade.
+
+The player must choose rewards based on their current health, skill decay level, combat style, and the strength of the upcoming Boss.
+
+---
+
+## Gameplay Overview
+
+In each run, the player begins by choosing one combat skill. After that, the player enters combat rooms, defeats enemies, and collects rewards to improve their build.
+
+The player needs to manage two things at the same time: their own growth and the Boss's growth. Exploring more rooms gives the player more chances to become stronger, but it also makes the Boss more dangerous.
+
+A typical run follows this structure:
+
+1. Choose a combat skill.
+2. Enter normal or elite combat rooms.
+3. Defeat enemies and collect rewards.
+4. Manage skill decay through careful skill usage and purification.
+5. Decide whether to continue exploring or fight the Boss.
+6. Challenge the Boss before it becomes too powerful.
+
+The game is designed to make every decision matter. Players must think carefully about when to use their core skill, which rewards to choose, and when to stop exploring and face the Boss.
+
+---
+
+## Built With
+
+- Unity
+- C#
+- GitHub
+
 ## Character Controller
 
 The player controller is implemented using a finite state machine (FSM) architecture.
