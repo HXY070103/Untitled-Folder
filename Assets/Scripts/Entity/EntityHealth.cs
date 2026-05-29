@@ -31,6 +31,9 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     private Coroutine dotCo;
     private bool isInDot = false;
+
+    private bool canRevival = false;
+    private float reviveHPMultiplier;
     
     protected virtual void Awake() {
         healthBar = GetComponentInChildren<Slider>();
@@ -53,6 +56,15 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public bool IsInvulnerable() {
         return isInvulnerable;
+    }
+
+    public void StartDeathPrevention(float reviveHPMultiplier) {
+        canRevival = true;
+        this.reviveHPMultiplier = reviveHPMultiplier;
+    }
+
+    public void EndDeathPrevention() {
+        canRevival = false;
     }
 
     public void ApplyDot(float damage, float dotInterval) {
@@ -96,6 +108,11 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         return damage.value * (1 - mitigation);
     }
 
+    public void IncreaseMaxHP(float bonusMaxHP, string source) {
+        stats.maxHP.AddModifier(bonusMaxHP, source);
+        OnHealthUpdate?.Invoke();
+    }
+
     public void Healing(float healingHP) {
         currentHP += healingHP;
 
@@ -115,6 +132,13 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     private void Die() {
+        if (canRevival) {
+            currentHP = stats.GetMaxHP() * reviveHPMultiplier;
+            OnHealthUpdate?.Invoke();
+            canRevival = false;
+            return;
+        }
+
         isDead = true;
         entity.EntityDeath();
     }

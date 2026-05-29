@@ -23,7 +23,7 @@ public class Stat {
         this.baseValue = baseValue;
     }
 
-    public void addModifier(float value, string source) {
+    public void AddModifier(float value, string source) {
         StatModifier modToAdd = new StatModifier(value, source);
         modifiers.Add(modToAdd);
         needToCalculate = true;

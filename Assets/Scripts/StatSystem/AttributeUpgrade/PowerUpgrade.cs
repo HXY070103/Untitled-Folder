@@ -10,7 +10,7 @@ public class PowerUpgrage : AttributeUpgrade {
     public override void ApplyUpgrade() {
         base.ApplyUpgrade();
 
-        stats.damage.addModifier(bonusDamage, name);
+        stats.damage.AddModifier(bonusDamage, name);
     }
 
     public override List<AttributeUpgradeDisplay> GetDisplayEffects()

@@ -47,7 +47,7 @@ public class PlayerJumpAttackState : PlayerState {
     private void IncreaseDamage(float damageMultiplier) {
         float baseDamage = player.stats.damage.GetValue();
         float bonusDamage = baseDamage * (damageMultiplier - 1);
-        player.stats.damage.addModifier(bonusDamage, "HeavyAttack");
+        player.stats.damage.AddModifier(bonusDamage, "HeavyAttack");
     }
 
     private void ResetDamage() {

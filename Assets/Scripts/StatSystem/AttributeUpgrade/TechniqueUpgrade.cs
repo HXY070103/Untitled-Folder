@@ -9,7 +9,7 @@ public class TechniqueUpgrade : AttributeUpgrade {
     public override void ApplyUpgrade() {
         base.ApplyUpgrade();
         
-        stats.skillEffect.addModifier(bonusSkillEffect, name);
+        stats.skillEffect.AddModifier(bonusSkillEffect, name);
     }
     public override List<AttributeUpgradeDisplay> GetDisplayEffects()
     {

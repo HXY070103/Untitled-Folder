@@ -12,8 +12,8 @@ public class VatalityUpgrade : AttributeUpgrade {
     public override void ApplyUpgrade() {
         base.ApplyUpgrade();
 
-        stats.maxHP.addModifier(bonusMaxHP, name);
-        stats.armor.addModifier(bonusArmor, name);
+        stats.maxHP.AddModifier(bonusMaxHP, name);
+        stats.armor.AddModifier(bonusArmor, name);
     }
     public override List<AttributeUpgradeDisplay> GetDisplayEffects()
     {
