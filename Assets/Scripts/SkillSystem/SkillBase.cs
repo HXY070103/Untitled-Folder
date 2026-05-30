@@ -81,6 +81,16 @@ public class SkillBase : MonoBehaviour {
         return Time.time < lastTimeUsed + cooldown;
     }
 
+    public float GetCurrentCooldown()
+    {
+        return cooldown - (Time.time - lastTimeUsed);
+    }
+
+    public float GetMaxCooldown()
+    {
+        return cooldown;
+    }
+
     //当玩家获得强化时调用：currentSkill.UnlockSkillUpgrade("Blood Fight");
     //upgradePanel.SetCurrentSkill(currentSkill);
     public void UnlockSkillUpgrade(string upgradeName)
