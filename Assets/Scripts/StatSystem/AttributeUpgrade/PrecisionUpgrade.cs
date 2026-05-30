@@ -11,8 +11,8 @@ public class PrecisionUpgrade : AttributeUpgrade {
     public override void ApplyUpgrade() {
         base.ApplyUpgrade();
         
-        stats.critPower.addModifier(bonusCritPower, name);
-        stats.critChance.addModifier(bonusCritChance, name);
+        stats.critPower.AddModifier(bonusCritPower, name);
+        stats.critChance.AddModifier(bonusCritChance, name);
     }
     public override List<AttributeUpgradeDisplay> GetDisplayEffects()
     {

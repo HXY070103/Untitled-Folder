@@ -30,7 +30,7 @@ public class FireballController : MonoBehaviour {
             transform.position = 
                 Vector3.Lerp(transform.position, targetPosition, chaseSpeed * Time.deltaTime);
         } else {
-            fireballManager.Healing();
+            fireballManager.HealingAtEnd();
             Destroy(gameObject);
         }
     }
