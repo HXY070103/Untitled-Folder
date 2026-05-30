@@ -43,4 +43,13 @@ public class PlayerStats : EntityStats {
 
         skillEffect.SetBaseValue(defaultStatSetup.skillEffect);
     }
+
+    private void Update()
+{
+    if (Input.GetKeyDown(KeyCode.Alpha1))
+    {
+        addUpgrade(AttributeUpgrageType.Vatality);
+        Debug.Log("Added Vatality Upgrade");
+    }
+}
 }
