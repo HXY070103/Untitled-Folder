@@ -243,12 +243,13 @@ MonoBehaviour:
   secondaryWallCheck: {fileID: 1486967556}
   heavyAttackSpeed: {x: 10, y: 1.5}
   jumpAttackSpeed: {x: 5, y: -6}
-  attackSpped:
+  attackSpeed:
   - {x: 3, y: 1.5}
   - {x: 1, y: 2.5}
   - {x: 4, y: 5}
   attackMovementDuration: 0.1
   comboResetTime: 0.5
+  attackAnimSpeedMultiplier: 1
   moveSpeed: 8
   jumpSpeed: 12
   wallJumpSpeed: {x: 6, y: 12}
@@ -440,6 +441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   isDead: 0
   currentHP: 0
+  isOnShotKillable: 0
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -948,12 +950,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 586c9b935fc6a4468bbaaa505b6feff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillPhase
-  skillName: 
-  description: 
-  upgrades: []
+  skillName: Phase
+  description: Enter a phased state where the next attack becomes a heavy strike.
+    During the phase state, the player is immune to damage and gains increased movement
+    speed. If the player attacks, the phase state ends immediately. If the player
+    times the phase just before an enemy attack, a perfect phase is triggered.
+  upgrades:
+  - upgradeName: Shadow Assassination
+    description: Converts heavy strike into a lethal strike
+    unlocked: 0
+  - upgradeName: Weakness Marking
+    description: Passing through enemies during phase reduces their damage and armor
+    unlocked: 1
   cooldown: 3
   skillDuration: 3
-  damageMultiplier: 10
+  phaseTrackerPrefab: {fileID: 6660558275766549021, guid: 91ac758a1168f48fbbc4f2bdde2f770c, type: 3}
+  damageMultiplier: 3
   speedUpPercentage: 1.5
   lockAttackDuration: 0.5
   perfectPhaseWindow: 0.2
@@ -972,7 +984,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SkillTimeControl
   skillName: TimeControl
   description: Creates a domain that slows down enemies and enemy projectiles within
-    its area
+    its area.
   upgrades:
   - upgradeName: Temporal Freeze
     description: Enemies within the field are immobilized
@@ -1010,8 +1022,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillLifeSteal
   skillName: life steal
-  description: heal yourself after the skill end. the more damage you make, the higher
-    healing amount you have
+  description: heal yourself after the skill end. The more damage you make, the higher
+    healing amount you have.
   upgrades:
   - upgradeName: Unshakable Resolve
     description: If the player takes fatal damage during the skill, instantly restore
@@ -1028,6 +1040,10 @@ MonoBehaviour:
     description: If post-skill healing exceeds 20% max HP, permanently increases
       max HP
     unlocked: 0
+  - upgradeName: Blood Frenzy
+    description: Increases damage taken during the skill, but also increases damage
+      and attack speed
+    unlocked: 0
   cooldown: 3
   skillDuration: 3
   fireVFXPrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
@@ -1040,6 +1056,9 @@ MonoBehaviour:
   maxConversionRate: 2
   healingHPThreshold: 0.2
   bonusMaxHP: 10
+  damageTakenMultiplier: 2
+  damageApplyMultiplier: 2
+  attackAnimSpeedMultiplier: 1.5
 --- !u!1 &185166898
 GameObject:
   m_ObjectHideFlags: 0
@@ -4578,18 +4597,6 @@ PrefabInstance:
     - target: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_Name
       value: EnemySkeleton
-      objectReference: {fileID: 0}
-    - target: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4587777559165797030, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
-      propertyPath: maxHP.baseValue
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 4587777559165797030, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
-      propertyPath: damage.baseValue
-      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5939796045182456773, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_LocalPosition.x

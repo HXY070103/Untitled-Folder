@@ -24,11 +24,21 @@ public class EntityStats : MonoBehaviour {
         bool isCrit = Random.Range(0, 100) < chance;
         float finalDamage = isCrit ? damage.GetValue() * critPower.GetValue() : damage.GetValue();
 
+        if (finalDamage < 5) {
+            finalDamage = 5;
+        }
+
         return new Damage(finalDamage, isCrit);
     }
 
     public float GetArmorMitigation() {
-        return armor.GetValue() / (armor.GetValue() + 100);
+        float finalMigitation = armor.GetValue() / (armor.GetValue() + 100);
+
+        if (finalMigitation < 0) {
+            finalMigitation = 0;
+        }
+
+        return finalMigitation;
     }
 
     [ContextMenu("Update Default Stat Setup")]

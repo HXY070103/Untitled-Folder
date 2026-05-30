@@ -468,6 +468,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   isDead: 0
   currentHP: 0
+  isOnShotKillable: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
