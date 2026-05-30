@@ -18,4 +18,6 @@ public class Chest : MonoBehaviour, IDamageable {
     public bool IsInvulnerable() {
         return false;
     }
+
+    public void TryApplyInstantKill() {}
 }

@@ -14,7 +14,8 @@ public class PlayerJumpAttackState : PlayerState {
 
         if (player.IsHeavyAttack) {
             phase.InterruptSkill();
-            IncreaseDamage(phase.DamageMultiplier);
+            IncreaseDamage();
+            HandleInstantKill();
         }
 
         touchedGround = false;
@@ -44,9 +45,15 @@ public class PlayerJumpAttackState : PlayerState {
         }
     }
 
-    private void IncreaseDamage(float damageMultiplier) {
+    private void HandleInstantKill() {
+        if (phase.UnLocked("Shadow Assassination")) {
+            player.combat.SetNextAttackToInstantKill();
+        }
+    }
+
+    private void IncreaseDamage() {
         float baseDamage = player.stats.damage.GetValue();
-        float bonusDamage = baseDamage * (damageMultiplier - 1);
+        float bonusDamage = baseDamage * (phase.GetDamageMultiplier() - 1);
         player.stats.damage.AddModifier(bonusDamage, "HeavyAttack");
     }
 

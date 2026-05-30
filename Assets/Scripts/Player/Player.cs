@@ -9,7 +9,8 @@ public class Player : Entity {
     public PlayerVFX vfx { get; private set; }
     public PlayerSkillManager skillManager { get; private set; }
     public PlayerStats stats { get; private set; }
-    public EntityHealth health { get; private set; }
+    public PlayerHealth health { get; private set; }
+    public PlayerCombat combat { get; private set; }
 
     public PlayerIdleState idleState { get; private set; }
     public PlayerMoveState moveState { get; private set; }
@@ -27,9 +28,10 @@ public class Player : Entity {
     [Header("Attack info")]
     public Vector2 heavyAttackSpeed = new Vector2(5, 1.5f);
     public Vector2 jumpAttackSpeed = new Vector2(5, -6);
-    public Vector2[] attackSpped;
+    public Vector2[] attackSpeed;
     public float attackMovementDuration = 0.1f;
     public float comboResetTime = 0.5f;
+    public float attackAnimSpeedMultiplier = 1;
     
     private Coroutine queueAttackCo;
     private bool isHeavyAttack = false;
@@ -38,6 +40,7 @@ public class Player : Entity {
 
     public bool IsHeavyAttack => isHeavyAttack;
     public bool CanAttack => canAttack;
+
 
     [Header("Movement info")]
     public float moveSpeed = 8;
@@ -59,7 +62,8 @@ public class Player : Entity {
 
         input = new PlayerInputSet();
         stats = GetComponent<PlayerStats>();
-        health = GetComponent<EntityHealth>();
+        health = GetComponent<PlayerHealth>();
+        combat = GetComponent<PlayerCombat>();
         vfx = GetComponent<PlayerVFX>();
         skillManager = GetComponent<PlayerSkillManager>();
 
@@ -89,6 +93,14 @@ public class Player : Entity {
         }
 
         stateMachine.ChangeState(deadState);
+    }
+
+    public void IncreaseAttackSpeed(float attackAnimSpeedMultiplier) {
+        this.attackAnimSpeedMultiplier = attackAnimSpeedMultiplier;
+    }
+
+    public void ResetAttackSpeed() {
+        attackAnimSpeedMultiplier = 1;
     }
 
     public float GetMoveSpeed() {
