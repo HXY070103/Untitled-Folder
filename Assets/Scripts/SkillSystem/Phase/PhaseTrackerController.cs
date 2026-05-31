@@ -3,6 +3,7 @@ using UnityEngine;
 public class PhaseTrackerController : MonoBehaviour {
     private SkillPhase phaseTrackerManager;
 
+    [Header("Debuff info")]
     [SerializeField] private float debuffDuration = 8;
     [SerializeField] private float damageReduction = 10;
     [SerializeField] private float armorRedection = 50;

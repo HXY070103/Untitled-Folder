@@ -961,15 +961,28 @@ MonoBehaviour:
     unlocked: 0
   - upgradeName: Weakness Marking
     description: Passing through enemies during phase reduces their damage and armor
-    unlocked: 1
+    unlocked: 0
+  - upgradeName: Shadow Execution
+    description: After killing an enemy with a heavy strike, briefly re-enter phase
+    unlocked: 0
+  - upgradeName: Chain Strikes
+    description: After triggering Perfect Phase, the next 3 attacks become heavy
+      strikes
+    unlocked: 0
+  - upgradeName: Perfect Echo
+    description: Restores a portion of HP when Perfect Phase is triggered
+    unlocked: 0
   cooldown: 3
   skillDuration: 3
-  phaseTrackerPrefab: {fileID: 6660558275766549021, guid: 91ac758a1168f48fbbc4f2bdde2f770c, type: 3}
   damageMultiplier: 3
   speedUpPercentage: 1.5
-  lockAttackDuration: 0.5
   perfectPhaseWindow: 0.2
-  isPerfectPhase: 0
+  lockAttackDuration: 0.5
+  heavyAttackExpiryTime: 10
+  phaseTrackerPrefab: {fileID: 6660558275766549021, guid: 91ac758a1168f48fbbc4f2bdde2f770c, type: 3}
+  bonusPhaseDuration: 1
+  bonusNumOfHeavyAttack: 3
+  bonusHP: 10
 --- !u!114 &185028333
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4600,11 +4613,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5939796045182456773, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.23
+      value: -9.1
       objectReference: {fileID: 0}
     - target: {fileID: 5939796045182456773, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.43
       objectReference: {fileID: 0}
     - target: {fileID: 5939796045182456773, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
       propertyPath: m_LocalPosition.z

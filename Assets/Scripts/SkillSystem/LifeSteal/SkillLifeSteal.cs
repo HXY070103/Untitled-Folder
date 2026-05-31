@@ -4,6 +4,7 @@ public class SkillLifeSteal : SkillBase {
     private PlayerHealth health;
     private Player player;
 
+    [Header("Skill info")]
     [SerializeField] private GameObject fireVFXPrefab;
     [SerializeField] private GameObject fireballPrefab;
     [SerializeField] private float conversionRate = 0.3f;
@@ -11,11 +12,18 @@ public class SkillLifeSteal : SkillBase {
     [SerializeField] private float minFireballGenerationRadius = 1.5f;
     [SerializeField] private float maxFireballGenerationRadius = 2;
     [SerializeField] private int fireballAmount = 5;
-    [Space]
+    
+    [Header("Unshakable resolve info")]
     [SerializeField] private float reviveHPMultiplier = 0.2f;
+
+    [Header("Desperate gambit info")]
     [SerializeField] private float maxConversionRate = 2;
+
+    [Header("Blood growth info")]
     [SerializeField] private float healingHPThreshold = 0.2f;
     [SerializeField] private float bonusMaxHP = 10;
+
+    [Header("Blood frenzy info")]
     [SerializeField] private float damageTakenMultiplier = 2;
     [SerializeField] private float damageApplyMultiplier = 2;
     [SerializeField] private float attackAnimSpeedMultiplier = 1.5f;

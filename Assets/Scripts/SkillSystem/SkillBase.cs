@@ -26,7 +26,6 @@ public class SkillBase : MonoBehaviour {
 
     public float RemainingDuration => remainingDuration;
     public bool IsSkillActive => isSkillActive;
-    public float SkillDuration => skillDuration * stats.GetSkillEffect();
 
     protected virtual void Awake() {
         stats = GetComponentInParent<PlayerStats>();
@@ -55,12 +54,16 @@ public class SkillBase : MonoBehaviour {
     protected virtual void StartSkill() {
         lastTimeUsed = Time.time;
         isSkillActive = true;
-        remainingDuration = SkillDuration;
+        remainingDuration = GetSkillDuration();
     }
 
     protected virtual void EndSkill() {
         isSkillActive = false;
         remainingDuration = 0;
+    }
+
+    public virtual float GetSkillDuration() {
+        return skillDuration * stats.GetSkillEffect();
     }
 
     public bool UnLocked(string upgradeName) {
@@ -81,13 +84,11 @@ public class SkillBase : MonoBehaviour {
         return Time.time < lastTimeUsed + cooldown;
     }
 
-    public float GetCurrentCooldown()
-    {
+    public float GetCurrentCooldown() {
         return cooldown - (Time.time - lastTimeUsed);
     }
 
-    public float GetMaxCooldown()
-    {
+    public float GetMaxCooldown() {
         return cooldown;
     }
 

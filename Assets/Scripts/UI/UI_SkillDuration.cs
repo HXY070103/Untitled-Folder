@@ -19,7 +19,7 @@ public class UI_SkillDuration : MonoBehaviour
         {
             durationGroup.SetActive(true);
             durationText.text = skill.RemainingDuration.ToString("F1") + "s";
-            float fillAmount = skill.RemainingDuration / skill.SkillDuration;
+            float fillAmount = skill.RemainingDuration / skill.GetSkillDuration();
             durationFillImage.fillAmount = fillAmount;
         }
         else

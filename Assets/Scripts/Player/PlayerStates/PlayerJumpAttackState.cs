@@ -16,6 +16,7 @@ public class PlayerJumpAttackState : PlayerState {
             phase.InterruptSkill();
             IncreaseDamage();
             HandleInstantKill();
+            StartHandleBonusPhase();
         }
 
         touchedGround = false;
@@ -41,7 +42,21 @@ public class PlayerJumpAttackState : PlayerState {
 
         if (player.IsHeavyAttack) {
             ResetDamage();
-            player.ResetNextAttack();
+            player.UpdateHeavyAttack();
+            EndHandleBonusPhase();
+        }
+    }
+
+    private void StartHandleBonusPhase() {
+        if (phase.UnLocked("Shadow Execution")) {
+            phase.EnableBonusPhase();
+        }
+    }
+
+    private void EndHandleBonusPhase() {
+        if (phase.UnLocked("Shadow Execution")) {
+            phase.DisableBonusPhase();
+            phase.TryToEnterBonusPhase();
         }
     }
 
