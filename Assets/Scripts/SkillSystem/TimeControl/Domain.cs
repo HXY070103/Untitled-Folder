@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class Domain : MonoBehaviour {
+    [Header("Domain info")]
     [SerializeField] private float expandSpeed = 2;
     [SerializeField] private float damage = 1;
     [SerializeField] private float damageInterval = 0.5f;

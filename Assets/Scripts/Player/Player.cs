@@ -34,11 +34,13 @@ public class Player : Entity {
     public float attackAnimSpeedMultiplier = 1;
     
     private Coroutine queueAttackCo;
+    private Coroutine setHeavyAttackCo;
     private bool isHeavyAttack = false;
+    private int numOfHeavyAttack = 0;
     private bool canAttack = true;
-    private Coroutine lockAttackCo;
 
     public bool IsHeavyAttack => isHeavyAttack;
+    public int NumOfHeavyAttack => numOfHeavyAttack;
     public bool CanAttack => canAttack;
 
 
@@ -117,25 +119,35 @@ public class Player : Entity {
         anim.speed = 1;
     }
 
-    public void SetNextAttackToHeavyAttack() {
-        isHeavyAttack = true;
-    }
-
-    public void ResetNextAttack() {
-        isHeavyAttack = false;
-    }
-
-    public void LockAttack(float duration) {
-        if (lockAttackCo != null) {
-            StopCoroutine(lockAttackCo);
+    public void SetHeavyAttack(float duration, int numOfHeavyAttack) {
+        if (setHeavyAttackCo != null) {
+            StopCoroutine(setHeavyAttackCo);
         }
 
-        lockAttackCo = StartCoroutine(LockAttackCo(duration));
+        setHeavyAttackCo = StartCoroutine(SetHeavyAttackCo(duration, numOfHeavyAttack));
     }
 
-    private IEnumerator LockAttackCo(float duration) {
-        canAttack = false;
+    private IEnumerator SetHeavyAttackCo(float duration, int numOfHeavyAttack) {
+        isHeavyAttack = true;
+        this.numOfHeavyAttack = numOfHeavyAttack;
         yield return new WaitForSeconds(duration);
+        isHeavyAttack = false;
+        this.numOfHeavyAttack = 0;
+    }
+
+    public void UpdateHeavyAttack() {
+        if (numOfHeavyAttack > 1) {
+            numOfHeavyAttack -= 1;
+        } else {
+            isHeavyAttack = false;
+        }
+    }
+
+    public void LockAttack() {
+        canAttack = false;
+    }
+
+    public void UnLockAttack() {
         canAttack = true;
     }
 

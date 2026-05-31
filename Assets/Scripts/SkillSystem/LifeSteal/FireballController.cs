@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class FireballController : MonoBehaviour {
+    [Header("Movement info")]
     [SerializeField] private float chaseSpeed = 15;
     [SerializeField] private float minWaitingTime = 0.5f;
     [SerializeField] private float maxWaitingTime = 1;

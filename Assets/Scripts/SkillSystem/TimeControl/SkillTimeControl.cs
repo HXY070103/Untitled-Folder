@@ -5,11 +5,15 @@ public class SkillTimeControl : SkillBase {
     public static event Action<float> OnSetFirstAttack;
     public static event Action OnResetFirstAttack;
 
+    [Header("Skill info")]
     [SerializeField] private GameObject domainPrefab;
     [SerializeField] private float maxSize = 20;
     [SerializeField] private float slowDownPercentage = 0.8f;
-    [Space]
+    
+    [Header("Hunting time info")]
     [SerializeField] private float bonusDuration = 1;
+
+    [Header("Precision targeting info")]
     [SerializeField] private float damageMultiplier = 2;
 
     private GameObject domain;
