@@ -118,6 +118,10 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public void IncreaseMaxHP(float bonusMaxHP, string source) {
         stats.maxHP.AddModifier(bonusMaxHP, source);
+        currentHP += bonusMaxHP;
+        if (currentHP > stats.GetMaxHP()) {
+            currentHP = stats.GetMaxHP();
+        }
         OnHealthUpdate?.Invoke();
     }
 
@@ -152,7 +156,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     private void UpdateHealthBar() {
-        if (healthBar == null && healthBar.gameObject.activeSelf) {
+        if (healthBar == null || !healthBar.gameObject.activeSelf) {
             return;
         }
 

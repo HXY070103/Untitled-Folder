@@ -22,12 +22,10 @@ public class PlayerStats : EntityStats {
         upgrades[(int) AttributeUpgrageType.Technique] = new TechniqueUpgrade(this);
     }
 
-    public void addUpgrade(AttributeUpgrageType upgrageType) {
-        
-        AttributeUpgrade upgrade = upgrades[(int) upgrageType];
+    public void addUpgrade(AttributeUpgrade upgrade) {
         if (upgrade == null)
         {
-            Debug.LogError("Attribute upgrade is null: " + upgrageType);
+            Debug.LogError("Attribute upgrade is null: " + upgrade);
             return;
         }
         upgrade.ApplyUpgrade();
@@ -43,13 +41,8 @@ public class PlayerStats : EntityStats {
 
         skillEffect.SetBaseValue(defaultStatSetup.skillEffect);
     }
-
-    private void Update()
-{
-    if (Input.GetKeyDown(KeyCode.Alpha1))
-    {
-        addUpgrade(AttributeUpgrageType.Vatality);
-        Debug.Log("Added Vatality Upgrade");
+    
+    public AttributeUpgrade[] GetAttributeUpgrades() {
+        return upgrades;
     }
-}
 }
