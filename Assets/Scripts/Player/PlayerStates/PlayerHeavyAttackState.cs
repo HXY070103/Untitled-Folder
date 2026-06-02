@@ -14,7 +14,10 @@ public class PlayerHeavyAttackState : PlayerState {
         base.Enter();
 
         phase.InterruptSkill();
-        IncreaseDamage(phase.DamageMultiplier);
+        IncreaseDamage();
+        HandleInstantKill();
+        StartHandleBonusPhase();
+
         attackDir = player.moveInput.x != 0 ? (int) player.moveInput.x : player.facingDir;
     }
 
@@ -32,12 +35,32 @@ public class PlayerHeavyAttackState : PlayerState {
         base.Exit();
 
         ResetDamage();
-        player.ResetNextAttack();
+        player.UpdateHeavyAttack();
+        EndHandleBonusPhase();
     }
 
-    private void IncreaseDamage(float damageMultiplier) {
+    private void StartHandleBonusPhase() {
+        if (phase.UnLocked("Shadow Execution")) {
+            phase.EnableBonusPhase();
+        }
+    }
+
+    private void EndHandleBonusPhase() {
+        if (phase.UnLocked("Shadow Execution")) {
+            phase.DisableBonusPhase();
+            phase.TryToEnterBonusPhase();
+        }
+    }
+
+    private void HandleInstantKill() {
+        if (phase.UnLocked("Shadow Assassination")) {
+            player.combat.SetNextAttackToInstantKill();
+        }
+    }
+
+    private void IncreaseDamage() {
         float baseDamage = player.stats.damage.GetValue();
-        float bonusDamage = baseDamage * (damageMultiplier - 1);
+        float bonusDamage = baseDamage * (phase.GetDamageMultiplier() - 1);
         player.stats.damage.AddModifier(bonusDamage, "HeavyAttack");
     }
 

@@ -41,6 +41,7 @@ public abstract class PlayerState : EntityState{
         base.UpdateAnimationPatameters();
 
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
+        anim.SetFloat("AttackAnimSpeedMultiplier", player.attackAnimSpeedMultiplier);
     }
 
     private bool CanDash() {

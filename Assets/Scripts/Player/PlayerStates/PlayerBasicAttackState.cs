@@ -13,9 +13,9 @@ public class PlayerBasicAttackState : PlayerState {
 
     public PlayerBasicAttackState(Player player, StateMachine stateMachine, string animBoolName) : 
         base(player, stateMachine, animBoolName) {
-        if (comboLimit != player.attackSpped.Length) {
+        if (comboLimit != player.attackSpeed.Length) {
             Debug.LogWarning("Combo limit is adjusted to match attack speed array!");
-            comboLimit = player.attackSpped.Length;
+            comboLimit = player.attackSpeed.Length;
         }
     }
 
@@ -75,8 +75,8 @@ public class PlayerBasicAttackState : PlayerState {
     private void ApplyAttackMovement() {
         attackMovementTimer = player.attackMovementDuration;
         player.SetVelocity(
-                attackDir * player.attackSpped[comboIndex - FirstComboIndex].x, 
-                player.attackSpped[comboIndex - FirstComboIndex].y
+                attackDir * player.attackSpeed[comboIndex - FirstComboIndex].x, 
+                player.attackSpeed[comboIndex - FirstComboIndex].y
             );
     }
 

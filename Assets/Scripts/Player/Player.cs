@@ -9,7 +9,8 @@ public class Player : Entity {
     public PlayerVFX vfx { get; private set; }
     public PlayerSkillManager skillManager { get; private set; }
     public PlayerStats stats { get; private set; }
-    public EntityHealth health { get; private set; }
+    public PlayerHealth health { get; private set; }
+    public PlayerCombat combat { get; private set; }
 
     public PlayerIdleState idleState { get; private set; }
     public PlayerMoveState moveState { get; private set; }
@@ -27,17 +28,21 @@ public class Player : Entity {
     [Header("Attack info")]
     public Vector2 heavyAttackSpeed = new Vector2(5, 1.5f);
     public Vector2 jumpAttackSpeed = new Vector2(5, -6);
-    public Vector2[] attackSpped;
+    public Vector2[] attackSpeed;
     public float attackMovementDuration = 0.1f;
     public float comboResetTime = 0.5f;
+    public float attackAnimSpeedMultiplier = 1;
     
     private Coroutine queueAttackCo;
+    private Coroutine setHeavyAttackCo;
     private bool isHeavyAttack = false;
+    private int numOfHeavyAttack = 0;
     private bool canAttack = true;
-    private Coroutine lockAttackCo;
 
     public bool IsHeavyAttack => isHeavyAttack;
+    public int NumOfHeavyAttack => numOfHeavyAttack;
     public bool CanAttack => canAttack;
+
 
     [Header("Movement info")]
     public float moveSpeed = 8;
@@ -59,7 +64,8 @@ public class Player : Entity {
 
         input = new PlayerInputSet();
         stats = GetComponent<PlayerStats>();
-        health = GetComponent<EntityHealth>();
+        health = GetComponent<PlayerHealth>();
+        combat = GetComponent<PlayerCombat>();
         vfx = GetComponent<PlayerVFX>();
         skillManager = GetComponent<PlayerSkillManager>();
 
@@ -91,6 +97,14 @@ public class Player : Entity {
         stateMachine.ChangeState(deadState);
     }
 
+    public void IncreaseAttackSpeed(float attackAnimSpeedMultiplier) {
+        this.attackAnimSpeedMultiplier = attackAnimSpeedMultiplier;
+    }
+
+    public void ResetAttackSpeed() {
+        attackAnimSpeedMultiplier = 1;
+    }
+
     public float GetMoveSpeed() {
         return moveSpeed * speedMultiplier;
     }
@@ -105,25 +119,35 @@ public class Player : Entity {
         anim.speed = 1;
     }
 
-    public void SetNextAttackToHeavyAttack() {
-        isHeavyAttack = true;
-    }
-
-    public void ResetNextAttack() {
-        isHeavyAttack = false;
-    }
-
-    public void LockAttack(float duration) {
-        if (lockAttackCo != null) {
-            StopCoroutine(lockAttackCo);
+    public void SetHeavyAttack(float duration, int numOfHeavyAttack) {
+        if (setHeavyAttackCo != null) {
+            StopCoroutine(setHeavyAttackCo);
         }
 
-        lockAttackCo = StartCoroutine(LockAttackCo(duration));
+        setHeavyAttackCo = StartCoroutine(SetHeavyAttackCo(duration, numOfHeavyAttack));
     }
 
-    private IEnumerator LockAttackCo(float duration) {
-        canAttack = false;
+    private IEnumerator SetHeavyAttackCo(float duration, int numOfHeavyAttack) {
+        isHeavyAttack = true;
+        this.numOfHeavyAttack = numOfHeavyAttack;
         yield return new WaitForSeconds(duration);
+        isHeavyAttack = false;
+        this.numOfHeavyAttack = 0;
+    }
+
+    public void UpdateHeavyAttack() {
+        if (numOfHeavyAttack > 1) {
+            numOfHeavyAttack -= 1;
+        } else {
+            isHeavyAttack = false;
+        }
+    }
+
+    public void LockAttack() {
+        canAttack = false;
+    }
+
+    public void UnLockAttack() {
         canAttack = true;
     }
 

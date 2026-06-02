@@ -1,6 +1,9 @@
+using System.Collections;
 using UnityEngine;
 
 public class Enemy : Entity, ISlowable{
+    private EntityStats stats;
+
     public EnemyIdleState idleState;
     public EnemyMoveState moveState;
     public EnemyAttackState attackState;
@@ -35,12 +38,54 @@ public class Enemy : Entity, ISlowable{
     private bool inAttackWindow = false;
     public bool InAttackWindow => inAttackWindow;
 
+    private bool onPhaseDebuff = false;
+    private Coroutine phaseDebuffCo;
+
+    protected override void Awake() {
+        base.Awake();
+
+        stats = GetComponent<EntityStats>();
+    }
+
     public float GetBattleMoveSpeed() {
         return battleMoveSpeed * speedMultiplier;
     }
 
     public float GetMoveSpeed() {
         return moveSpeed * speedMultiplier;
+    }
+
+    public void 
+        ApplyPhaseDebuff(float debuffDuration, float damageReduction, float armorReduction) {
+        if (onPhaseDebuff) {
+            return;
+        }
+
+        if (phaseDebuffCo != null) {
+            StopCoroutine(phaseDebuffCo);
+        }
+
+        phaseDebuffCo = 
+            StartCoroutine(PhaseDebuffCo(debuffDuration, damageReduction, armorReduction));
+    }
+
+    private IEnumerator 
+        PhaseDebuffCo(float debuffDuration, float damageReduction, float armorReduction) {
+        StartPhaseDebuff(damageReduction, armorReduction);
+        yield return new WaitForSeconds(debuffDuration);
+        EndPhaseDebuff();
+    }
+
+    private void StartPhaseDebuff(float damageReduction, float armorReduction) {
+        onPhaseDebuff = true;
+        stats.damage.AddModifier(-damageReduction, "WeaknessMarking");
+        stats.armor.AddModifier(-armorReduction, "WeaknessMarking");
+    }
+
+    private void EndPhaseDebuff() {
+        onPhaseDebuff = false;
+        stats.damage.RemoveModifier("WeaknessMarking");
+        stats.armor.RemoveModifier("WeaknessMarking");
     }
 
     public void SlowDown(float slowDownPercentage) {

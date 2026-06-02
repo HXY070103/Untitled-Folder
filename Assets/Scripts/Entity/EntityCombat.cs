@@ -7,6 +7,8 @@ public class EntityCombat : MonoBehaviour {
     [Header("Damage info")]
     public float damage = 10;
 
+    private bool canApplyInstantKill = false;
+
     [Header("Target detection info")]
     [SerializeField] private float targetCheckRadius = 1;
     [SerializeField] private LayerMask whatIsTarget;
@@ -20,6 +22,10 @@ public class EntityCombat : MonoBehaviour {
     public void PerformAttack() {
         foreach (var target in GetDetectedColliders()) {
             IDamageable damageable = target.GetComponent<IDamageable>();
+
+            if (canApplyInstantKill) {
+                damageable.TryApplyInstantKill();
+            }
             
             if (damageable == null) {
                 continue;
@@ -32,7 +38,13 @@ public class EntityCombat : MonoBehaviour {
                 vfx.CreateOnHitVFX(target.transform, damage.isCrit);
             }
         }
+
+        canApplyInstantKill = false;
     } 
+
+    public void SetNextAttackToInstantKill() {
+        canApplyInstantKill = true;
+    }
 
     protected Collider2D[] GetDetectedColliders() {
         return 

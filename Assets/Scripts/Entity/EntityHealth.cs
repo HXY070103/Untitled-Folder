@@ -14,6 +14,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [Header("Health info")]
     [SerializeField] protected bool isDead = false;
     [SerializeField] private float currentHP;
+    [SerializeField] private bool isOnShotKillable = false;
 
     private bool isInvulnerable = false;
 
@@ -44,6 +45,13 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         currentHP = stats.GetMaxHP();
         OnHealthUpdate += UpdateHealthBar;
         UpdateHealthBar();
+    }
+
+    public void TryApplyInstantKill() {
+        if (isOnShotKillable) {
+            currentHP = 0;
+            OnHealthUpdate?.Invoke();
+        }
     }
 
     public void EnterInvulnerableState() {
