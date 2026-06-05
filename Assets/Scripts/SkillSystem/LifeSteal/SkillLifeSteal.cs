@@ -32,13 +32,13 @@ public class SkillLifeSteal : SkillBase {
     private GameObject fireVFX;
 
     public float GetConversionRate() {
+        float bonusConversionRate;
         if (UnLocked("Desperate Gambit")) {
-            float bonusConversionRate = 
-                (maxConversionRate - conversionRate) * (1 - health.GetHPPercentage());
-            return conversionRate + bonusConversionRate;
+            bonusConversionRate = (maxConversionRate - conversionRate) * (1 - health.GetHPPercentage());
+        } else {
+            bonusConversionRate = 0;
         }
-
-        return conversionRate * stats.GetSkillEffect();
+        return (conversionRate + bonusConversionRate) * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
     protected override void Awake() {

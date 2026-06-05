@@ -19,7 +19,7 @@ public class UI_Ingame : MonoBehaviour
 
     private void UpdateHealthBar()
     {
-        float maxHealth = player.stats.GetMaxHP();
+        float maxHealth = Mathf.RoundToInt(player.stats.GetMaxHP());
         float currentHealth = Mathf.RoundToInt(player.health.GetCurrentHP());
         float sizeDiffrence = Mathf.Abs(maxHealth - healthRect.sizeDelta.x);
 

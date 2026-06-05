@@ -11,6 +11,9 @@ public class SkillBase : MonoBehaviour {
     [Header("Skill Upgrades")]
     [SerializeField] protected List<SkillUpgradeDisplayData> upgrades = new List<SkillUpgradeDisplayData>();
 
+    [SerializeField] protected float[] decreaseRate;
+    [SerializeField] protected int decreaseIndex = 0;
+
     public string SkillName => skillName;
     public string Description => description;
     public List<SkillUpgradeDisplayData> Upgrades => upgrades;
@@ -32,6 +35,7 @@ public class SkillBase : MonoBehaviour {
         lastTimeUsed = float.MinValue;
         remainingDuration = 0;
         isSkillActive = false;
+        decreaseRate = new float[6] {1f, 1f, 0.8f, 0.75f, 0.6f, 0.5f };
     }
 
     public void ApplySkill() {
@@ -55,6 +59,14 @@ public class SkillBase : MonoBehaviour {
         lastTimeUsed = Time.time;
         isSkillActive = true;
         remainingDuration = GetSkillDuration();
+        if (decreaseIndex == decreaseRate.Length - 1) {
+            PlayerHealth playerHealth = GetComponentInParent<PlayerHealth>();
+            if (stats.GetMaxHP() >= 0.3 * playerHealth.GetInitialMaxHP())
+            {
+                playerHealth.DecreaseMaxHP(stats.GetMaxHP() * 0.2f, "Skill Decay");
+            }
+        }
+        decreaseIndex = Mathf.Min(decreaseIndex + 1, decreaseRate.Length - 1);
     }
 
     protected virtual void EndSkill() {
@@ -63,7 +75,7 @@ public class SkillBase : MonoBehaviour {
     }
 
     public virtual float GetSkillDuration() {
-        return skillDuration * stats.GetSkillEffect();
+        return skillDuration * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
     public bool UnLocked(string upgradeName) {
@@ -90,6 +102,14 @@ public class SkillBase : MonoBehaviour {
 
     public float GetMaxCooldown() {
         return cooldown;
+    }
+
+    public int GetDecreaseIndex() {
+        return decreaseIndex;
+    }
+
+    public void decreaseDecay() {
+        decreaseIndex = Mathf.Max(decreaseIndex - 1, 0);
     }
 
     //当玩家获得强化时调用：currentSkill.UnlockSkillUpgrade("Blood Fight");

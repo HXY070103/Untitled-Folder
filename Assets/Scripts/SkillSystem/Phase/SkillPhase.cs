@@ -39,7 +39,7 @@ public class SkillPhase : SkillBase {
     }
 
     public float GetDamageMultiplier() {
-        return damageMultiplier * stats.GetSkillEffect();
+        return damageMultiplier * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
     protected override void Awake() {
@@ -158,7 +158,11 @@ public class SkillPhase : SkillBase {
 
     private IEnumerator HandlePerfectWindow() {
         inPerfectPhaseWindow = true;
-        yield return new WaitForSeconds(perfectPhaseWindow);
+        yield return new WaitForSeconds(GetPerfectPhaseWindow());
         inPerfectPhaseWindow = false;
+    }
+
+    private float GetPerfectPhaseWindow() {
+        return perfectPhaseWindow * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 }

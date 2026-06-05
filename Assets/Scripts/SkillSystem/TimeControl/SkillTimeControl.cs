@@ -19,7 +19,7 @@ public class SkillTimeControl : SkillBase {
     private GameObject domain;
 
     public float GetMaxSize() {
-        return maxSize * stats.GetSkillEffect();
+        return maxSize * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
     public float GetSlowDownPercentage() {
@@ -27,7 +27,7 @@ public class SkillTimeControl : SkillBase {
             return 1;
         }
 
-        return slowDownPercentage * stats.GetSkillEffect();
+        return slowDownPercentage * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
 

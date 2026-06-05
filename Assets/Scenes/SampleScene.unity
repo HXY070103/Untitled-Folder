@@ -373,7 +373,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b71837b7b544c5e9755013f1c2dcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillManager
-  currentSkillType: 2
+  currentSkillType: 0
 --- !u!114 &38960031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,6 +441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   isDead: 0
   currentHP: 0
+  initialMaxHP: 100
   isOnShotKillable: 0
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
@@ -1190,6 +1191,8 @@ MonoBehaviour:
   - upgradeName: Perfect Echo
     description: Restores a portion of HP when Perfect Phase is triggered
     unlocked: 0
+  decreaseRate: []
+  decreaseIndex: 0
   cooldown: 3
   skillDuration: 3
   damageMultiplier: 3
@@ -1233,6 +1236,8 @@ MonoBehaviour:
     description: The first attack against each enemy during the skill deals increased
       damage
     unlocked: 0
+  decreaseRate: []
+  decreaseIndex: 0
   cooldown: 3
   skillDuration: 3
   domainPrefab: {fileID: 8066122577892052930, guid: df04f63a1809d442482117ff6dbc340b, type: 3}
@@ -1275,6 +1280,8 @@ MonoBehaviour:
     description: Increases damage taken during the skill, but also increases damage
       and attack speed
     unlocked: 0
+  decreaseRate: []
+  decreaseIndex: 0
   cooldown: 3
   skillDuration: 3
   fireVFXPrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
@@ -54141,9 +54148,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Coming Soon
+  m_text: Purification has been implemented
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -54210,7 +54217,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -119.48657, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1736879231

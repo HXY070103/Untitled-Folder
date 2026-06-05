@@ -14,6 +14,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [Header("Health info")]
     [SerializeField] protected bool isDead = false;
     [SerializeField] private float currentHP;
+    [SerializeField] private float initialMaxHP = 100f;
     [SerializeField] private bool isOnShotKillable = false;
 
     private bool isInvulnerable = false;
@@ -125,6 +126,17 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         OnHealthUpdate?.Invoke();
     }
 
+    public void DecreaseMaxHP(float reduceMaxHP, string source) {
+        stats.maxHP.AddModifier(-reduceMaxHP, source);
+        if (currentHP > stats.GetMaxHP()) {
+            currentHP = stats.GetMaxHP();
+        }
+        if (currentHP <= 0) {
+            currentHP = 0;
+        }
+        OnHealthUpdate?.Invoke();
+    }
+
     public void Healing(float healingHP) {
         currentHP += healingHP;
 
@@ -189,5 +201,9 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public float GetHPPercentage() {
         return currentHP / stats.GetMaxHP();
+    }
+
+    public float GetInitialMaxHP() {
+        return initialMaxHP;
     }
 }
