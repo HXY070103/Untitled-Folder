@@ -90,6 +90,9 @@ public class UI_ChestReward : MonoBehaviour
         mainChoicePanel.SetActive(false);
         upgradePanel.SetActive(false);
         purificationPanel.SetActive(true);
+
+        skillManager.GetCurrentSkill().decreaseDecay();
+        skillManager.GetCurrentSkill().decreaseDecay();
         StartCoroutine(ClosePurificationAfterDelay());
     }
 
