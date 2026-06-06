@@ -30,6 +30,7 @@ public class UI_UpgradeOption : MonoBehaviour
         {
             backgroundImage.color = normalColor;
         }
+        button.interactable = true;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OnClick);

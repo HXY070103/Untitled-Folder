@@ -1,0 +1,715 @@
+fileFormatVersion: 2
+guid: d55214e6cfa874ea8a00d9eb6f387ebf
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 6372082153228130932
+    second: decayUI_0
+  - first:
+      213: 6488524490053831903
+    second: decayUI_1
+  - first:
+      213: -7324113072366500852
+    second: decayUI_2
+  - first:
+      213: -4807706527649509206
+    second: decayUI_3
+  - first:
+      213: -2733217172513103158
+    second: decayUI_4
+  - first:
+      213: -4706371184385058131
+    second: decayUI_5
+  - first:
+      213: 1186435528272457639
+    second: decayUI_6
+  - first:
+      213: -751379030817702716
+    second: decayUI_7
+  - first:
+      213: -1443575314973219322
+    second: decayUI_8
+  - first:
+      213: -7253658812579115626
+    second: decayUI_9
+  - first:
+      213: -5732438914319484826
+    second: decayUI_10
+  - first:
+      213: 3205575127579933771
+    second: decayUI_11
+  - first:
+      213: -574247123995608453
+    second: decayUI_12
+  - first:
+      213: -3264653925802741250
+    second: decayUI_13
+  - first:
+      213: -6092416813817162879
+    second: decayUI_14
+  - first:
+      213: -4199158832760014196
+    second: decayUI_15
+  - first:
+      213: -941230852258659813
+    second: decayUI_16
+  - first:
+      213: 1887090126073559476
+    second: decayUI_17
+  - first:
+      213: 4609013606612942308
+    second: decayUI_18
+  - first:
+      213: -535895746538957173
+    second: decayUI_19
+  - first:
+      213: -7646248778412408193
+    second: decayUI_20
+  - first:
+      213: -5957734326599507039
+    second: decayUI_21
+  - first:
+      213: 4403985066305116594
+    second: decayUI_22
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: decayUI_0
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 907
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47ad4c625fe2e6850800000000000000
+      internalID: 6372082153228130932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_1
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 88
+        width: 655
+        height: 931
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdcc41265aedb0a50800000000000000
+      internalID: 6488524490053831903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_2
+      rect:
+        serializedVersion: 2
+        x: 764
+        y: 469
+        width: 10
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c04ccca27f58b5a90800000000000000
+      internalID: -7324113072366500852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_3
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 424
+        width: 10
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa0df1ba268974db0800000000000000
+      internalID: -4807706527649509206
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_4
+      rect:
+        serializedVersion: 2
+        x: 755
+        y: 399
+        width: 15
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac2eb5a7679a11ad0800000000000000
+      internalID: -2733217172513103158
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_5
+      rect:
+        serializedVersion: 2
+        x: 765
+        y: 321
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: daa189dd75c9faeb0800000000000000
+      internalID: -4706371184385058131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_6
+      rect:
+        serializedVersion: 2
+        x: 769
+        y: 288
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7af2593b3d0177010800000000000000
+      internalID: 1186435528272457639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_7
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 297
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ccfe60a0c09295f0800000000000000
+      internalID: -751379030817702716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_8
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 262
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 606af7046e367fbe0800000000000000
+      internalID: -1443575314973219322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_9
+      rect:
+        serializedVersion: 2
+        x: 774
+        y: 240
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69d0752ddb3d55b90800000000000000
+      internalID: -7253658812579115626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_10
+      rect:
+        serializedVersion: 2
+        x: 749
+        y: 215
+        width: 15
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6687c5fdd294270b0800000000000000
+      internalID: -5732438914319484826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_11
+      rect:
+        serializedVersion: 2
+        x: 683
+        y: 167
+        width: 14
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4cba3c389d7c7c20800000000000000
+      internalID: 3205575127579933771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_12
+      rect:
+        serializedVersion: 2
+        x: 698
+        y: 149
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7ab3f0884dd708f0800000000000000
+      internalID: -574247123995608453
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_13
+      rect:
+        serializedVersion: 2
+        x: 718
+        y: 140
+        width: 33
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef171f52d8e91b2d0800000000000000
+      internalID: -3264653925802741250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_14
+      rect:
+        serializedVersion: 2
+        x: 661
+        y: 144
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1839fc4df23637ba0800000000000000
+      internalID: -6092416813817162879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_15
+      rect:
+        serializedVersion: 2
+        x: 687
+        y: 152
+        width: 10
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8a35e92a4799b5c0800000000000000
+      internalID: -4199158832760014196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_16
+      rect:
+        serializedVersion: 2
+        x: 688
+        y: 109
+        width: 25
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b120c77d68310f2f0800000000000000
+      internalID: -941230852258659813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_17
+      rect:
+        serializedVersion: 2
+        x: 715
+        y: 96
+        width: 60
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b9f2cfa87a403a10800000000000000
+      internalID: 1887090126073559476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_18
+      rect:
+        serializedVersion: 2
+        x: 676
+        y: 78
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ed3b13a47186ff30800000000000000
+      internalID: 4609013606612942308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_19
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 86
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8617e668ad1098f0800000000000000
+      internalID: -535895746538957173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_20
+      rect:
+        serializedVersion: 2
+        x: 725
+        y: 74
+        width: 13
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f72c6726f3113e590800000000000000
+      internalID: -7646248778412408193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_21
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 73
+        width: 30
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a3a2e40230e15da0800000000000000
+      internalID: -5957734326599507039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: decayUI_22
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 55
+        width: 20
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b9dd31a5191e1d30800000000000000
+      internalID: 4403985066305116594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      decayUI_0: 6372082153228130932
+      decayUI_1: 6488524490053831903
+      decayUI_10: -5732438914319484826
+      decayUI_11: 3205575127579933771
+      decayUI_12: -574247123995608453
+      decayUI_13: -3264653925802741250
+      decayUI_14: -6092416813817162879
+      decayUI_15: -4199158832760014196
+      decayUI_16: -941230852258659813
+      decayUI_17: 1887090126073559476
+      decayUI_18: 4609013606612942308
+      decayUI_19: -535895746538957173
+      decayUI_2: -7324113072366500852
+      decayUI_20: -7646248778412408193
+      decayUI_21: -5957734326599507039
+      decayUI_22: 4403985066305116594
+      decayUI_3: -4807706527649509206
+      decayUI_4: -2733217172513103158
+      decayUI_5: -4706371184385058131
+      decayUI_6: 1186435528272457639
+      decayUI_7: -751379030817702716
+      decayUI_8: -1443575314973219322
+      decayUI_9: -7253658812579115626
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

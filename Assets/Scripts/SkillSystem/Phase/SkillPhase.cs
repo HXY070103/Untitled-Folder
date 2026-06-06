@@ -162,7 +162,7 @@ public class SkillPhase : SkillBase {
         inPerfectPhaseWindow = false;
     }
 
-    private float GetPerfectPhaseWindow() {
+    public float GetPerfectPhaseWindow() {
         return perfectPhaseWindow * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class UI_SkillDuration : MonoBehaviour
 {
     [SerializeField] private PlayerSkillManager manager;
-    [SerializeField] private SkillBase skill;
+    private SkillBase skill;
 
     [Header("UI")]
     [SerializeField] private GameObject durationGroup;

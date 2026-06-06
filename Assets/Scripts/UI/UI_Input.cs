@@ -59,11 +59,11 @@ public class UI_Input : MonoBehaviour
         bool isAnyUIOpen = (characterUI != null && characterUI.gameObject.activeSelf) || (optionsUI != null && optionsUI.activeSelf);
         if (isAnyUIOpen)
         {
-            Time.timeScale = 0f; // Pause the game
+            GamePauseManager.Instance.Pause("UI_Input");
         }
         else
         {
-            Time.timeScale = 1f; // Resume the game
+            GamePauseManager.Instance.Resume("UI_Input");
         }
     }
 }
