@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class SkillBase : MonoBehaviour {
     [SerializeField] protected string skillName;
+    [SerializeField] protected SkillType skillType;
 
     [TextArea]
     [SerializeField] protected string description;
@@ -12,9 +13,12 @@ public class SkillBase : MonoBehaviour {
     [SerializeField] protected List<SkillUpgradeDisplayData> upgrades = new List<SkillUpgradeDisplayData>();
 
     [SerializeField] protected float[] decreaseRate;
-    [SerializeField] protected int decreaseIndex = 0;
+    [SerializeField] protected int decreaseIndex;
+
+    [SerializeField] protected UI_SkillDecay skillDecayUI;
 
     public string SkillName => skillName;
+    public SkillType SkillType => skillType;
     public string Description => description;
     public List<SkillUpgradeDisplayData> Upgrades => upgrades;
 
@@ -35,7 +39,8 @@ public class SkillBase : MonoBehaviour {
         lastTimeUsed = float.MinValue;
         remainingDuration = 0;
         isSkillActive = false;
-        decreaseRate = new float[6] {1f, 1f, 0.8f, 0.75f, 0.6f, 0.5f };
+        decreaseRate = new float[6] {1f, 1f, 0.8f, 0.7f, 0.6f, 0.5f}; // normal, 1decay, 2decay, 3decay, 4decay, 5decay
+        decreaseIndex = 0;
     }
 
     public void ApplySkill() {
@@ -67,6 +72,7 @@ public class SkillBase : MonoBehaviour {
             }
         }
         decreaseIndex = Mathf.Min(decreaseIndex + 1, decreaseRate.Length - 1);
+        skillDecayUI.UpdateDecayUI(decreaseIndex);
     }
 
     protected virtual void EndSkill() {
@@ -104,12 +110,13 @@ public class SkillBase : MonoBehaviour {
         return cooldown;
     }
 
-    public int GetDecreaseIndex() {
-        return decreaseIndex;
+    public void DecreaseDecay() {
+        decreaseIndex = Mathf.Max(decreaseIndex - 1, 0);
+        skillDecayUI.UpdateDecayUI(decreaseIndex);
     }
 
-    public void decreaseDecay() {
-        decreaseIndex = Mathf.Max(decreaseIndex - 1, 0);
+    public int GetDecayLevel() {
+        return decreaseIndex;
     }
 
     //当玩家获得强化时调用：currentSkill.UnlockSkillUpgrade("Blood Fight");

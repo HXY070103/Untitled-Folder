@@ -52,7 +52,7 @@ public class UI_ChestReward : MonoBehaviour
             return;
         }
 
-        Time.timeScale = 0f;
+        GamePauseManager.Instance.Pause("ChestReward");
 
         rootPanel.SetActive(true);
         mainChoicePanel.SetActive(true);
@@ -91,8 +91,8 @@ public class UI_ChestReward : MonoBehaviour
         upgradePanel.SetActive(false);
         purificationPanel.SetActive(true);
 
-        skillManager.GetCurrentSkill().decreaseDecay();
-        skillManager.GetCurrentSkill().decreaseDecay();
+        skillManager.GetCurrentSkill().DecreaseDecay();
+        skillManager.GetCurrentSkill().DecreaseDecay();
         StartCoroutine(ClosePurificationAfterDelay());
     }
 
@@ -115,7 +115,7 @@ public class UI_ChestReward : MonoBehaviour
         upgradePanel.SetActive(false);
         purificationPanel.SetActive(false);
 
-        Time.timeScale = 1f;
+        GamePauseManager.Instance.Resume("ChestReward");
     }
 
     private List<ChestUpgradeOption> GetRandomUpgradeOptions(int count)
