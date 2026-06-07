@@ -1,8 +1,12 @@
 using UnityEngine;
 
-public class PlayerSkillManager : MonoBehaviour {
+public class PlayerSkillManager : MonoBehaviour, ISaveable {
     private SkillBase[] skills;
     [SerializeField] private SkillType currentSkillType;
+    [SerializeField] private UI_SkillDecay skillDecayUI;
+    private int skillDecay;
+
+    public int SkillDecay => skillDecay;
 
     private void Awake() {
         Initialize();
@@ -35,5 +39,23 @@ public class PlayerSkillManager : MonoBehaviour {
         skills[(int) SkillType.TimeControl] = GetComponentInChildren<SkillTimeControl>();
         skills[(int) SkillType.LifeSteal] = GetComponentInChildren<SkillLifeSteal>();
         skills[(int) SkillType.Phase] = GetComponentInChildren<SkillPhase>();
+    }
+
+    public void UpdateSkillDecay(int skillDecay)
+    {
+        this.skillDecay = skillDecay;
+        skillDecayUI.UpdateDecayUI(this.skillDecay);
+    }
+
+    public void LoadData(GameData data)
+    {
+        this.skillDecay = data.skillDecay;
+        skillDecayUI.UpdateDecayUI(this.skillDecay);
+        this.GetCurrentSkill().UpdateSkillDecay(this.skillDecay);
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.skillDecay = this.skillDecay;
     }
 }

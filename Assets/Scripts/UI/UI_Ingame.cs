@@ -10,7 +10,7 @@ public class UI_Ingame : MonoBehaviour
     [SerializeField] private Slider healthSlider;
     [SerializeField] private TextMeshProUGUI healthText;
 
-    private void Start()
+    private void Awake()
     {
         player = FindFirstObjectByType<Player>();
         player.health.OnHealthUpdate += UpdateHealthBar;

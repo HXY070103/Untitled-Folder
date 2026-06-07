@@ -624,6 +624,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillManager
   currentSkillType: 0
+  skillDecayUI: {fileID: 1530134092}
 --- !u!114 &38960031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1781,7 +1782,7 @@ MonoBehaviour:
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
-  skillDecayUI: {fileID: 1530134092}
+  playerSkillManager: {fileID: 38960030}
   cooldown: 3
   skillDuration: 3
   damageMultiplier: 3
@@ -1828,7 +1829,7 @@ MonoBehaviour:
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
-  skillDecayUI: {fileID: 1530134092}
+  playerSkillManager: {fileID: 38960030}
   cooldown: 3
   skillDuration: 3
   domainPrefab: {fileID: 8066122577892052930, guid: df04f63a1809d442482117ff6dbc340b, type: 3}
@@ -1874,7 +1875,7 @@ MonoBehaviour:
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
-  skillDecayUI: {fileID: 1530134092}
+  playerSkillManager: {fileID: 38960030}
   cooldown: 3
   skillDuration: 3
   fireVFXPrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
@@ -60828,6 +60829,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 38960022}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2132693754
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2132693756}
+  - component: {fileID: 2132693755}
+  m_Layer: 0
+  m_Name: '***SAVE MANAGER***'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2132693755
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132693754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 461641ecc5c144b898eec481382d0646, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveManager
+  fileName: UntitledFolder.json
+--- !u!4 &2132693756
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132693754}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1212.6812, y: 880.2008, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2142306939
 GameObject:
   m_ObjectHideFlags: 0
@@ -61072,3 +61118,4 @@ SceneRoots:
   - {fileID: 2106353088}
   - {fileID: 1464365394}
   - {fileID: 1654876391}
+  - {fileID: 2132693756}

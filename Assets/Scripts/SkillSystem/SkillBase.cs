@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 
-public class SkillBase : MonoBehaviour {
+public class SkillBase : MonoBehaviour{
     [SerializeField] protected string skillName;
     [SerializeField] protected SkillType skillType;
 
@@ -14,8 +14,7 @@ public class SkillBase : MonoBehaviour {
 
     [SerializeField] protected float[] decreaseRate;
     [SerializeField] protected int decreaseIndex;
-
-    [SerializeField] protected UI_SkillDecay skillDecayUI;
+    [SerializeField] protected PlayerSkillManager playerSkillManager;
 
     public string SkillName => skillName;
     public SkillType SkillType => skillType;
@@ -72,7 +71,7 @@ public class SkillBase : MonoBehaviour {
             }
         }
         decreaseIndex = Mathf.Min(decreaseIndex + 1, decreaseRate.Length - 1);
-        skillDecayUI.UpdateDecayUI(decreaseIndex);
+        playerSkillManager.UpdateSkillDecay(decreaseIndex);
     }
 
     protected virtual void EndSkill() {
@@ -112,11 +111,16 @@ public class SkillBase : MonoBehaviour {
 
     public void DecreaseDecay() {
         decreaseIndex = Mathf.Max(decreaseIndex - 1, 0);
-        skillDecayUI.UpdateDecayUI(decreaseIndex);
+        playerSkillManager.UpdateSkillDecay(decreaseIndex);
     }
 
     public int GetDecayLevel() {
         return decreaseIndex;
+    }
+
+    public void UpdateSkillDecay(int skillDecay)
+    {
+        this.decreaseIndex = skillDecay;
     }
 
     //当玩家获得强化时调用：currentSkill.UnlockSkillUpgrade("Blood Fight");

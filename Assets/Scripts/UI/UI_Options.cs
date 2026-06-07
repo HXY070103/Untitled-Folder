@@ -8,7 +8,7 @@ public class UI_Options : MonoBehaviour
 
     [SerializeField] private Toggle healthBarToggle;
 
-    private void Start()
+    private void Awake()
     {
         player = FindFirstObjectByType<Player>();
         healthBarToggle.onValueChanged.AddListener(OnHealthBarToggleChanged);
