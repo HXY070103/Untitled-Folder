@@ -2,9 +2,9 @@ using System.Collections;
 using UnityEngine;
 
 public class SkillPhase : SkillBase {
-    private PlayerVFX vfx;
     private EntityHealth health;
     private Player player;
+    private PlayerVFX vfx;
 
     [Header("Skill info")]
     [SerializeField] private float damageMultiplier = 2;
@@ -45,9 +45,9 @@ public class SkillPhase : SkillBase {
     protected override void Awake() {
         base.Awake();
 
-        vfx = GetComponentInParent<PlayerVFX>();
         health = GetComponentInParent<EntityHealth>();
         player = GetComponentInParent<Player>();
+        vfx = GetComponentInParent<PlayerVFX>();
     }
 
     protected override void StartSkill() {
@@ -153,10 +153,10 @@ public class SkillPhase : SkillBase {
             StopCoroutine(handlePerfectPhaseWindowCo);
         }
 
-        handlePerfectPhaseWindowCo = StartCoroutine(HandlePerfectWindow());
+        handlePerfectPhaseWindowCo = StartCoroutine(HandlePerfectPhaseWindow());
     }
 
-    private IEnumerator HandlePerfectWindow() {
+    private IEnumerator HandlePerfectPhaseWindow() {
         inPerfectPhaseWindow = true;
         yield return new WaitForSeconds(GetPerfectPhaseWindow());
         inPerfectPhaseWindow = false;

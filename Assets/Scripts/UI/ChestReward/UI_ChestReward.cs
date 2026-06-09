@@ -20,6 +20,7 @@ public class UI_ChestReward : MonoBehaviour
     [SerializeField] private UI_ChestChoiceButton purificationChoiceButton;
 
     private GameObject player;
+    private PlayerVFX vfx;
     private PlayerStats playerStats;
     private PlayerSkillManager skillManager;
     private Chest currentChest;
@@ -39,6 +40,7 @@ public class UI_ChestReward : MonoBehaviour
         player = playerObj;
         currentChest = chest;
 
+        vfx = player.GetComponent<PlayerVFX>();
         playerStats = player.GetComponent<PlayerStats>();
         skillManager = player.GetComponent<PlayerSkillManager>();
 
@@ -93,12 +95,14 @@ public class UI_ChestReward : MonoBehaviour
         upgradePanel.SetActive(false);
         purificationPanel.SetActive(true);
 
-        skillManager.GetCurrentSkill().DecreaseDecay();
-        skillManager.GetCurrentSkill().DecreaseDecay();
+        vfx.GenerateParticleEffect(Color.blue);
+        skillManager.GetCurrentSkill().DecreaseDecay(2);
+
         if (currentChest != null)
         {
             currentChest.ClaimReward();
         }
+        
         SaveGame();
         StartCoroutine(ClosePurificationAfterDelay());
     }
@@ -174,6 +178,7 @@ public class UI_ChestReward : MonoBehaviour
             option.optionType = ChestUpgradeOptionType.Attribute;
             option.attributeUpgrade = upgrade;
             option.playerStats = playerStats;
+            option.vfx = vfx;
 
             pool.Add(option);
         }
@@ -198,6 +203,7 @@ public class UI_ChestReward : MonoBehaviour
             option.optionType = ChestUpgradeOptionType.Skill;
             option.skill = currentSkill;
             option.skillUpgrade = skillUpgrade;
+            option.vfx = vfx;
 
             pool.Add(option);
         }

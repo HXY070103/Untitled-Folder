@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text;
+using UnityEngine;
 
 public enum ChestUpgradeOptionType
 {
@@ -12,6 +13,7 @@ public class ChestUpgradeOption
     public ChestUpgradeOptionType optionType;
 
     public AttributeUpgrade attributeUpgrade;
+    public PlayerVFX vfx;
     public PlayerStats playerStats;
     public SkillBase skill;
     public SkillUpgradeDisplayData skillUpgrade;
@@ -52,10 +54,12 @@ public class ChestUpgradeOption
     {
         if (optionType == ChestUpgradeOptionType.Attribute)
         {
-            playerStats.addUpgrade(attributeUpgrade);
+            vfx.GenerateParticleEffect(Color.red);
+            playerStats.AddUpgrade(attributeUpgrade);
             return;
         }
 
+        vfx.GenerateParticleEffect(Color.yellow);
         skill.UnlockSkillUpgrade(skillUpgrade.upgradeName);
     }
 }
