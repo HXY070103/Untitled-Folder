@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using System;
+using NUnit.Framework;
 
 public class SkillBase : MonoBehaviour{
     [SerializeField] protected string skillName;
@@ -102,7 +104,24 @@ public class SkillBase : MonoBehaviour{
     }
 
     public float GetCurrentCooldown() {
-        return cooldown - (Time.time - lastTimeUsed);
+        return Mathf.Max(0, cooldown - (Time.time - lastTimeUsed));
+    }
+
+    public float GetReaminCooldown()
+    {
+        return GetCurrentCooldown();
+    }
+
+    public void SetRemainCooldown(float remaining)
+    {
+        remaining = Mathf.Clamp(remaining, 0, cooldown);
+        if (remaining <= 0)
+        {
+            lastTimeUsed = float.MinValue;
+        } else
+        {
+            lastTimeUsed = Time.time - (cooldown - remaining);
+        }
     }
 
     public float GetMaxCooldown() {
@@ -136,5 +155,50 @@ public class SkillBase : MonoBehaviour{
             }
         }
         Debug.Log("there is no upgrade");
+    }
+
+    public List<string> GetUnlockedUpgrades()
+    {
+        List<string> result = new List<string>();
+
+        foreach (var upgrade in upgrades)
+        {
+            if (upgrade != null && upgrade.unlocked)
+            {
+                result.Add(upgrade.upgradeName);
+            }
+        }
+        return result;
+    }
+
+    public void LoadUnlockedUpgrades(List<string> unlocked)
+    {
+        foreach (var upgrade in upgrades)
+        {
+            if (upgrade != null && unlocked.Contains(upgrade.upgradeName))
+            {
+                upgrade.unlocked = true;
+            } else
+            {
+                upgrade.unlocked = false;
+            }
+        }
+    }
+
+    public void SetDecayLevel(int level)
+    {
+        decreaseIndex = Mathf.Clamp(level, 0, decreaseRate.Length - 1);
+        playerSkillManager.UpdateSkillDecay(decreaseIndex);
+    }
+
+    public void ClearRuntimeSkillState()
+    {
+        if (handleSkillCo != null)
+        {
+            StopCoroutine(handleSkillCo);
+            handleSkillCo = null;
+        }
+        isSkillActive = false;
+        remainingDuration = 0;
     }
 }

@@ -44,18 +44,38 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
     public void UpdateSkillDecay(int skillDecay)
     {
         this.skillDecay = skillDecay;
-        skillDecayUI.UpdateDecayUI(this.skillDecay);
+        if (skillDecayUI != null)
+        {
+            skillDecayUI.UpdateDecayUI(this.skillDecay);
+        }
     }
 
     public void LoadData(GameData data)
     {
-        this.skillDecay = data.skillDecay;
-        skillDecayUI.UpdateDecayUI(this.skillDecay);
-        this.GetCurrentSkill().UpdateSkillDecay(this.skillDecay);
+        if (skills == null)
+        {
+            Initialize();
+        }
+        currentSkillType = (SkillType) data.chosenSkillType;
+        SkillBase currentSKill = GetCurrentSkill();
+        currentSKill.ClearRuntimeSkillState();
+        currentSKill.SetDecayLevel(data.skillDecay);
+        currentSKill.SetRemainCooldown(data.remainSkillColldown);
+        currentSKill.LoadUnlockedUpgrades(data.unlockedSkillUpgrades);
+        UpdateSkillDecay(data.skillDecay);
     }
 
     public void SaveData(ref GameData data)
     {
-        data.skillDecay = this.skillDecay;
+        if (skills == null)
+        {
+            Initialize();
+        }
+        SkillBase currentSKill = GetCurrentSkill();
+
+        data.chosenSkillType = (int) currentSkillType;
+        data.skillDecay = currentSKill.GetDecayLevel();
+        data.remainSkillColldown = currentSKill.GetReaminCooldown();
+        data.unlockedSkillUpgrades = currentSKill.GetUnlockedUpgrades();
     }
 }

@@ -8,19 +8,22 @@ public class SaveManager : MonoBehaviour
     private FileDataHandler dataHandler;
     private GameData gameData;
     private List<ISaveable> allSaveables;
-    [SerializeField] private string fileName = "UntitledFolder.json";
+    [SerializeField] private string fileName = "saveData.json";
 
     private IEnumerator Start()
     {
         dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         allSaveables = FindISaveables();
-
         yield return new WaitForSeconds(.01f);
         LoadGame();
     }
 
     public void SaveGame()
     {
+        if (gameData == null)
+        {
+            gameData = new GameData();
+        }
         foreach(var saveable in allSaveables)
         {
             saveable.SaveData(ref gameData);
@@ -43,11 +46,23 @@ public class SaveManager : MonoBehaviour
         }
     }
 
-    [ContextMenu("***Delata save data***")]
+    [ContextMenu("***Delate save data***")]
     public void DeleteSaveData()
     {
         dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         dataHandler.Delete();
+    }
+
+    public void SetCheckpoint(Vector3 position)
+    {
+        if (gameData == null)
+        {
+            gameData = new GameData();
+        }
+        gameData.hasCheckpoint = true;
+        gameData.checkpointX = position.x;
+        gameData.checkpointY = position.y;
+        gameData.checkpointZ = position.z;
     }
 
     private List<ISaveable> FindISaveables()

@@ -206,4 +206,11 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     public float GetInitialMaxHP() {
         return initialMaxHP;
     }
+
+    public void SetCurrentHP(float HP)
+    {
+        currentHP = Mathf.Clamp(HP, 0, stats.GetMaxHP());
+        isDead = currentHP <= 0;
+        OnHealthUpdate?.Invoke();
+    }
 }
