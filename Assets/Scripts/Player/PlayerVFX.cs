@@ -2,10 +2,13 @@ using System.Collections;
 using UnityEngine;
 
 public class PlayerVFX : EntityVFX {
+    [Header("Particle effect info")]
+    [SerializeField] private GameObject particleEffectPrefab;
+ 
     [Header("Image echo VFX info")]
     [Range(0.01f, 0.20f)]
     [SerializeField] private float imageEchoInterval = 0.05f;
-    [SerializeField] private GameObject imageEchoVFX;
+    [SerializeField] private GameObject imageEchoVFXPrefab;
 
     [Header("Phase VFX info")]
     [SerializeField] private float targetAlpha = 0.2f;
@@ -14,6 +17,19 @@ public class PlayerVFX : EntityVFX {
 
     private Coroutine imageEcho;
     private Coroutine fadeCo;
+
+    public void GenerateParticleEffect(Color color){
+        GameObject particleEffect = 
+            Instantiate(particleEffectPrefab, transform.position, Quaternion.identity);
+        ParticleSystem ps = particleEffect.GetComponent<ParticleSystem>();
+        ParticleSystem.MainModule main = ps.main;
+
+        main.startColor = color; 
+        ps.Play();
+
+        float destroyDelay = main.duration + main.startLifetime.constantMax;
+        Destroy(particleEffect, destroyDelay);
+    }
 
     public void ResetTransparency() {
         Color newColor = sr.color;
@@ -63,7 +79,7 @@ public class PlayerVFX : EntityVFX {
     }
 
     private void CreateImageEcho() {
-        GameObject imageEcho = Instantiate(imageEchoVFX, transform.position, transform.rotation);
+        GameObject imageEcho = Instantiate(imageEchoVFXPrefab, transform.position, transform.rotation);
         imageEcho.GetComponentInChildren<SpriteRenderer>().sprite = sr.sprite;
     }
 }

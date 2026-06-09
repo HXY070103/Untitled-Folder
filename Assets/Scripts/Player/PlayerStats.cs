@@ -25,12 +25,13 @@ public class PlayerStats : EntityStats, ISaveable {
         upgrades[(int) AttributeUpgrageType.Technique] = new TechniqueUpgrade(this);
     }
 
-    public void addUpgrade(AttributeUpgrade upgrade) {
+    public void AddUpgrade(AttributeUpgrade upgrade) {
         if (upgrade == null)
         {
             Debug.LogError("Attribute upgrade is null: " + upgrade);
             return;
         }
+
         upgrade.ApplyUpgrade();
         obtainAttributeUpgrades.Add(upgrade);
     }
@@ -67,7 +68,7 @@ public class PlayerStats : EntityStats, ISaveable {
             }
             for (int i = 0; i < saveData.count; ++i)
             {
-                addUpgrade(upgrade);
+                AddUpgrade(upgrade);
             }
         }
     }
