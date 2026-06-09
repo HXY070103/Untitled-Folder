@@ -22,6 +22,7 @@ public class UI_ChestReward : MonoBehaviour
     private GameObject player;
     private PlayerStats playerStats;
     private PlayerSkillManager skillManager;
+    private Chest currentChest;
 
     private void Awake()
     {
@@ -33,9 +34,10 @@ public class UI_ChestReward : MonoBehaviour
         purificationPanel.SetActive(false);
     }
 
-    public void Open(GameObject playerObj)
+    public void Open(GameObject playerObj, Chest chest)
     {
         player = playerObj;
+        currentChest = chest;
 
         playerStats = player.GetComponent<PlayerStats>();
         skillManager = player.GetComponent<PlayerSkillManager>();
@@ -93,6 +95,11 @@ public class UI_ChestReward : MonoBehaviour
 
         skillManager.GetCurrentSkill().DecreaseDecay();
         skillManager.GetCurrentSkill().DecreaseDecay();
+        if (currentChest != null)
+        {
+            currentChest.ClaimReward();
+        }
+        SaveGame();
         StartCoroutine(ClosePurificationAfterDelay());
     }
 
@@ -105,7 +112,21 @@ public class UI_ChestReward : MonoBehaviour
     public void SelectUpgrade(ChestUpgradeOption option)
     {
         option.Apply();
+        if (currentChest != null)
+        {
+            currentChest.ClaimReward();
+        }
+        SaveGame();
         Close();
+    }
+
+    private void SaveGame()
+    {
+        SaveManager saveManager = FindFirstObjectByType<SaveManager>();
+        if (saveManager != null)
+        {
+            saveManager.SaveGame();
+        }
     }
 
     public void Close()
@@ -114,6 +135,7 @@ public class UI_ChestReward : MonoBehaviour
         mainChoicePanel.SetActive(false);
         upgradePanel.SetActive(false);
         purificationPanel.SetActive(false);
+        currentChest = null;
 
         GamePauseManager.Instance.Resume("ChestReward");
     }
