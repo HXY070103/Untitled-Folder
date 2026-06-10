@@ -10,6 +10,10 @@ public class Chest : MonoBehaviour, IDamageable, ISaveable {
 
     [Header("Open info")]
     [SerializeField] private Vector2 knockback = new Vector2(0, 5);
+
+    [Header("Chest info")]
+    [SerializeField] private bool isBetter;
+
     private bool isChoosing;
     private bool isClaimed;
 
@@ -37,7 +41,7 @@ public class Chest : MonoBehaviour, IDamageable, ISaveable {
             Debug.LogError("Chest: UI_ChestReward instance not found.");
             return;
         }
-        UI_ChestReward.Instance.Open(player, this);    
+        UI_ChestReward.Instance.Open(player, this, isBetter);
     }
 
     public void ClaimReward()

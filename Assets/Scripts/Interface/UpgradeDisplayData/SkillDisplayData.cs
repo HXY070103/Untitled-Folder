@@ -8,4 +8,5 @@ public class SkillDisplayData
     [TextArea]
     public string description;
     public List<SkillUpgradeDisplayData> upgrades = new List<SkillUpgradeDisplayData>();
+    public List<SkillUpgradeDisplayData> betterUpgrades = new List<SkillUpgradeDisplayData>();
 }
