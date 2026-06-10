@@ -5,6 +5,8 @@ using System;
 using NUnit.Framework;
 
 public class SkillBase : MonoBehaviour{
+    protected PlayerStats stats;
+
     [SerializeField] protected string skillName;
     [SerializeField] protected SkillType skillType;
 
@@ -13,7 +15,6 @@ public class SkillBase : MonoBehaviour{
 
     [Header("Skill Upgrades")]
     [SerializeField] protected List<SkillUpgradeDisplayData> upgrades = new List<SkillUpgradeDisplayData>();
-
     [SerializeField] protected float[] decreaseRate;
     [SerializeField] protected int decreaseIndex;
     [SerializeField] protected PlayerSkillManager playerSkillManager;
@@ -23,7 +24,7 @@ public class SkillBase : MonoBehaviour{
     public string Description => description;
     public List<SkillUpgradeDisplayData> Upgrades => upgrades;
 
-    protected PlayerStats stats;
+    [Header("Basic skill info")]
     [SerializeField] private float cooldown = 3;
     [SerializeField] private float skillDuration = 3;
     
@@ -37,6 +38,7 @@ public class SkillBase : MonoBehaviour{
 
     protected virtual void Awake() {
         stats = GetComponentInParent<PlayerStats>();
+    
         lastTimeUsed = float.MinValue;
         remainingDuration = 0;
         isSkillActive = false;
@@ -128,8 +130,8 @@ public class SkillBase : MonoBehaviour{
         return cooldown;
     }
 
-    public void DecreaseDecay() {
-        decreaseIndex = Mathf.Max(decreaseIndex - 1, 0);
+    public void DecreaseDecay(int decreaseLevel) {
+        decreaseIndex = Mathf.Max(decreaseIndex - decreaseLevel, 0);
         playerSkillManager.UpdateSkillDecay(decreaseIndex);
     }
 
@@ -139,7 +141,7 @@ public class SkillBase : MonoBehaviour{
 
     public void UpdateSkillDecay(int skillDecay)
     {
-        this.decreaseIndex = skillDecay;
+        decreaseIndex = skillDecay;
     }
 
     //当玩家获得强化时调用：currentSkill.UnlockSkillUpgrade("Blood Fight");
