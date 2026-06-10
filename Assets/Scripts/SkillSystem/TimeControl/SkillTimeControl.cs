@@ -15,6 +15,8 @@ public class SkillTimeControl : SkillBase {
 
     [Header("Precision targeting info")]
     [SerializeField] private float damageMultiplier = 2;
+    
+    [SerializeField] private PlayerHealth playerHealth;
 
     private GameObject domain;
 
@@ -27,13 +29,18 @@ public class SkillTimeControl : SkillBase {
             return 1;
         }
 
+        if (UnlockedForBetterUpgrade("Fixed Rate"))
+        {
+            return slowDownPercentage * stats.GetSkillEffect();
+        }
         return slowDownPercentage * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
-
 
     protected override void StartSkill() {
         base.StartSkill();
 
+        playerHealth.isAttacked = false;
+        
         CreateDomain();
 
         if (UnLocked("Hunting Time")) {
@@ -56,6 +63,14 @@ public class SkillTimeControl : SkillBase {
 
         if (UnLocked("Precision Targeting")) {
             OnResetFirstAttack?.Invoke();
+        }
+        
+        if (UnlockedForBetterUpgrade("Calm Fight"))
+        {
+            if (playerHealth.isAttacked == false)
+            {
+                DecreaseDecay(1);
+            }
         }
     }
 

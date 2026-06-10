@@ -39,6 +39,10 @@ public class SkillPhase : SkillBase {
     }
 
     public float GetDamageMultiplier() {
+        if (UnlockedForBetterUpgrade("Fixed Attack"))
+        {
+            return damageMultiplier * stats.GetSkillEffect();
+        }
         return damageMultiplier * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
@@ -82,6 +86,11 @@ public class SkillPhase : SkillBase {
 
         if (UnLocked("Perfect Echo") && isPerfectPhase) {
             health.Healing(bonusHP);
+        }
+
+        if (UnlockedForBetterUpgrade("Perfect Timing"))
+        {
+            DecreaseDecay(1);
         }
     }
 
@@ -146,6 +155,7 @@ public class SkillPhase : SkillBase {
 
     public void PerfectPhaseTriggered() {
         isPerfectPhase = true;
+        Debug.Log("perfect phase");
     }
 
     private void SetPerfectWindow() {

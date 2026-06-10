@@ -65,13 +65,25 @@ public class UI_UpgradePanel : MonoBehaviour
             contentText.text = sb.ToString();
             return;
         }
-        if (currentSkill.upgrades == null || currentSkill.upgrades.Count == 0)
+        if ((currentSkill.upgrades == null || currentSkill.upgrades.Count == 0) 
+            && (currentSkill.betterUpgrades == null || currentSkill.betterUpgrades.Count == 0))
         {
             sb.AppendLine("No skill upgrades available.");
             contentText.text = sb.ToString();
             return;
         }
         bool hasUnlockedUpgrade = false;
+
+        foreach (var upgrade in currentSkill.betterUpgrades)
+        {
+            if (upgrade.unlocked)
+            {
+                hasUnlockedUpgrade = true;
+                sb.AppendLine($"[{upgrade.upgradeName}]");
+                sb.AppendLine(upgrade.description);
+                sb.AppendLine();
+            }
+        }
         foreach (var upgrade in currentSkill.upgrades)
         {
             if (upgrade.unlocked)
@@ -158,6 +170,10 @@ public class UI_UpgradePanel : MonoBehaviour
 
             upgrades = skill.Upgrades != null 
                 ? new List<SkillUpgradeDisplayData>(skill.Upgrades)
+                : new List<SkillUpgradeDisplayData>(),
+
+            betterUpgrades = skill.BetterUpgrades != null
+                ? new List<SkillUpgradeDisplayData>(skill.BetterUpgrades)
                 : new List<SkillUpgradeDisplayData>()
         };
         

@@ -17,8 +17,10 @@ public class GameData
    //skill
    public int chosenSkillType;
    public int skillDecay;
+   public int numOfUse;
    public float remainSkillColldown;
    public List<string> unlockedSkillUpgrades = new List<string>();
+   public List<string> unlockedBetterUpgrades = new List<string>();
 
    //attribute upgrades
    public List<AttributeUpgradeSaveData> attributeUpgrades = new List<AttributeUpgradeSaveData>();

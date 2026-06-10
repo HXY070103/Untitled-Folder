@@ -624,7 +624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92b71837b7b544c5e9755013f1c2dcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillManager
-  currentSkillType: 0
+  currentSkillType: 2
   skillDecayUI: {fileID: 1530134092}
 --- !u!114 &38960031
 MonoBehaviour:
@@ -674,8 +674,9 @@ MonoBehaviour:
   onHitVFXColor: {r: 1, g: 1, b: 1, a: 1}
   onHitVFX: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
   onCritHitVFX: {fileID: 1321752846314756928, guid: b9426da7f34ab4e6dac992440f1c4583, type: 3}
+  particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
-  imageEchoVFX: {fileID: 2270825432934318720, guid: 4f1f4f8826d734b10b1ba186c9e19441, type: 3}
+  imageEchoVFXPrefab: {fileID: 2270825432934318720, guid: 4f1f4f8826d734b10b1ba186c9e19441, type: 3}
   targetAlpha: 0.2
   fadeSpeed: 2
   fadeInterval: 0.05
@@ -701,6 +702,7 @@ MonoBehaviour:
   onHeavyDamageKnockback: {x: 7, y: 7}
   heavyKnockbackDuration: 0.5
   miniHealthBarActive: 0
+  isAttacked: 0
 --- !u!114 &38960034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1733,8 +1735,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 185028331}
-  - component: {fileID: 185028334}
   - component: {fileID: 185028333}
+  - component: {fileID: 185028334}
   - component: {fileID: 185028332}
   m_Layer: 7
   m_Name: SkillHolder
@@ -1793,6 +1795,22 @@ MonoBehaviour:
   - upgradeName: Perfect Echo
     description: Restores a portion of HP when Perfect Phase is triggered
     unlocked: 0
+  betterUpgrades:
+  - upgradeName: Stable
+    description: use 2 times of skill will increase 1 skill decay
+    unlocked: 0
+  - upgradeName: Perfect Timing
+    description: If you make perfect phase, then this skill will not increase skill
+      decay
+    unlocked: 0
+  - upgradeName: Fixed Time
+    description: (manual exclusive with Fixed Attack) skill decay will not decrease
+      the skill duration
+    unlocked: 0
+  - upgradeName: Fixed Attack
+    description: (manual exclusive with Fixed Time) skill decay will not decrease
+      the rate of heavy attack
+    unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 38960030}
@@ -1840,6 +1858,22 @@ MonoBehaviour:
     description: The first attack against each enemy during the skill deals increased
       damage
     unlocked: 0
+  betterUpgrades:
+  - upgradeName: Stable
+    description: use 2 times of skill will increase 1 skill decay
+    unlocked: 0
+  - upgradeName: Calm Fight
+    description: 'if player is not injured during the skill duration, then this skill
+      will not increase skill decay '
+    unlocked: 0
+  - upgradeName: Fixed Rate
+    description: (manual exclusive with Fixed Time) skill decay will not decrease
+      the rate of slow
+    unlocked: 0
+  - upgradeName: Fixed Time
+    description: (manual exclusive with Fixed Rate) skill decay will not decrease
+      the skill dutation
+    unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 38960030}
@@ -1850,6 +1884,7 @@ MonoBehaviour:
   slowDownPercentage: 0.8
   bonusDuration: 1
   damageMultiplier: 2
+  playerHealth: {fileID: 38960033}
 --- !u!114 &185028334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1886,6 +1921,26 @@ MonoBehaviour:
     description: Increases damage taken during the skill, but also increases damage
       and attack speed
     unlocked: 0
+  betterUpgrades:
+  - upgradeName: Stable
+    description: use 2 times of skill will increase 1 skill decay
+    unlocked: 0
+  - upgradeName: Blood Back
+    description: if you heal enough amount of HP by this skill during skill duration,
+      then this skill will not increase skill decay
+    unlocked: 0
+  - upgradeName: Fixed Time
+    description: '(mutual exclusive with Fixed Blood)
+
+      skill decay will not
+      decrease the skill duration'
+    unlocked: 0
+  - upgradeName: Fixed Blood
+    description: '(mutual exclusive with Fixed Time)
+
+      skill decay will not
+      decrease the ratio of healing by making damage '
+    unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 38960030}
@@ -1904,6 +1959,7 @@ MonoBehaviour:
   damageTakenMultiplier: 2
   damageApplyMultiplier: 2
   attackAnimSpeedMultiplier: 1.5
+  amountOfBloodBack: 10
 --- !u!1 &185166898
 GameObject:
   m_ObjectHideFlags: 0
@@ -5973,7 +6029,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1695621403
-  m_SortingLayer: -6
+  m_SortingLayer: -7
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: be8c9daed4a4fed4cbc669e1c42e6de0, type: 3}
@@ -6614,6 +6670,7 @@ MonoBehaviour:
   - {fileID: 308957455}
   upgradeChoiceButton: {fileID: 1774572912}
   purificationChoiceButton: {fileID: 1641868810}
+  detailForPurification: {fileID: 1722951292}
 --- !u!1 &874055664
 GameObject:
   m_ObjectHideFlags: 0
@@ -9056,7 +9113,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1695621403
-  m_SortingLayer: -6
+  m_SortingLayer: -7
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 99a4a23701ec66e4f993efdcb794e764, type: 3}
@@ -9148,7 +9205,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1695621403
-  m_SortingLayer: -6
+  m_SortingLayer: -7
   m_SortingOrder: 2
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
@@ -18910,7 +18967,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -516828461
-  m_SortingLayer: -4
+  m_SortingLayer: -5
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
@@ -54815,6 +54872,7 @@ MonoBehaviour:
     skillName: Life Steal
     description: 
     upgrades: []
+    betterUpgrades: []
   playerStats: {fileID: 38960031}
   skillManager: {fileID: 38960030}
 --- !u!1 &1421862735
@@ -56182,7 +56240,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1695621403
-  m_SortingLayer: -6
+  m_SortingLayer: -7
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 99a4a23701ec66e4f993efdcb794e764, type: 3}
@@ -56653,6 +56711,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1600154296}
+  - {fileID: 1722951291}
   m_Father: {fileID: 892088119}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -57255,6 +57314,143 @@ MonoBehaviour:
   statName: {fileID: 1674503059}
   statValue: {fileID: 2142306941}
   entityStats: {fileID: 38960031}
+--- !u!1 &1722951290
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1722951291}
+  - component: {fileID: 1722951293}
+  - component: {fileID: 1722951292}
+  m_Layer: 5
+  m_Name: Details
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1722951291
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722951290}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1641868806}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -44}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1722951292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722951290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: -x Skill Decay
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
+  m_sharedMaterial: {fileID: -8065883861848785263, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 24
+  m_fontSizeBase: 24
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: -17.43396, y: 0, z: -19.613037, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1722951293
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722951290}
+  m_CullTransparentMesh: 1
 --- !u!1 &1736879228
 GameObject:
   m_ObjectHideFlags: 0
@@ -57315,7 +57511,7 @@ MonoBehaviour:
   m_text: Purification has been implemented
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: -8065883861848785263, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -57381,7 +57577,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -119.48657, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &1736879231
@@ -57991,6 +58187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2772e68e6c9954f7f993396f745254dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Checkpoint
+  lightBeamPrefab: {fileID: 5386106882603929669, guid: e68305435184f422791222be4d75407f, type: 3}
 --- !u!61 &1774751028
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -58984,7 +59181,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1695621403
-  m_SortingLayer: -6
+  m_SortingLayer: -7
   m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 99a4a23701ec66e4f993efdcb794e764, type: 3}
@@ -60557,6 +60754,10 @@ PrefabInstance:
       propertyPath: chestID
       value: chest_002
       objectReference: {fileID: 0}
+    - target: {fileID: 76117898836642934, guid: 52b9f9d4746e34fc6a4e1006ca389488, type: 3}
+      propertyPath: isBetter
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2843764241385937629, guid: 52b9f9d4746e34fc6a4e1006ca389488, type: 3}
       propertyPath: m_LocalPosition.x
       value: -7.08
@@ -60600,6 +60801,10 @@ PrefabInstance:
     - target: {fileID: 7603165686939089333, guid: 52b9f9d4746e34fc6a4e1006ca389488, type: 3}
       propertyPath: m_Name
       value: ObjectChest (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7603165686939089333, guid: 52b9f9d4746e34fc6a4e1006ca389488, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -60840,7 +61045,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1695621403
-  m_SortingLayer: -6
+  m_SortingLayer: -7
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: be8c9daed4a4fed4cbc669e1c42e6de0, type: 3}
@@ -61281,7 +61486,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 1695621403
-  m_SortingLayer: -6
+  m_SortingLayer: -7
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: be8c9daed4a4fed4cbc669e1c42e6de0, type: 3}
@@ -61310,5 +61515,5 @@ SceneRoots:
   - {fileID: 2106353088}
   - {fileID: 1464365394}
   - {fileID: 1654876391}
-  - {fileID: 2132693756}
   - {fileID: 1774751029}
+  - {fileID: 2132693756}

@@ -3,6 +3,8 @@ using System.Collections;
 public class PlayerHealth : EntityHealth, ISaveable {
     private SkillPhase phase;
 
+    public bool isAttacked;
+
     private bool isVulnerable = false;
     private float damageMultiplier;
 
@@ -16,6 +18,7 @@ public class PlayerHealth : EntityHealth, ISaveable {
         if (isVulnerable) {
             damage = new Damage(damage.value * damageMultiplier, damage.isCrit);
         }
+        isAttacked = true;
 
         base.TakeDamage(damage, damageDealer);
 

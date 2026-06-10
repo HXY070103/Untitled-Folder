@@ -28,6 +28,8 @@ public class SkillLifeSteal : SkillBase {
     [SerializeField] private float damageApplyMultiplier = 2;
     [SerializeField] private float attackAnimSpeedMultiplier = 1.5f;
 
+    [SerializeField] private float amountOfBloodBack;
+
     private float totalHealingHP;
     private GameObject fireVFX;
 
@@ -37,6 +39,10 @@ public class SkillLifeSteal : SkillBase {
             bonusConversionRate = (maxConversionRate - conversionRate) * (1 - health.GetHPPercentage());
         } else {
             bonusConversionRate = 0;
+        }
+        if (UnlockedForBetterUpgrade("Fixed Blood"))
+        {
+            return (conversionRate + bonusConversionRate) * stats.GetSkillEffect();
         }
         return (conversionRate + bonusConversionRate) * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
@@ -71,6 +77,11 @@ public class SkillLifeSteal : SkillBase {
         EndAccumulateDamage();
         DestroyFireVFX();
 
+        if (UnlockedForBetterUpgrade("Blood Back"))
+        {
+            HandleBloodBack();
+        }
+
         if (!UnLocked("Unshakable Resolve") && !UnLocked("Stable Gain")) {
             CreateFireball();
         }
@@ -87,6 +98,14 @@ public class SkillLifeSteal : SkillBase {
             health.EndVulnerability();
             ResetDamage();
             player.ResetAttackSpeed();
+        }
+    }
+
+    private void HandleBloodBack()
+    {
+        if (totalHealingHP >= amountOfBloodBack)
+        {
+            DecreaseDecay(1);
         }
     }
 
