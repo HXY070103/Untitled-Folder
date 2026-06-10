@@ -127,6 +127,10 @@ public class Enemy : Entity, ISlowable{
         stateMachine.ChangeState(battleState);
     }
 
+    public void DestoryGameObjectWithDelay(float delay) {
+        Destroy(gameObject, delay);
+    }
+
     public Transform GetPlayerReference() {
         if (player == null) {
             player = PlayerDetected().transform;
