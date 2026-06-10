@@ -17,6 +17,7 @@ public class EnemyDeadState : EnemyState {
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 15);
 
         stateMachine.SwitchOff();
+        enemy.DestoryGameObjectWithDelay(10);
     }
 
     public override void Update() {
