@@ -2,7 +2,8 @@ using System.Collections;
 using UnityEngine;
 
 public class Enemy : Entity, ISlowable{
-    private EntityStats stats;
+    public EntityStats stats { get; private set; }
+    public EntityCombat combat { get; private set; }
 
     public EnemyIdleState idleState;
     public EnemyMoveState moveState;
@@ -12,8 +13,10 @@ public class Enemy : Entity, ISlowable{
     public EnemyStunnedState stunnedState;
 
     [Header("Battle info")]
+    public bool canChasePlayer = true;
     public float battleMoveSpeed = 3;
     public float attackDistance = 2;
+    public float attackCooldown = 0.5f;
     public float battleDuration = 5;
     public float minRetreatDistance = 1;
     public Vector2 retreatSpeed = new Vector2(5, 3);
@@ -45,6 +48,7 @@ public class Enemy : Entity, ISlowable{
         base.Awake();
 
         stats = GetComponent<EntityStats>();
+        combat = GetComponent<EntityCombat>();
     }
 
     public float GetBattleMoveSpeed() {
@@ -54,6 +58,8 @@ public class Enemy : Entity, ISlowable{
     public float GetMoveSpeed() {
         return moveSpeed * speedMultiplier;
     }
+
+    public virtual void SpecialAttack() {}
 
     public void 
         ApplyPhaseDebuff(float debuffDuration, float damageReduction, float armorReduction) {
