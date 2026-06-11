@@ -14,8 +14,8 @@ TagManager:
   - Ground
   - Player
   - Enemy
-  - 
-  - 
+  - EnemyProjectile
+  - Untargetable
   - 
   - 
   - 
@@ -48,7 +48,7 @@ TagManager:
     uniqueID: 3778138835
     locked: 0
   - name: CheckPoint
-    uniqueID: 3496310203
+    uniqueID: 498959099
     locked: 0
   - name: Chest
     uniqueID: 3935080143

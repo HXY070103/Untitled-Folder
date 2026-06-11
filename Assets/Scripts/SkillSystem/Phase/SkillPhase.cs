@@ -56,6 +56,8 @@ public class SkillPhase : SkillBase {
 
     protected override void StartSkill() {
         base.StartSkill();
+
+        player.gameObject.layer = LayerMask.NameToLayer("Untargetable");
         
         isPerfectPhase = false;
         SetPerfectWindow();
@@ -73,6 +75,8 @@ public class SkillPhase : SkillBase {
 
     protected override void EndSkill() {
         base.EndSkill();
+
+        player.gameObject.layer = LayerMask.NameToLayer("Player");
         
         player.RecoverSpeed();
         vfx.ResetTransparency();

@@ -20,7 +20,7 @@ public class EntityCombat : MonoBehaviour {
     }
 
     public void PerformAttack() {
-        foreach (var target in GetDetectedColliders()) {
+        foreach (var target in GetDetectedColliders(whatIsTarget)) {
             IDamageable damageable = target.GetComponent<IDamageable>();
 
             if (canApplyInstantKill) {
@@ -42,13 +42,32 @@ public class EntityCombat : MonoBehaviour {
         canApplyInstantKill = false;
     } 
 
+    public void PerforAttackOnTarget(Transform target) {
+        IDamageable damageable = target.GetComponent<IDamageable>();
+
+        if (canApplyInstantKill) {
+            damageable.TryApplyInstantKill();
+        }
+            
+        if (damageable == null) {
+            return;
+        }
+
+        Damage damage = stats.GetDamage();
+        damageable.TakeDamage(damage, transform);
+
+        if (!damageable.IsInvulnerable()) {
+            vfx.CreateOnHitVFX(target.transform, damage.isCrit);
+        }
+    }
+
     public void SetNextAttackToInstantKill() {
         canApplyInstantKill = true;
     }
 
-    protected Collider2D[] GetDetectedColliders() {
+    protected Collider2D[] GetDetectedColliders(LayerMask whatToDetect) {
         return 
-            Physics2D.OverlapCircleAll(targetCheck.position, targetCheckRadius, whatIsTarget);
+            Physics2D.OverlapCircleAll(targetCheck.position, targetCheckRadius, whatToDetect);
     }
 
     private void OnDrawGizmos() {

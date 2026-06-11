@@ -205,8 +205,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 622f1369d85534f969a49e8c53ba8d0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySlime
-  groundCheckDistance: 0.5
-  wallCheckDistance: 0.5
+  groundCheckDistance: 0.2
+  wallCheckDistance: 0.6
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -233,7 +233,7 @@ MonoBehaviour:
   playerCheck: {fileID: 3078112580693504641}
   slimeToCreatePrefab: {fileID: 0}
   amountOfSlimesToCreate: 0
-  newSlimeVelocity: []
+  newSlimePositionOffset: {x: 0, y: 0}
   hasStunnedRecovery: 1
 --- !u!50 &5540637436232507075
 Rigidbody2D:
