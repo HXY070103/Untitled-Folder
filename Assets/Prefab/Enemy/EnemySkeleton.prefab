@@ -357,8 +357,10 @@ MonoBehaviour:
   groundCheck: {fileID: 8262399107502491296}
   primaryWallCheck: {fileID: 5939796045182456773}
   secondaryWallCheck: {fileID: 5939796045182456773}
+  canChasePlayer: 1
   battleMoveSpeed: 3
   attackDistance: 2
+  attackCooldown: 0.5
   battleDuration: 5
   minRetreatDistance: 1
   retreatSpeed: {x: 5, y: 3}
@@ -468,6 +470,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   isDead: 0
   currentHP: 0
+  initialMaxHP: 100
   isOnShotKillable: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2

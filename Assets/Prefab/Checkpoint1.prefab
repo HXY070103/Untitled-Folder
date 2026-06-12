@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1599057948655336010}
   - component: {fileID: 6656341203066234089}
   - component: {fileID: 2403745058405032174}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Checkpoint1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2772e68e6c9954f7f993396f745254dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Checkpoint
+  lightBeamPrefab: {fileID: 5386106882603929669, guid: e68305435184f422791222be4d75407f, type: 3}
 --- !u!212 &2403745058405032174
 SpriteRenderer:
   serializedVersion: 2
@@ -141,8 +142,8 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 498959099
+  m_SortingLayer: -4
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -1799554416, guid: be55291aae08d434db3da3b59db3ab4a, type: 3}
