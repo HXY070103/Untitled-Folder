@@ -15,6 +15,10 @@ public class UI_SkillDuration : MonoBehaviour
     private void Update()
     {
         skill = manager.GetCurrentSkill();
+        if (skill == null)
+        {
+            return;
+        }
         if (skill.IsSkillActive)
         {
             durationGroup.SetActive(true);

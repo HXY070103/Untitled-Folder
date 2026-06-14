@@ -5,6 +5,12 @@ using System.Collections.Generic;
 [Serializable]
 public class GameData
 {
+   // game state
+   public bool isGameInProgess;
+   public bool hasChosenSkill;
+   //scene
+   public string currentSceneName;
+
    // checkpoint
    public bool hasCheckpoint;
    public float checkpointX;

@@ -5,14 +5,13 @@ using UnityEngine.UI;
 
 public class UI_Ingame : MonoBehaviour
 {
-    private Player player;
+    [SerializeField] private Player player;
     [SerializeField] private RectTransform healthRect;
     [SerializeField] private Slider healthSlider;
     [SerializeField] private TextMeshProUGUI healthText;
 
-    private void Awake()
+    private void Start()
     {
-        player = FindFirstObjectByType<Player>();
         player.health.OnHealthUpdate += UpdateHealthBar;
         UpdateHealthBar();
     }

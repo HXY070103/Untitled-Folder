@@ -290,6 +290,15 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SkillChoose"",
+                    ""type"": ""Button"",
+                    ""id"": ""fc4325ea-6ba2-481c-9933-e0dae9e10292"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -323,6 +332,17 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard & Mouse"",
                     ""action"": ""CharacterUI"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""00c03d46-2785-4372-8a7f-05a2c9896181"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard & Mouse"",
+                    ""action"": ""SkillChoose"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -361,6 +381,7 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
         m_UI_OptionsUI = m_UI.FindAction("OptionsUI", throwIfNotFound: true);
         m_UI_AlternativeInput = m_UI.FindAction("AlternativeInput", throwIfNotFound: true);
         m_UI_CharacterUI = m_UI.FindAction("CharacterUI", throwIfNotFound: true);
+        m_UI_SkillChoose = m_UI.FindAction("SkillChoose", throwIfNotFound: true);
     }
 
     ~@PlayerInputSet()
@@ -596,6 +617,7 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_OptionsUI;
     private readonly InputAction m_UI_AlternativeInput;
     private readonly InputAction m_UI_CharacterUI;
+    private readonly InputAction m_UI_SkillChoose;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -619,6 +641,10 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "UI/CharacterUI".
         /// </summary>
         public InputAction @CharacterUI => m_Wrapper.m_UI_CharacterUI;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/SkillChoose".
+        /// </summary>
+        public InputAction @SkillChoose => m_Wrapper.m_UI_SkillChoose;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -654,6 +680,9 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
             @CharacterUI.started += instance.OnCharacterUI;
             @CharacterUI.performed += instance.OnCharacterUI;
             @CharacterUI.canceled += instance.OnCharacterUI;
+            @SkillChoose.started += instance.OnSkillChoose;
+            @SkillChoose.performed += instance.OnSkillChoose;
+            @SkillChoose.canceled += instance.OnSkillChoose;
         }
 
         /// <summary>
@@ -674,6 +703,9 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
             @CharacterUI.started -= instance.OnCharacterUI;
             @CharacterUI.performed -= instance.OnCharacterUI;
             @CharacterUI.canceled -= instance.OnCharacterUI;
+            @SkillChoose.started -= instance.OnSkillChoose;
+            @SkillChoose.performed -= instance.OnSkillChoose;
+            @SkillChoose.canceled -= instance.OnSkillChoose;
         }
 
         /// <summary>
@@ -798,5 +830,12 @@ public partial class @PlayerInputSet: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnCharacterUI(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SkillChoose" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSkillChoose(InputAction.CallbackContext context);
     }
 }
