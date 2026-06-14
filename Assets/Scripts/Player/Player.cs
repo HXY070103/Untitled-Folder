@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : Entity {
     public static event Action OnPlayerDeath;
+    public static Player instance;
 
     public PlayerInputSet input { get; private set; }
     public PlayerVFX vfx { get; private set; }
@@ -62,6 +63,7 @@ public class Player : Entity {
     protected override void Awake() {
         base.Awake();
 
+        instance = this;
         input = new PlayerInputSet();
         stats = GetComponent<PlayerStats>();
         health = GetComponent<PlayerHealth>();
@@ -95,6 +97,11 @@ public class Player : Entity {
         }
 
         stateMachine.ChangeState(deadState);
+    }
+
+    public void TeleportPlayer(Vector3 position)
+    {
+        transform.position = position;
     }
 
     public void IncreaseAttackSpeed(float attackAnimSpeedMultiplier) {

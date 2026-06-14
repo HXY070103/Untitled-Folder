@@ -5515,7 +5515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e1d826c013ee4891a88c32933147492, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Ingame
-  player: {fileID: 0}
+  player: {fileID: 6200617753876788339, guid: 81a7f60869a3742a6bdcd9f2beeaf2c9, type: 3}
   healthRect: {fileID: 272387726207679090}
   healthSlider: {fileID: 6877920720253055205}
   healthText: {fileID: 145064865405505146}
@@ -13762,9 +13762,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SaveManager, Assembly-CSharp
-        m_MethodName: SaveGame
+      - m_Target: {fileID: 1121670105585118243}
+        m_TargetAssemblyTypeName: UI_Options, Assembly-CSharp
+        m_MethodName: SaveAndExitToMainMenu
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
