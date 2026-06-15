@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Waypoint : MonoBehaviour
 {
@@ -55,7 +54,7 @@ public class Waypoint : MonoBehaviour
         
     }
 
-    /* cannot go back
+    /* can go back by open this method
     private void OnTriggerExit2D(Collider2D collision)
     {
         canBeTrigger = true;

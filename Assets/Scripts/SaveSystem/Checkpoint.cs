@@ -11,18 +11,15 @@ public class Checkpoint : MonoBehaviour
             return;
         }
 
-        Instantiate(lightBeamPrefab, transform.position, Quaternion.identity);
-
-        SaveManager saveManager = FindFirstObjectByType<SaveManager>();
-
-        if (saveManager == null)
+        if (lightBeamPrefab != null)
+        {
+            Instantiate(lightBeamPrefab, transform.position, Quaternion.identity);
+        }
+        if (SaveManager.instance == null)
         {
             Debug.LogError("Checkpoint: SaveManager not found");
             return;
         }
-
-        saveManager.SetCheckpoint(transform.position);
-        saveManager.SaveGame();
-
+        SaveManager.instance.SaveGame();
     }
 }

@@ -2,10 +2,18 @@ using Unity.VectorGraphics;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using NUnit.Framework;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Scene Transition")]
+    [SerializeField] private Image fadeImage;
+    [SerializeField] private float fadeDuration = 1f;
+
     public static GameManager instance;
+
+    public bool isChangeScene;
 
     private void Awake()
     {
@@ -18,6 +26,40 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    // change scene for mainmenu, tutorial...
+    public void LoadScene(string sceneName)
+    {
+        if (isChangeScene)
+        {
+            return;
+        }
+        StartCoroutine(LoadSceneCo(sceneName));
+    }
+
+    private IEnumerator LoadSceneCo(string sceneName)
+    {
+        isChangeScene = true;
+
+        // fade out 淡入
+        yield return Fade(0f, 1f);
+
+        SceneManager.LoadScene(sceneName);
+        yield return null;
+        yield return new WaitForSecondsRealtime(0.2f);
+
+        if (SaveManager.instance != null)
+        {
+            SaveManager.instance.RefreshSavables();
+            SaveManager.instance.LoadDataToCurrentScene();
+        }
+
+        //fade in
+        yield return Fade(1f, 0f);
+
+        isChangeScene = false;
+    }
+
+    // change scene by waypoint: map to map
     public void ChangeScene(string sceneName, WaypointType type)
     {
         StartCoroutine(ChangeSceneCo(sceneName, type));
@@ -25,9 +67,9 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ChangeSceneCo(string sceneName, WaypointType waypointType)
     {
-        // Fade effect: to be completed
-
-        yield return new WaitForSeconds(1f);
+        // Fade effect
+        isChangeScene = true;
+        yield return Fade(0f, 1f);
 
         SceneManager.LoadScene(sceneName);
 
@@ -52,6 +94,9 @@ public class GameManager : MonoBehaviour
             SaveManager.instance.RefreshSavables();
             SaveManager.instance.SaveGame();
         }
+
+        yield return Fade(1f, 0f);
+        isChangeScene = false;
     }
 
     private Vector3 GetWaypointPosition(WaypointType type)
@@ -74,5 +119,40 @@ public class GameManager : MonoBehaviour
             instance = null;
         }
         Destroy(gameObject);
+    }
+
+    private IEnumerator Fade(float fromAlpha, float toAlpha)
+    {
+        if (fadeImage == null)
+        {
+            Debug.LogWarning("FadeImage is not assigned on GameManager.");
+            yield break;
+        }
+        fadeImage.gameObject.SetActive(true);
+        fadeImage.raycastTarget = true;
+
+        float timer = 0f;
+        Color color = fadeImage.color;
+        color.a = fromAlpha;
+        fadeImage.color = color;
+
+        while (timer < fadeDuration)
+        {
+            timer += Time.unscaledDeltaTime;
+            float alpha = Mathf.Lerp(fromAlpha, toAlpha, timer / fadeDuration);
+            color = fadeImage.color;
+            color.a = alpha;
+            fadeImage.color = color;
+            yield return null;
+        }
+
+        color = fadeImage.color;
+        color.a = toAlpha;
+        fadeImage.color = color;
+
+        if (toAlpha <= 0f)
+        {
+            fadeImage.raycastTarget = false;
+        }
     }
 }

@@ -11,11 +11,11 @@ public class GameData
    //scene
    public string currentSceneName;
 
-   // checkpoint
-   public bool hasCheckpoint;
-   public float checkpointX;
-   public float checkpointY;
-   public float checkpointZ;
+   // player position
+   public bool hasPlayerPosition;
+   public float playerPositionX;
+   public float playerPositionY;
+   public float playerPositionZ;
 
    //player health
    public float playerCurrentHP = -1;
