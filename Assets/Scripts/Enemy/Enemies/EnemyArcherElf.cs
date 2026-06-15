@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class EnemyArcherElf : Enemy, ICounterable{
+public class EnemyArcherElf : Enemy {
     [Header("Archer elf specific info")]
     [SerializeField] private GameObject arrowPrefab;
     [SerializeField] private Transform arrowStartPoint;
@@ -31,13 +31,5 @@ public class EnemyArcherElf : Enemy, ICounterable{
             Instantiate(arrowPrefab, arrowStartPoint.position, Quaternion.identity);
         arrow.GetComponent<EnemyArcherElfArrow>().SetUpArrow(facingDir * arrowSpeed, combat);
 
-    }
-
-    public bool CanBeCountered() {
-        return InAttackWindow;
-    }
-    
-    public void HandleCounter() {
-        stateMachine.ChangeState(stunnedState);
     }
 }

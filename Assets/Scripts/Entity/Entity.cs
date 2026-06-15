@@ -109,13 +109,13 @@ public class Entity : MonoBehaviour {
             );
 
         Gizmos.DrawLine(
-            primaryWallCheck.position, 
-            primaryWallCheck.position + new Vector3(facingDir * wallCheckDistance, 0)
-        );
+                primaryWallCheck.position, 
+                primaryWallCheck.position + new Vector3(facingDir * wallCheckDistance, 0)
+            );
         
         Gizmos.DrawLine(
-            secondaryWallCheck.position, 
-            secondaryWallCheck.position + new Vector3(facingDir * wallCheckDistance, 0)
-        );
+                secondaryWallCheck.position, 
+                secondaryWallCheck.position + new Vector3(facingDir * wallCheckDistance, 0)
+            );
     }
 }

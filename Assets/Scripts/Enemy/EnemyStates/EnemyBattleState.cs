@@ -21,9 +21,7 @@ public class EnemyBattleState : EnemyState {
         }
 
         if (ShouldRetreat()) {
-            float xVelocity = -DirectionToPlayer() * enemy.retreatSpeed.x;
-            rb.linearVelocity = new Vector2(xVelocity, enemy.retreatSpeed.y);
-            enemy.HandleFlip(DirectionToPlayer());
+            QuickRetreat();
         }
     }
 
@@ -37,7 +35,7 @@ public class EnemyBattleState : EnemyState {
         if (BattleTimeIsOver()) {
             stateMachine.ChangeState(enemy.idleState);
         }
-        
+
         HandleBattle();
     }
 
@@ -53,19 +51,28 @@ public class EnemyBattleState : EnemyState {
         lastTimeAttacked = Time.time;
     }
 
+    protected void QuickRetreat() {
+        float xVelocity = -DirectionToPlayer() * enemy.GetQuickRetreatSpeed().x;
+        float yVelocity = enemy.GetQuickRetreatSpeed().y;
+        rb.linearVelocity = new Vector2(xVelocity, yVelocity);
+        enemy.HandleFlip(DirectionToPlayer());
+    }
+
     protected virtual void HandleBattle() {
         if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
             UpdateAttackTimer();
-            stateMachine.ChangeState(enemy.attackState);            
+            stateMachine.ChangeState(enemy.attackState); 
         } else {
             if (!enemy.PlayerDetected()) {
                 enemy.HandleFlip(DirectionToPlayer());
             }
 
-            if (enemy.canChasePlayer) {
-                float xVelocity = DirectionToPlayer() * enemy.GetBattleMoveSpeed();
-                enemy.SetVelocity(xVelocity, rb.linearVelocity.y);
+            if (WithInAttackRange() || enemy.wallDetected) {
+                return;
             }
+
+            float xVelocity = DirectionToPlayer() * enemy.GetBattleMoveSpeed();
+            enemy.SetVelocity(xVelocity, rb.linearVelocity.y);
         }
     }
     

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemySkeleton : Enemy, ICounterable {
+public class EnemySkeleton : Enemy {
     protected override void Awake() {
         base.Awake();
 
@@ -16,13 +16,5 @@ public class EnemySkeleton : Enemy, ICounterable {
         base.Start();
 
         stateMachine.Initialize(idleState);
-    }
-
-    public bool CanBeCountered() {
-        return InAttackWindow;
-    }
-    
-    public void HandleCounter() {
-        stateMachine.ChangeState(stunnedState);
     }
 }

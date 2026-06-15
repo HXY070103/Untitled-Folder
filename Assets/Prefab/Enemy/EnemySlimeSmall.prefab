@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: 3448902426482759441}
   - component: {fileID: 5540637436232507075}
   - component: {fileID: 5726836470157696460}
-  - component: {fileID: 2083399252451657036}
+  - component: {fileID: 6322030108138316690}
   - component: {fileID: 7940335907271336775}
   - component: {fileID: 5752175408144724445}
   - component: {fileID: 5984651231167587435}
@@ -206,7 +206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySlime
   groundCheckDistance: 0.2
-  wallCheckDistance: 0.6
+  wallCheckDistance: 0.5
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -216,11 +216,13 @@ MonoBehaviour:
   groundCheck: {fileID: 6007499827683730294}
   primaryWallCheck: {fileID: 3078112580693504641}
   secondaryWallCheck: {fileID: 3078112580693504641}
+  canChasePlayer: 1
   battleMoveSpeed: 3
   attackDistance: 0.6
+  attackCooldown: 0.9
   battleDuration: 5
   minRetreatDistance: 0.3
-  retreatSpeed: {x: 4, y: 2}
+  quickRetreatSpeed: {x: 5, y: 3}
   stunnedSpeed: {x: 7, y: 2}
   stunnedDuration: 1
   idleDurarion: 2
@@ -299,7 +301,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.06}
   m_Size: {x: 1.6, y: 0.88}
   m_Direction: 1
---- !u!114 &2083399252451657036
+--- !u!114 &6322030108138316690
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -308,14 +310,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5706280760924928225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2765550e8ed1e4404b75f147046fc4e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 19e037d9e7ef34f05bcffa128fbb8199, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityCombat
-  damage: 25
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCombat
   targetCheckRadius: 0.3
   whatIsTarget:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 2176
   targetCheck: {fileID: 4127688833393541075}
 --- !u!114 &7940335907271336775
 MonoBehaviour:
@@ -351,6 +352,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  imageEchoInterval: 0.05
+  imageEchoVFXPrefab: {fileID: 0}
   onDamageVFXMaterial: {fileID: 2100000, guid: c8bbf733d1f504c969c031f0379a1148, type: 2}
   onDamageVFXDurarion: 0.2
   onHitVFXColor: {r: 1, g: 1, b: 1, a: 1}

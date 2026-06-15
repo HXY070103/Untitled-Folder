@@ -70,11 +70,11 @@ public class Domain : MonoBehaviour {
 
     private void ApplyDomainDamage(Collider2D collision) {
         EnemyHealth enemyHealth = collision.GetComponent<EnemyHealth>();
-        enemyHealth?.ApplyDot(damage, damageInterval);
+        enemyHealth?.StartDot(damage, damageInterval, float.PositiveInfinity);
     }
 
     private void EndDomainDamage(Collider2D collision) {
         EnemyHealth enemyHealth = collision.GetComponent<EnemyHealth>();
-        enemyHealth?.EndDot();
+        enemyHealth?.StopDot();
     }
 }

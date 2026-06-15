@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 802951399104089180}
   - component: {fileID: 3668161012677136483}
   - component: {fileID: 3874318240405639009}
-  - component: {fileID: 3437286392803320222}
+  - component: {fileID: 6586418354013251328}
   - component: {fileID: 6178671657647446579}
   - component: {fileID: 5464574310772426263}
   - component: {fileID: 4587777559165797030}
@@ -360,10 +360,10 @@ MonoBehaviour:
   canChasePlayer: 1
   battleMoveSpeed: 3
   attackDistance: 2
-  attackCooldown: 0.5
+  attackCooldown: 1.5
   battleDuration: 5
   minRetreatDistance: 1
-  retreatSpeed: {x: 5, y: 3}
+  quickRetreatSpeed: {x: 5, y: 3}
   stunnedSpeed: {x: 7, y: 7}
   stunnedDuration: 1
   idleDurarion: 2
@@ -438,7 +438,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.25}
   m_Size: {x: 0.6, y: 1.5}
   m_Direction: 0
---- !u!114 &3437286392803320222
+--- !u!114 &6586418354013251328
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -447,14 +447,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4043535905820101034}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2765550e8ed1e4404b75f147046fc4e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 19e037d9e7ef34f05bcffa128fbb8199, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EntityCombat
-  damage: 25
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyCombat
   targetCheckRadius: 1
   whatIsTarget:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 2176
   targetCheck: {fileID: 7963739379977170035}
 --- !u!114 &6178671657647446579
 MonoBehaviour:
@@ -490,6 +489,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  imageEchoInterval: 0.05
+  imageEchoVFXPrefab: {fileID: 0}
   onDamageVFXMaterial: {fileID: 2100000, guid: c8bbf733d1f504c969c031f0379a1148, type: 2}
   onDamageVFXDurarion: 0.2
   onHitVFXColor: {r: 1, g: 1, b: 1, a: 1}

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemySlime: Enemy, ICounterable {
+public class EnemySlime: Enemy {
     [Header("Slime specific info")]
     [SerializeField] private GameObject slimeToCreatePrefab;
     [SerializeField] private int amountOfSlimesToCreate = 2;
@@ -24,14 +24,6 @@ public class EnemySlime: Enemy, ICounterable {
         base.Start();
 
         stateMachine.Initialize(idleState);
-    }
-
-    public bool CanBeCountered() {
-        return InAttackWindow;
-    }
-    
-    public void HandleCounter() {
-        stateMachine.ChangeState(stunnedState);
     }
 
     public void CreateSlimeOnDeath() {

@@ -11,7 +11,6 @@ public class PlayerDashState : PlayerState {
         base.Enter();
 
         vfx.DoImageEchoEffect(player.dashDuration);
-        player.gameObject.layer = LayerMask.NameToLayer("Untargetable");
 
         stateTimer = player.dashDuration;
         originalGravityScale = rb.gravityScale;
@@ -32,8 +31,6 @@ public class PlayerDashState : PlayerState {
 
     public override void Exit() {
         base.Exit();
-
-        player.gameObject.layer = LayerMask.NameToLayer("Player");
 
         rb.gravityScale = originalGravityScale;
         player.SetVelocity(0, 0);
