@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-public class Enemy : Entity, ISlowable{
+public class Enemy : Entity, ISlowable, ICounterable {
     public EntityStats stats { get; private set; }
-    public EntityCombat combat { get; private set; }
+    public EnemyCombat combat { get; private set; }
+    public EnemyVFX vfx { get; private set; }
 
     public EnemyIdleState idleState;
     public EnemyMoveState moveState;
@@ -13,13 +14,12 @@ public class Enemy : Entity, ISlowable{
     public EnemyStunnedState stunnedState;
 
     [Header("Battle info")]
-    public bool canChasePlayer = true;
     public float battleMoveSpeed = 3;
     public float attackDistance = 2;
     public float attackCooldown = 0.5f;
     public float battleDuration = 5;
     public float minRetreatDistance = 1;
-    public Vector2 retreatSpeed = new Vector2(5, 3);
+    public Vector2 quickRetreatSpeed = new Vector2(5, 3);
 
     [Header("Stunned info")]
     public Vector2 stunnedSpeed = new Vector2(7, 7);
@@ -48,7 +48,8 @@ public class Enemy : Entity, ISlowable{
         base.Awake();
 
         stats = GetComponent<EntityStats>();
-        combat = GetComponent<EntityCombat>();
+        combat = GetComponent<EnemyCombat>();
+        vfx = GetComponent<EnemyVFX>();
     }
 
     public float GetBattleMoveSpeed() {
@@ -57,6 +58,10 @@ public class Enemy : Entity, ISlowable{
 
     public float GetMoveSpeed() {
         return moveSpeed * speedMultiplier;
+    }
+
+    public Vector2 GetQuickRetreatSpeed() {
+        return quickRetreatSpeed * speedMultiplier;
     }
 
     public virtual void SpecialAttack() {}
@@ -103,6 +108,14 @@ public class Enemy : Entity, ISlowable{
     public void RecoverSpeed() {
         speedMultiplier = 1;
         anim.speed = 1;
+    }
+
+    public bool CanBeCountered() {
+        return InAttackWindow;
+    }
+    
+    public void HandleCounter() {
+        stateMachine.ChangeState(stunnedState);
     }
 
     public void EnterAttackWindow() {

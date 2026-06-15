@@ -17,8 +17,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] private float initialMaxHP = 100f;
     [SerializeField] private bool isOnShotKillable = false;
 
-    private bool isInvulnerable = false;
-
     [Header("On damage knockback info")]
     [SerializeField] private Vector2 onDamageKnockback = new Vector2(1.5f, 2.5f);
     [SerializeField] private float knockbackDuration = 0.2f;
@@ -32,7 +30,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     public bool miniHealthBarActive;
 
     private Coroutine dotCo;
-    private bool isInDot = false;
 
     private bool canRevival = false;
     private float reviveHPMultiplier;
@@ -50,21 +47,8 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public void TryApplyInstantKill() {
         if (isOnShotKillable) {
-            currentHP = 0;
-            OnHealthUpdate?.Invoke();
+            ReduceHP(currentHP);
         }
-    }
-
-    public void EnterInvulnerableState() {
-        isInvulnerable = true;
-    }
-
-    public void ExitInvulnerableState() {
-        isInvulnerable = false;
-    }
-
-    public bool IsInvulnerable() {
-        return isInvulnerable;
     }
 
     public void StartDeathPrevention(float reviveHPMultiplier) {
@@ -72,33 +56,37 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         this.reviveHPMultiplier = reviveHPMultiplier;
     }
 
-    public void EndDeathPrevention() {
+    public void StopDeathPrevention() {
         canRevival = false;
     }
 
-    public void ApplyDot(float damage, float dotInterval) {
+    public void StartDot(float damage, float dotInterval, float duration) {
         if (dotCo != null) {
             StopCoroutine(dotCo);
         }
 
-        isInDot = true;
-        dotCo = StartCoroutine(DotCo(damage, dotInterval));
+        dotCo = StartCoroutine(DotCo(damage, dotInterval, duration));
     }
 
-    public void EndDot() {
-        isInDot = false;
+    public void StopDot() {
+        if (dotCo != null) {
+            StopCoroutine(dotCo);
+        }
     }
 
-    private IEnumerator DotCo(float damage, float dotInterval) {
-        while (isInDot) {
+    private IEnumerator DotCo(float damage, float dotInterval, float duration) {
+        float timeTracker = 0;
+
+        while (timeTracker < duration) {
             ReduceHP(damage);
             vfx.PlayOnDamageVFX();
             yield return new WaitForSeconds(dotInterval);
+            timeTracker += dotInterval;
         }
     }
  
     public virtual void TakeDamage(Damage damage, Transform damageDealer) {
-        if (isDead || isInvulnerable) {
+        if (isDead) {
             return;
         }
 
@@ -143,22 +131,25 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         if (currentHP > stats.GetMaxHP()) {
             currentHP = stats.GetMaxHP();
         }
+
         OnHealthUpdate?.Invoke();
     }
 
     protected void ReduceHP(float damage) {
         currentHP -= damage;
-        OnHealthUpdate?.Invoke();
+
         if (currentHP <= 0) {
+            currentHP = 0;
             Die();
         }
         
+        OnHealthUpdate?.Invoke();
     }
 
     private void Die() {
         if (canRevival) {
-            currentHP = stats.GetMaxHP() * reviveHPMultiplier;
-            OnHealthUpdate?.Invoke();
+            float reviveHP = stats.GetMaxHP() * reviveHPMultiplier;
+            Healing(reviveHP);
             canRevival = false;
             return;
         }

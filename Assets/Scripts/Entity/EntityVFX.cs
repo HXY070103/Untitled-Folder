@@ -5,6 +5,13 @@ public class EntityVFX : MonoBehaviour {
     protected SpriteRenderer sr;
     private Entity entity;
 
+    [Header("Image echo VFX info")]
+    [Range(0.01f, 0.20f)]
+    [SerializeField] private float imageEchoInterval = 0.05f;
+    [SerializeField] private GameObject imageEchoVFXPrefab;
+
+    private Coroutine imageEcho;
+
     [Header("On Taking damage VFX")]
     [SerializeField] private Material onDamageVFXMaterial;
     [SerializeField] private float onDamageVFXDurarion = 0.2f;
@@ -21,6 +28,40 @@ public class EntityVFX : MonoBehaviour {
         sr = GetComponentInChildren<SpriteRenderer>();
         entity = GetComponent<Entity>();
         originalMaterial = sr.material;
+    }
+
+    public void DoImageEchoEffect(float duration) {
+        if (imageEcho != null) {
+            StopCoroutine(imageEcho);
+        }
+
+        imageEcho = StartCoroutine(ImageEchoEffectCo(duration));
+    }
+
+    public void StopImageEchoEffect() {
+        if (imageEcho != null) {
+            StopCoroutine(imageEcho);
+        }
+    }
+
+    private IEnumerator ImageEchoEffectCo(float duration) {
+        float timeTracker = 0;
+        
+        while (timeTracker < duration) {
+            CreateImageEcho();
+            yield return new WaitForSeconds(imageEchoInterval);
+            timeTracker += imageEchoInterval;
+        }
+    }
+
+    private void CreateImageEcho() {
+        Vector3 position = entity.anim.transform.position;
+        float scale = entity.anim.transform.localScale.x * entity.transform.localScale.x;
+
+        GameObject imageEcho = Instantiate(imageEchoVFXPrefab, position, transform.rotation);
+
+        imageEcho.transform.localScale = new Vector3(scale, scale, scale);
+        imageEcho.GetComponentInChildren<SpriteRenderer>().sprite = sr.sprite;
     }
 
     public void CreateOnHitVFX(Transform target, bool isCrit) {
