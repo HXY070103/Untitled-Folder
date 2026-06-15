@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyArcherElfArrow : MonoBehaviour, ICounterable, ISlowable{
+public class EnemyArcherElfArrow : MonoBehaviour, ICounterable, ISlowable {
     private Collider2D col;
     private Rigidbody2D rb;
     private Animator anim;
@@ -8,7 +8,8 @@ public class EnemyArcherElfArrow : MonoBehaviour, ICounterable, ISlowable{
     private EntityCombat combat;
 
     [SerializeField] private LayerMask whatIsTarget;
-    [SerializeField] private float stuckDuration = 3;
+    [SerializeField] private LayerMask whatCanCollideWith;
+    [SerializeField] private float destroyDelay = 3;
     [SerializeField] private GameObject destroyVFXPrefab;
 
     private float arrowSpeed;
@@ -29,7 +30,10 @@ public class EnemyArcherElfArrow : MonoBehaviour, ICounterable, ISlowable{
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (((1 << collision.gameObject.layer) & whatIsTarget) != 0) {
-            combat.PerforAttackOnTarget(collision.transform);
+            combat.PerformAttackOnTarget(collision.transform);
+        }
+
+        if (((1 << collision.gameObject.layer) & whatCanCollideWith) != 0) {
             StuckIntoTarget(collision.transform);
         }
     }
@@ -40,7 +44,7 @@ public class EnemyArcherElfArrow : MonoBehaviour, ICounterable, ISlowable{
         col.enabled = false;
         anim.enabled = false; 
         transform.parent = target;
-        Destroy(gameObject, stuckDuration);
+        Destroy(gameObject, destroyDelay);
     }
 
     public bool CanBeCountered() {

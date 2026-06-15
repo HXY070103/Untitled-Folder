@@ -76,10 +76,6 @@ public class Chest : MonoBehaviour, IDamageable, ISaveable {
         }
     }
 
-    public bool IsInvulnerable() {
-        return false;
-    }
-
     public void TryApplyInstantKill() {}
 
     public void LoadData(GameData data)

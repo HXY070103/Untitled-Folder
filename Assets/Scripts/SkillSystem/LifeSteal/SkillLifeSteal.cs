@@ -87,7 +87,7 @@ public class SkillLifeSteal : SkillBase {
         }
 
         if (UnLocked("Unshakable Resolve")) {
-            health.EndDeathPrevention();
+            health.StopDeathPrevention();
         }
 
         if (UnLocked("Blood Growth")) {

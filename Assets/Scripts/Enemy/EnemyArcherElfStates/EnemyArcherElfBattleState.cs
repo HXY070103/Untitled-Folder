@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyArcherElfBattleState : EnemyBattleState {
     private bool reachDeadEnd;
+    private int deadEndDir;
 
     public EnemyArcherElfBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {}
@@ -13,11 +14,12 @@ public class EnemyArcherElfBattleState : EnemyBattleState {
     }
 
     public override void Update() {
-        base.Update();
-
         if (!enemy.groundDetected || enemy.wallDetected) {
             reachDeadEnd = true;
+            deadEndDir = enemy.facingDir;
         }
+
+        base.Update();
     }
 
     public override void Exit() {
@@ -25,22 +27,11 @@ public class EnemyArcherElfBattleState : EnemyBattleState {
     }
 
     protected override void HandleBattle() {
-        if (CanAttack()) {
-            enemy.SetVelocity(0, rb.linearVelocity.y);
-
-            if (!enemy.PlayerDetected()) {
-                enemy.HandleFlip(DirectionToPlayer());
-            }
-
-            if (WithInAttackRange() && enemy.PlayerDetected()) {
-                UpdateAttackTimer();
-                stateMachine.ChangeState(enemy.attackState);
-            }
-        } else { 
-            bool shouldWalkAway = 
-                !reachDeadEnd && DistanceToPlayer() < enemy.attackDistance * 0.8f;
-
-            if (shouldWalkAway) {
+        if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
+            UpdateAttackTimer();
+            stateMachine.ChangeState(enemy.attackState); 
+        } else {
+            if (CanWalkAway() && InWalkAwayRange()) {
                 float xVeloity = -DirectionToPlayer() * enemy.GetBattleMoveSpeed();
                 enemy.SetVelocity(xVeloity, rb.linearVelocity.y);
             } else {
@@ -51,5 +42,13 @@ public class EnemyArcherElfBattleState : EnemyBattleState {
                 }
             }
         }
+    }
+
+    private bool CanWalkAway() {
+        return !reachDeadEnd || -DirectionToPlayer() != deadEndDir;
+    }
+
+    private bool InWalkAwayRange() {
+        return DistanceToPlayer() < enemy.attackDistance * 0.8f;
     }
 }

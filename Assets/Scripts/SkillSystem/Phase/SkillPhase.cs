@@ -7,6 +7,7 @@ public class SkillPhase : SkillBase {
     private PlayerVFX vfx;
 
     [Header("Skill info")]
+    [SerializeField] private GameObject hurtCheckerPrefab;
     [SerializeField] private float damageMultiplier = 2;
     [SerializeField] private float speedUpPercentage = 1.5f;
     [SerializeField] private float perfectPhaseWindow = 0.2f;
@@ -14,6 +15,8 @@ public class SkillPhase : SkillBase {
     [SerializeField] private float heavyAttackExpiryTime = 10;
 
     private Coroutine handleHeavyAttackCo;
+    private GameObject hurtChecker;
+    private bool isPerfectPhase;
 
     [Header("Weakness marking info")]
     [SerializeField] private GameObject phaseTrackerPrefab;
@@ -28,11 +31,6 @@ public class SkillPhase : SkillBase {
 
     [Header("Perfect echo info")]
     [SerializeField] private float bonusHP = 10;
-
-    private bool inPerfectPhaseWindow = false;
-    private bool isPerfectPhase = false;
-    private Coroutine handlePerfectPhaseWindowCo;
-    public bool InPerfectPhaseWindow => inPerfectPhaseWindow;
 
     public float GetSpeedUpPercentage() {
         return speedUpPercentage * stats.GetSkillEffect();
@@ -60,13 +58,13 @@ public class SkillPhase : SkillBase {
         player.gameObject.layer = LayerMask.NameToLayer("Untargetable");
         
         isPerfectPhase = false;
-        SetPerfectWindow();
+        SetPerfectPhaseWindow();
+
 
         HandleHeavyAttack();
 
         player.SpeedUp(GetSpeedUpPercentage());
         vfx.DoFadeEffect();
-        health.EnterInvulnerableState();
 
         if (UnLocked("Weakness Marking")) {
             CreatePhaseTracker();
@@ -80,7 +78,6 @@ public class SkillPhase : SkillBase {
         
         player.RecoverSpeed();
         vfx.ResetTransparency();
-        health.ExitInvulnerableState();
 
         isBonusPhase = false;
 
@@ -157,23 +154,17 @@ public class SkillPhase : SkillBase {
         Destroy(phaseTracker);
     }
 
+    private void SetPerfectPhaseWindow() {
+        GameObject hurtChecker = 
+            Instantiate(hurtCheckerPrefab, transform.position, Quaternion.identity);
+        hurtChecker.transform.SetParent(transform);
+        hurtChecker.GetComponent<HurtCheckerController>().SetUpHurtChecker(this);
+        Destroy(hurtChecker, GetPerfectPhaseWindow());
+    }
+
     public void PerfectPhaseTriggered() {
         isPerfectPhase = true;
         Debug.Log("perfect phase");
-    }
-
-    private void SetPerfectWindow() {
-        if (handlePerfectPhaseWindowCo != null) {
-            StopCoroutine(handlePerfectPhaseWindowCo);
-        }
-
-        handlePerfectPhaseWindowCo = StartCoroutine(HandlePerfectPhaseWindow());
-    }
-
-    private IEnumerator HandlePerfectPhaseWindow() {
-        inPerfectPhaseWindow = true;
-        yield return new WaitForSeconds(GetPerfectPhaseWindow());
-        inPerfectPhaseWindow = false;
     }
 
     public float GetPerfectPhaseWindow() {

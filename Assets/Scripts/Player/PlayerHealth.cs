@@ -1,8 +1,6 @@
 using UnityEngine;
 using System.Collections;
 public class PlayerHealth : EntityHealth, ISaveable {
-    private SkillPhase phase;
-
     public bool isAttacked;
 
     private bool isVulnerable = false;
@@ -10,8 +8,6 @@ public class PlayerHealth : EntityHealth, ISaveable {
 
     protected override void Awake() {
         base.Awake();
-
-        phase = GetComponentInChildren<SkillPhase>();
     }
 
     public override void TakeDamage(Damage damage, Transform damageDealer) {
@@ -21,10 +17,6 @@ public class PlayerHealth : EntityHealth, ISaveable {
         isAttacked = true;
 
         base.TakeDamage(damage, damageDealer);
-
-        if (phase.InPerfectPhaseWindow) {
-            phase.PerfectPhaseTriggered();
-        }
     }
 
     public void StartVulnerability(float damageMultiplier) {
@@ -38,7 +30,7 @@ public class PlayerHealth : EntityHealth, ISaveable {
 
     public void LoadData(GameData data)
     {
-        if (data.playerCurrentHP >= 0)
+        if (data.playerCurrentHP > 0) 
         {
             StartCoroutine(LoadHealthNextFrame(data.playerCurrentHP));
         }
