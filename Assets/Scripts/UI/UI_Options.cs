@@ -1,7 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
 
 public class UI_Options : MonoBehaviour
 {
@@ -43,8 +42,11 @@ public class UI_Options : MonoBehaviour
         }
         if (GameManager.instance != null)
         {
-            GameManager.instance.DestorySelf();
+            GameManager.instance.LoadScene("Mainscene");
         }
-        SceneManager.LoadScene("Mainscene");
+        else
+        {
+            Debug.LogError("GameManager not found");
+        }
     }
 }

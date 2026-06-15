@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainMenuManager : MonoBehaviour
@@ -97,7 +96,14 @@ public class MainMenuManager : MonoBehaviour
 
         dataHandler.SaveData(newData);
 
-        SceneManager.LoadScene(newGameSceneName);
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.LoadScene(newGameSceneName);
+        }
+        else
+        {
+            Debug.LogError("GameManager not found");
+        }
     }
 
     public void OnContinueGameButton()
@@ -125,12 +131,26 @@ public class MainMenuManager : MonoBehaviour
             return;
         }
 
-        SceneManager.LoadScene(data.currentSceneName);
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.LoadScene(data.currentSceneName);
+        }
+        else
+        {
+            Debug.LogError("GameManager not found");
+        }
     }
 
     public void OnTutorialButton()
     {
-        SceneManager.LoadScene(tutorialSceneName);
+        if (GameManager.instance != null)
+        {
+            GameManager.instance.LoadScene(tutorialSceneName);
+        }
+        else
+        {
+            Debug.LogError("GameManager not found");
+        }
     }
 
     public void OnSettingButton()

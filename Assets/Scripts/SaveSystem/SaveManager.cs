@@ -76,14 +76,10 @@ public class SaveManager : MonoBehaviour
             gameData.currentSceneName = SceneManager.GetActiveScene().name;
             yield break;
         }
-        if (!string.IsNullOrEmpty(gameData.currentSceneName)
-            && SceneManager.GetActiveScene().name != gameData.currentSceneName)
-        {
-            SceneManager.LoadScene(gameData.currentSceneName);
-
-            yield return null;
-            yield return new WaitForSeconds(0.1f);
-        }
+        
+        yield return null;
+        yield return new WaitForSeconds(0.1f);
+    
         RefreshSavables();
         foreach(var saveable in allSaveables)
         {
@@ -116,18 +112,6 @@ public class SaveManager : MonoBehaviour
     {
         dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
         dataHandler.Delete();
-    }
-
-    public void SetCheckpoint(Vector3 position)
-    {
-        if (gameData == null)
-        {
-            gameData = new GameData();
-        }
-        gameData.hasCheckpoint = true;
-        gameData.checkpointX = position.x;
-        gameData.checkpointY = position.y;
-        gameData.checkpointZ = position.z;
     }
 
     private List<ISaveable> FindISaveables()
