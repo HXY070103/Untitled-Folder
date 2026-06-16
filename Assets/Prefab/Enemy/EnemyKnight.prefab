@@ -247,9 +247,9 @@ MonoBehaviour:
   groundCheck: {fileID: 3236728319078674316}
   primaryWallCheck: {fileID: 474838836005265591}
   secondaryWallCheck: {fileID: 474838836005265591}
-  battleMoveSpeed: 3
-  attackDistance: 2
-  attackCooldown: 1.2
+  battleMoveSpeed: 2.5
+  attackDistance: 1.7
+  attackCooldown: 1.5
   battleDuration: 5
   minRetreatDistance: 0.6
   quickRetreatSpeed: {x: 5, y: 3}
@@ -378,6 +378,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 0}
   onDamageVFXMaterial: {fileID: 2100000, guid: c8bbf733d1f504c969c031f0379a1148, type: 2}
@@ -400,19 +401,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EntityStats
   defaultStatSetup: {fileID: 11400000, guid: b970993ca290b4cf4a0ece4687e71472, type: 2}
   maxHP:
-    baseValue: 100
+    baseValue: 150
     modifiers: []
   damage:
-    baseValue: 10
+    baseValue: 15
     modifiers: []
   critPower:
     baseValue: 2
     modifiers: []
   critChance:
-    baseValue: 0
+    baseValue: 10
     modifiers: []
   armor:
-    baseValue: 100
+    baseValue: 150
     modifiers: []
 --- !u!1 &5203628025734382714
 GameObject:

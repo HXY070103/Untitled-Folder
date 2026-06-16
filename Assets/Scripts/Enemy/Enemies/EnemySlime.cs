@@ -5,7 +5,6 @@ public class EnemySlime: Enemy {
     [SerializeField] private GameObject slimeToCreatePrefab;
     [SerializeField] private int amountOfSlimesToCreate = 2;
     [SerializeField] private Vector2 newSlimePositionOffset = new Vector2(2, 1);
-    [SerializeField] private bool hasStunnedRecovery = true;
 
     protected override void Awake() {
         base.Awake();
@@ -17,7 +16,7 @@ public class EnemySlime: Enemy {
         deadState = new EnemySlimeDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
 
-        anim.SetBool("HasStunnedRecovery", hasStunnedRecovery);
+        anim.SetBool("HasStunnedRecovery", true);
     }
 
     protected override void Start() {

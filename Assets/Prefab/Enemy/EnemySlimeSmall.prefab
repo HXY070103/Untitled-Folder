@@ -216,9 +216,8 @@ MonoBehaviour:
   groundCheck: {fileID: 6007499827683730294}
   primaryWallCheck: {fileID: 3078112580693504641}
   secondaryWallCheck: {fileID: 3078112580693504641}
-  canChasePlayer: 1
   battleMoveSpeed: 3
-  attackDistance: 0.6
+  attackDistance: 0.5
   attackCooldown: 0.9
   battleDuration: 5
   minRetreatDistance: 0.3
@@ -236,7 +235,6 @@ MonoBehaviour:
   slimeToCreatePrefab: {fileID: 0}
   amountOfSlimesToCreate: 0
   newSlimePositionOffset: {x: 0, y: 0}
-  hasStunnedRecovery: 1
 --- !u!50 &5540637436232507075
 Rigidbody2D:
   serializedVersion: 5
@@ -352,6 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 0}
   onDamageVFXMaterial: {fileID: 2100000, guid: c8bbf733d1f504c969c031f0379a1148, type: 2}

@@ -12,7 +12,6 @@ public class EnemyMage : Enemy {
     [SerializeField] private float spellCastCooldown = 0.3f;
     
     [Space]
-    [SerializeField] private bool hasStunnedRecovery = true;
     [SerializeField] private Transform backCollisionCheck;
     [SerializeField] private float backCollisionDistance;
     public float retreatCooldown = 5;
@@ -35,7 +34,7 @@ public class EnemyMage : Enemy {
         retreatState = new EnemyMageRetreatState(this, stateMachine, "Battle");
         spellCastState = new EnemyMageSpellCastState(this, stateMachine, "SpellCast");
 
-        anim.SetBool("HasStunnedRecovery", hasStunnedRecovery);
+        anim.SetBool("HasStunnedRecovery", true);
     }
 
     protected override void Start() {
