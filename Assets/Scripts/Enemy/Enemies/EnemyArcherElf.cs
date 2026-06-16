@@ -16,6 +16,8 @@ public class EnemyArcherElf : Enemy {
         battleState = new EnemyArcherElfBattleState(this, stateMachine, "Battle");
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
+
+        anim.SetBool("HasStunnedRecovery", false);
     }
 
     protected override void Start() {

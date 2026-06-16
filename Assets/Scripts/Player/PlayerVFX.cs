@@ -2,28 +2,12 @@ using System.Collections;
 using UnityEngine;
 
 public class PlayerVFX : EntityVFX {
-    [Header("Particle effect info")]
-    [SerializeField] private GameObject particleEffectPrefab;
-
     [Header("Phase VFX info")]
     [SerializeField] private float targetAlpha = 0.2f;
     [SerializeField] private float fadeSpeed = 2;
     [SerializeField] private float fadeInterval = 0.05f;
 
     private Coroutine fadeCo;
-
-    public void GenerateParticleEffect(Color color){
-        GameObject particleEffect = 
-            Instantiate(particleEffectPrefab, transform.position, Quaternion.identity);
-        ParticleSystem ps = particleEffect.GetComponent<ParticleSystem>();
-        ParticleSystem.MainModule main = ps.main;
-
-        main.startColor = color; 
-        ps.Play();
-
-        float destroyDelay = main.duration + main.startLifetime.constantMax;
-        Destroy(particleEffect, destroyDelay);
-    }
 
     public void ResetTransparency() {
         Color newColor = sr.color;
