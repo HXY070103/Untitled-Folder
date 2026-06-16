@@ -1,10 +1,16 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerPositionSaver : MonoBehaviour, ISaveable
 {
     public void LoadData(GameData data)
     {
+        string currentSceneName = SceneManager.GetActiveScene().name;
         if (!data.hasPlayerPosition)
+        {
+            return;
+        }
+        if (!data.clearedSceneNames.Contains(currentSceneName))
         {
             return;
         }

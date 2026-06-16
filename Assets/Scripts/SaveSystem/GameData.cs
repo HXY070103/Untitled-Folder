@@ -33,6 +33,9 @@ public class GameData
 
    //chest
    public List<string> openedChestID = new List<string>();
+
+   //level clear
+   public List<string> clearedSceneNames = new List<string>();
 }
 
 [Serializable]

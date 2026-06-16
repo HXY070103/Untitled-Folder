@@ -150,6 +150,65 @@ public class SaveManager : MonoBehaviour
         return data.currentSceneName;
     }
 
+    public bool IsSceneCleared(string sceneName)
+    {
+        if (dataHandler == null)
+        {
+            dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+        }
+
+        if (gameData == null)
+        {
+            gameData = dataHandler.LoadData();
+        }
+
+        if (gameData == null)
+        {
+            return false;
+        }
+
+        return gameData.clearedSceneNames.Contains(sceneName);
+    }
+
+    public bool HasSavedPlayerPosition()
+    {
+        if (dataHandler == null)
+        {
+            dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+        }
+
+        if (gameData == null)
+        {
+            gameData = dataHandler.LoadData();
+        }
+
+        return gameData != null && gameData.hasPlayerPosition;
+    }
+
+    public Vector3 GetSavedPlayerPosition()
+    {
+        if (dataHandler == null)
+        {
+            dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+        }
+
+        if (gameData == null)
+        {
+            gameData = dataHandler.LoadData();
+        }
+
+        if (gameData == null || !gameData.hasPlayerPosition)
+        {
+            return Vector3.zero;
+        }
+
+        return new Vector3(
+            gameData.playerPositionX,
+            gameData.playerPositionY,
+            gameData.playerPositionZ
+        );
+    }
+
     public void CreateNewGame(string startSceneName)
     {
         GameData data = new GameData();
