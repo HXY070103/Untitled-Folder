@@ -26,6 +26,8 @@ public class EnemyDarkKnight : Enemy {
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
         dashAttackState = new EnemyDarkKnightDashAttackState(this, stateMachine, "DashAttack");
+
+        anim.SetBool("HasStunnedRecovery", false);
     }
 
     protected override void Start() {

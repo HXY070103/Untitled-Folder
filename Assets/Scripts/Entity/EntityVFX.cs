@@ -5,6 +5,9 @@ public class EntityVFX : MonoBehaviour {
     protected SpriteRenderer sr;
     private Entity entity;
 
+    [Header("Particle effect info")]
+    [SerializeField] private GameObject particleEffectPrefab;
+
     [Header("Image echo VFX info")]
     [Range(0.01f, 0.20f)]
     [SerializeField] private float imageEchoInterval = 0.05f;
@@ -28,6 +31,19 @@ public class EntityVFX : MonoBehaviour {
         sr = GetComponentInChildren<SpriteRenderer>();
         entity = GetComponent<Entity>();
         originalMaterial = sr.material;
+    }
+
+    public void GenerateParticleEffect(Color color){
+        GameObject particleEffect = 
+            Instantiate(particleEffectPrefab, transform.position, Quaternion.identity);
+        ParticleSystem ps = particleEffect.GetComponent<ParticleSystem>();
+        ParticleSystem.MainModule main = ps.main;
+
+        main.startColor = color; 
+        ps.Play();
+
+        float destroyDelay = main.duration + main.startLifetime.constantMax;
+        Destroy(particleEffect, destroyDelay);
     }
 
     public void DoImageEchoEffect(float duration) {

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Enemy : Entity, ISlowable, ICounterable {
     public EntityStats stats { get; private set; }
+    public EnemyHealth health { get; private set; }
     public EnemyCombat combat { get; private set; }
     public EnemyVFX vfx { get; private set; }
 
@@ -48,6 +49,7 @@ public class Enemy : Entity, ISlowable, ICounterable {
         base.Awake();
 
         stats = GetComponent<EntityStats>();
+        health = GetComponent<EnemyHealth>();
         combat = GetComponent<EnemyCombat>();
         vfx = GetComponent<EnemyVFX>();
     }
