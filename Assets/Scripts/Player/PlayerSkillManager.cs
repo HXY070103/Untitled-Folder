@@ -82,7 +82,6 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
 
     public void LoadData(GameData data)
     {
-        Debug.Log("Load skill. hasChosenInitialSkill = " + data.hasChosenSkill + ", chosenSkillType = " + data.chosenSkillType);
         if (skills == null)
         {
             Initialize();
@@ -106,7 +105,6 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
 
     public void SaveData(ref GameData data)
     {
-        Debug.Log("Save skill. hasChosenSkill = " + hasChosenSkill + ", currentSkillType = " + currentSkillType);
         if (skills == null)
         {
             Initialize();

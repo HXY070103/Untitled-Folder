@@ -76,18 +76,25 @@ public class GameManager : MonoBehaviour
         yield return null;
         yield return new WaitForSeconds(0.2f);
 
+        bool targetSceneClear = false;
+
         if (SaveManager.instance != null)
         {
+            targetSceneClear = SaveManager.instance.IsSceneCleared(sceneName);
             SaveManager.instance.RefreshSavables();
             SaveManager.instance.LoadDataToCurrentScene();
         }
        
-        Vector3 position = GetWaypointPosition(waypointType);
-
-        if (position != Vector3.zero)
+        if (!targetSceneClear)
         {
-            Player.instance.TeleportPlayer(position);
+            Vector3 position = GetWaypointPosition(waypointType);
+
+            if (position != Vector3.zero)
+            {
+                Player.instance.TeleportPlayer(position);
+            }
         }
+        
 
         if (SaveManager.instance != null)
         {
