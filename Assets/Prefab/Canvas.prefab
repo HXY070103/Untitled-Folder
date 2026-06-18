@@ -11863,10 +11863,7 @@ RectTransform:
   - {fileID: 1934527200060499601}
   - {fileID: 2676584945415580167}
   - {fileID: 2233372320699485080}
-<<<<<<< HEAD
-=======
   - {fileID: 4666819171917796622}
->>>>>>> feature/UI
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
