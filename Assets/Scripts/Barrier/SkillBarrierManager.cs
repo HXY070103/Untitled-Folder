@@ -7,17 +7,23 @@ public class SkillBarrierManager : MonoBehaviour
 
     private void Start()
     {
-        if (SaveManager.instance.HasChoosenSkill())
-        {
-            OpenBarrier();
-        } else
-        {
-            CloseBarrier();
-        }
+        RefreshBarrier();
     }
 
-    private void Update()
+    public void RefreshBarrier()
     {
+        if (barrier == null)
+        {
+            Debug.LogWarning("SkillBarrierManager: barrier is not assigned.");
+            return;
+        }
+
+        if (SaveManager.instance == null)
+        {
+            CloseBarrier();
+            return;
+        }
+
         if (SaveManager.instance.HasChoosenSkill())
         {
             OpenBarrier();

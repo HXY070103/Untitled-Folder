@@ -4,12 +4,16 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 using NUnit.Framework;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
     [Header("Scene Transition")]
     [SerializeField] private Image fadeImage;
     [SerializeField] private float fadeDuration = 1f;
+
+    [Header("Boss Level")]
+    [SerializeField] private List<string> scenesThatIncreaseBossLevel = new List<string>();
 
     public static GameManager instance;
 
@@ -73,6 +77,8 @@ public class GameManager : MonoBehaviour
 
         SceneManager.LoadScene(sceneName);
 
+        TryIncreaseBossLevel(sceneName);
+
         yield return null;
         yield return new WaitForSeconds(0.2f);
 
@@ -95,6 +101,7 @@ public class GameManager : MonoBehaviour
             }
         }
         
+
 
         if (SaveManager.instance != null)
         {
@@ -160,6 +167,19 @@ public class GameManager : MonoBehaviour
         if (toAlpha <= 0f)
         {
             fadeImage.raycastTarget = false;
+        }
+    }
+
+    private void TryIncreaseBossLevel(string sceneName)
+    {
+        if (SaveManager.instance == null)
+        {
+            return;
+        }
+
+        if (scenesThatIncreaseBossLevel.Contains(sceneName))
+        {
+            SaveManager.instance.IncreaseNumOfLevel();
         }
     }
 }

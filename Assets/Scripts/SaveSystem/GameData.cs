@@ -5,6 +5,9 @@ using System.Collections.Generic;
 [Serializable]
 public class GameData
 {
+   // boss level
+   public int numOfLevel;
+   
    // game state
    public bool isGameInProgess;
    public bool hasChosenSkill;

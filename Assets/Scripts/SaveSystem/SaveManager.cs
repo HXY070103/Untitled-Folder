@@ -94,6 +94,8 @@ public class SaveManager : MonoBehaviour
             gameData = dataHandler.LoadData();
         }
 
+        gameData = dataHandler.LoadData();
+
         if (gameData == null)
         {
             Debug.LogWarning("No game data to load to current scene.");
@@ -211,14 +213,29 @@ public class SaveManager : MonoBehaviour
 
     public void CreateNewGame(string startSceneName)
     {
-        GameData data = new GameData();
+        gameData = new GameData();
 
-        data.isGameInProgess = true;
-        data.hasChosenSkill = false;
-        data.currentSceneName = startSceneName;
-        data.playerCurrentHP = -1;
+        gameData.isGameInProgess = true;
+        gameData.hasChosenSkill = false;
+        gameData.currentSceneName = startSceneName;
+        gameData.playerCurrentHP = -1;
+        gameData.numOfLevel = 0;
+        gameData.numOfUse = 0;
+        gameData.hasPlayerPosition = false;
 
-        dataHandler.SaveData(data);
+        dataHandler.SaveData(gameData);
+    }
+
+    public void MarkGameOver()
+    {
+        EnsureGameDataLoaded();
+
+        gameData.isGameInProgess = false;
+        gameData.currentSceneName = "";
+        gameData.hasPlayerPosition = false;
+        gameData.playerCurrentHP = -1;
+
+        dataHandler.SaveData(gameData);
     }
     public void MarkInitialSkillChosen()
     {
@@ -265,5 +282,36 @@ public class SaveManager : MonoBehaviour
             instance = null;
         }
         Destroy(gameObject);
+    }
+
+    public void IncreaseNumOfLevel()
+    {
+        EnsureGameDataLoaded();
+        gameData.numOfLevel ++;
+        dataHandler.SaveData(gameData);
+    }
+
+    public int GetNumOfLevel()
+    {
+        EnsureGameDataLoaded();
+        return gameData.numOfLevel;
+    }
+
+    private void EnsureGameDataLoaded()
+    {
+        if (dataHandler == null)
+        {
+            dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
+        }
+
+        if (gameData == null)
+        {
+            gameData = dataHandler.LoadData();
+        }
+
+        if (gameData == null)
+        {
+            gameData = new GameData();
+        }
     }
 }

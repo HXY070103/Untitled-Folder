@@ -113,13 +113,13 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         {
             return;
         }
-        SkillBase currentSKill = GetCurrentSkill();
+        SkillBase currentSkill = GetCurrentSkill();
 
         data.chosenSkillType = (int) currentSkillType;
-        data.skillDecay = currentSKill.GetDecayLevel();
-        data.numOfUse = currentSKill.GetNumOfUse();
-        data.remainSkillColldown = currentSKill.GetReaminCooldown();
-        data.unlockedSkillUpgrades = currentSKill.GetUnlockedUpgrades();
-        data.unlockedBetterUpgrades = currentSKill.GetUnLockedBetterUpgrades();
+        data.skillDecay = currentSkill.GetDecayLevel();
+        data.numOfUse = currentSkill.GetNumOfUse();
+        data.remainSkillColldown = currentSkill.GetReaminCooldown();
+        data.unlockedSkillUpgrades = currentSkill.GetUnlockedUpgrades();
+        data.unlockedBetterUpgrades = currentSkill.GetUnLockedBetterUpgrades();
     }
 }
