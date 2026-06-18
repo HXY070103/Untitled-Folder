@@ -11,6 +11,7 @@ public class EnemySkeletonKing : Enemy {
     [SerializeField] private float summonCooldown = 0.5f;
     public float healthThresholdForSummon = 0.5f;
     public float summonAttackCooldown = 5;
+    public float summonAttackDistance = 10;
 
     private Coroutine summonCo;
     private bool summonPerformed;
