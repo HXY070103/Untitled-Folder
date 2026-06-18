@@ -76,6 +76,11 @@ public class SkillChoosePanel : MonoBehaviour
                 SaveManager.instance.MarkInitialSkillChosen();
                 SaveManager.instance.SaveGame();
             }
+            SkillBarrierManager barrierManager = FindFirstObjectByType<SkillBarrierManager>();
+            if (barrierManager != null)
+            {
+                barrierManager.RefreshBarrier();
+            }
         }
         ClosePanel();
     }

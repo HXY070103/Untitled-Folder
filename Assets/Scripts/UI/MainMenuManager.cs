@@ -87,14 +87,22 @@ public class MainMenuManager : MonoBehaviour
 
     private void StartNewGame()
     {
-        GameData newData = new GameData();
+        if (SaveManager.instance != null)
+        {
+            SaveManager.instance.CreateNewGame(newGameSceneName);
+        } else
+        {
+            GameData newData = new GameData();
 
-        newData.isGameInProgess = true;
-        newData.hasChosenSkill = false;
-        newData.currentSceneName = newGameSceneName;
-        newData.playerCurrentHP = -1;
-
-        dataHandler.SaveData(newData);
+            newData.isGameInProgess = true;
+            newData.hasChosenSkill = false;
+            newData.currentSceneName = newGameSceneName;
+            newData.playerCurrentHP = -1;
+            newData.numOfLevel = 0;
+            newData.numOfUse = 0;
+            newData.hasPlayerPosition = false;
+            dataHandler.SaveData(newData);
+        }
 
         if (GameManager.instance != null)
         {

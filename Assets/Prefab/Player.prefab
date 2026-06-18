@@ -225,6 +225,7 @@ MonoBehaviour:
   playerSkillManager: {fileID: 6596648338181236841}
   cooldown: 3
   skillDuration: 3
+  hurtCheckerPrefab: {fileID: 5438744945553926496, guid: 2ecd1dda1b74f4093bb4e3002ce09fa7, type: 3}
   damageMultiplier: 3
   speedUpPercentage: 1.5
   perfectPhaseWindow: 0.2
@@ -796,7 +797,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6397b8be5204d4ebedd89e2829aa4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  damage: 10
   targetCheckRadius: 1
   whatIsTarget:
     serializedVersion: 2
@@ -841,14 +841,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1597de2df00e64cbdbd721dea216c5d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerVFX
+  particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
+  imageEchoInterval: 0.05
+  imageEchoVFXPrefab: {fileID: 2270825432934318720, guid: 4f1f4f8826d734b10b1ba186c9e19441, type: 3}
   onDamageVFXMaterial: {fileID: 2100000, guid: c8bbf733d1f504c969c031f0379a1148, type: 2}
   onDamageVFXDurarion: 0.2
   onHitVFXColor: {r: 1, g: 1, b: 1, a: 1}
   onHitVFX: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
   onCritHitVFX: {fileID: 1321752846314756928, guid: b9426da7f34ab4e6dac992440f1c4583, type: 3}
-  particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
-  imageEchoInterval: 0.05
-  imageEchoVFXPrefab: {fileID: 2270825432934318720, guid: 4f1f4f8826d734b10b1ba186c9e19441, type: 3}
   targetAlpha: 0.2
   fadeSpeed: 2
   fadeInterval: 0.05
@@ -897,6 +897,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSkillManager
   currentSkillType: 2
   skillDecayUI: {fileID: 0}
+  hasChosenSkill: 0
 --- !u!50 &1461506367493400771
 Rigidbody2D:
   serializedVersion: 5

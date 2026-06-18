@@ -9,6 +9,7 @@ public class Waypoint : MonoBehaviour
     [SerializeField] private WaypointType connectedWaypoint;
     [SerializeField] private Transform respawnPoint;
     [SerializeField] private bool canBeTrigger = true;
+    [SerializeField] private bool isBossWinExit = false;
 
     public void SetCanbeTrigger(bool canBeTrigger)
     {
@@ -50,6 +51,18 @@ public class Waypoint : MonoBehaviour
             return;
         }
         canBeTrigger = false;
+        if (isBossWinExit)
+        {
+            if (GameOverManager.instance != null)
+            {
+                GameOverManager.instance.ShowWin();
+            } else
+            {
+                Debug.LogError("Cannot find gameover manager");
+            }
+            return;
+        }
+        SaveManager.instance.SaveGame();
         GameManager.instance.ChangeScene(transferToScene, connectedWaypoint);
         
     }
