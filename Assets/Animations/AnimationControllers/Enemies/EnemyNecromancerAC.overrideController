@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: EnemyNecromancerAC
+  m_Controller: {fileID: 9100000, guid: 8843ebf14884841368b2e2043481dda6, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 3ac0f3093e7fa4a0f92c94a345dc3433, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 858ac1887f7184b90b2b715a823d0456, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 5c7786f51ef404df1a449504f4febc56, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: cbc24421ef5974a1fb1779528006b624, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 71099c261ec1e441a95b7dcffda377ef, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: ee15625ae63c94f4d9701e109c4144b4, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 66f3ab5198ea54b1ea9bac563d2fbfdd, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 59cf339f6d642493495693804f63b3e6, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 9825310e92c3f4d57ae1c6a2b4401ec8, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 2953f382eaa3a4762b4a7061ee6c24f5, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 600f8d0f92bfb4eda9f8bdfb5a10b10f, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: a5609c68bae8043fb82a131e3badfe7b, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 7519831e4c7e04e73997cd5534f1ae35, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 177b0077085434cb7a49312bd168998c, type: 2}

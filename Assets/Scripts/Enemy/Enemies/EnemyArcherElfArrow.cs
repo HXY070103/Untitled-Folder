@@ -5,7 +5,7 @@ public class EnemyArcherElfArrow : MonoBehaviour, ICounterable, ISlowable {
     private Rigidbody2D rb;
     private Animator anim;
 
-    private EntityCombat combat;
+    private EnemyCombat combat;
 
     [SerializeField] private LayerMask whatIsTarget;
     [SerializeField] private LayerMask whatCanCollideWith;
@@ -14,7 +14,7 @@ public class EnemyArcherElfArrow : MonoBehaviour, ICounterable, ISlowable {
 
     private float arrowSpeed;
 
-    public void SetUpArrow(float arrowSpeed, EntityCombat combat) {
+    public void SetUpArrow(float arrowSpeed, EnemyCombat combat) {
         col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();

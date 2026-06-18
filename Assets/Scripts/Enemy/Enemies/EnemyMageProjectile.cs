@@ -5,7 +5,7 @@ public class EnemyMageProjectile : MonoBehaviour, ICounterable, ISlowable {
     private Rigidbody2D rb;
     private Animator anim;
 
-    private EntityCombat combat;
+    private EnemyCombat combat;
 
     [SerializeField] private LayerMask whatIsTarget;
     [SerializeField] private LayerMask whatCanCollideWith;
@@ -15,7 +15,7 @@ public class EnemyMageProjectile : MonoBehaviour, ICounterable, ISlowable {
 
     private float slowDownPercentage;
 
-    public void SetUpProjectile(Transform target, EntityCombat combat) {
+    public void SetUpProjectile(Transform target, EnemyCombat combat) {
         col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();

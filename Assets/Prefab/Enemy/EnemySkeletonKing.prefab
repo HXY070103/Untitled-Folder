@@ -279,12 +279,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   playerCheck: {fileID: 4418708743536626225}
-  skeletonPrefab: {fileID: 0}
+  skeletonPrefab: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
   summonStartPoint: {fileID: 5222858994496647657}
   amountOfSkeletonToSummon: 3
   summonCooldown: 0.5
   healthThresholdForSummon: 0.5
   summonAttackCooldown: 5
+  summonAttackDistance: 10
 --- !u!50 &7361001632944665758
 Rigidbody2D:
   serializedVersion: 5

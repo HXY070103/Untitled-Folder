@@ -3,9 +3,13 @@ using UnityEngine;
 public class EnemySkeletonKingBattleState : EnemyBattleState {
     private EnemySkeletonKing enemySkeletonKing;
 
+    private bool shouldSummon;
+
     public EnemySkeletonKingBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
         enemySkeletonKing = enemy as EnemySkeletonKing;
+
+        shouldSummon = false;
     }
 
     public override void Enter() {
@@ -14,6 +18,12 @@ public class EnemySkeletonKingBattleState : EnemyBattleState {
     }
 
     public override void Update() {
+        if (!shouldSummon && IsLowHealth()) {
+            shouldSummon = true;
+            enemySkeletonKing.attackCooldown = enemySkeletonKing.summonAttackCooldown;
+            enemySkeletonKing.attackDistance = enemySkeletonKing.summonAttackDistance;
+        }
+
         base.Update();
     }
 
@@ -25,8 +35,7 @@ public class EnemySkeletonKingBattleState : EnemyBattleState {
         if (WithInAttackRange() && enemySkeletonKing.PlayerDetected() && CanAttack()) {
             UpdateAttackTimer();
 
-            if (IsLowHealth()) {
-                enemySkeletonKing.attackCooldown = enemySkeletonKing.summonAttackCooldown;
+            if (shouldSummon) {
                 stateMachine.ChangeState(enemySkeletonKing.summonState);
             } else {
                 stateMachine.ChangeState(enemySkeletonKing.attackState); 
