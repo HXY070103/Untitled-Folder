@@ -20,6 +20,6 @@ public class Checkpoint : MonoBehaviour
             Debug.LogError("Checkpoint: SaveManager not found");
             return;
         }
-        SaveManager.instance.SaveGame();
+        SaveManager.instance.SaveGameIfAllowed();
     }
 }

@@ -126,6 +126,8 @@ MonoBehaviour:
   scenesThatIncreaseBossLevel:
   - EliteLevel_1_Repeat
   - NormalLevel_1_Repeat
+  - EliteLevel_2_Repeat
+  - EliteLevel_3_Repeat
   isChangeScene: 0
 --- !u!114 &7616256750613471219
 MonoBehaviour:

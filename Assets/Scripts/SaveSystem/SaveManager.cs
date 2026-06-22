@@ -128,7 +128,7 @@ public class SaveManager : MonoBehaviour
     {
         if (dataHandler != null)
         {
-            SaveGame();
+            SaveGameIfAllowed();
         }
     }
 
@@ -312,6 +312,43 @@ public class SaveManager : MonoBehaviour
         if (gameData == null)
         {
             gameData = new GameData();
+        }
+    }
+
+    public void SaveGameIfAllowed()
+    {
+        if (!CanSaveCurrentSceneProgress())
+        {
+            Debug.Log("Current level is not cleared. Progress will not be saved.");
+            return;
+        }
+
+        SaveGame();
+    }
+
+    public bool CanSaveCurrentSceneProgress()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+
+        // 主菜单、选技能场景这种没有 LevelClearManager 的场景，允许保存
+        LevelClearManager levelClearManager = FindFirstObjectByType<LevelClearManager>();
+        if (levelClearManager == null)
+        {
+            return true;
+        }
+        if (IsSceneCleared(sceneName))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void TrytoRemoveSceneFromCleared(string sceneName)
+    {
+        if (gameData.clearedSceneNames.Contains(sceneName))
+        {
+            gameData.clearedSceneNames.Remove(sceneName);
         }
     }
 }
