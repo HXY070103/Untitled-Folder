@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class EnemyBoss : MonoBehaviour
+public class EnemyBossUpgrade : MonoBehaviour
 {
     [Header("Boss name")]
     [SerializeField] private string bossName = "Final Boss";
