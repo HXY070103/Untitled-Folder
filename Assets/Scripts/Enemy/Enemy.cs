@@ -33,9 +33,9 @@ public class Enemy : Entity, ISlowable, ICounterable {
     public float moveAnimSpeedMultiplier = 1;
 
     [Header("Player Detection info")]
-    [SerializeField] private float playerCheckDistance = 10;
-    [SerializeField] private LayerMask whatIsPlayer;
-    [SerializeField] private Transform playerCheck;
+    [SerializeField] protected float playerCheckDistance = 10;
+    [SerializeField] protected LayerMask whatIsPlayer;
+    [SerializeField] protected Transform playerCheck;
 
     public Transform player { get; private set; }
 
@@ -139,13 +139,11 @@ public class Enemy : Entity, ISlowable, ICounterable {
     }
 
     public void TryToEnterBattleState(Transform player) {
-        if (stateMachine.currentState == battleState 
-            || stateMachine.currentState == attackState) {
-            return;
+        if (stateMachine.currentState == idleState 
+            || stateMachine.currentState == moveState) {
+            this.player = player;
+            stateMachine.ChangeState(battleState);
         }
-
-        this.player = player;
-        stateMachine.ChangeState(battleState);
     }
 
     public void DestoryGameObjectWithDelay(float delay) {
@@ -154,13 +152,13 @@ public class Enemy : Entity, ISlowable, ICounterable {
 
     public Transform GetPlayerReference() {
         if (player == null) {
-            player = PlayerDetected().transform;
+            player = DetectPlayer();
         }
 
         return player;
     }
 
-    public RaycastHit2D PlayerDetected() {
+    public virtual Transform DetectPlayer() {
         RaycastHit2D hit = Physics2D.Raycast(
                 playerCheck.position, 
                 Vector2.right, 
@@ -173,7 +171,11 @@ public class Enemy : Entity, ISlowable, ICounterable {
             return default;
         }
 
-        return hit;
+        return hit.transform;
+    }
+
+    public bool PlayerDetected() {
+        return DetectPlayer() != null;
     }
 
     protected override void OnDrawGizmos() {

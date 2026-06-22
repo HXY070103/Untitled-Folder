@@ -26,7 +26,7 @@ public class EnemySkeletonKing : Enemy {
         battleState = new EnemySkeletonKingBattleState(this, stateMachine, "Battle");
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
-        summonState = new EnemySkeletonKingSummonState(this, stateMachine, "Idle");
+        summonState = new EnemySkeletonKingSummonState(this, stateMachine, "Battle");
 
         anim.SetBool("HasStunnedRecovery", false);
     }
@@ -54,6 +54,7 @@ public class EnemySkeletonKing : Enemy {
             GameObject skeleton = 
                 Instantiate(skeletonPrefab, summonStartPoint.position, Quaternion.identity);
             skeleton.GetComponent<EnemySkeleton>().HandleFlip(facingDir);
+            skeleton.GetComponent<EnemySkeleton>().TryToEnterBattleState(player);
 
             Color color = Color.purple;
             vfx.GenerateParticleEffect(color);

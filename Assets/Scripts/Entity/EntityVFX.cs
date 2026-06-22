@@ -78,6 +78,7 @@ public class EntityVFX : MonoBehaviour {
 
         imageEcho.transform.localScale = new Vector3(scale, scale, scale);
         imageEcho.GetComponentInChildren<SpriteRenderer>().sprite = sr.sprite;
+        imageEcho.GetComponentInChildren<SpriteRenderer>().flipX = sr.flipX;
     }
 
     public void CreateOnHitVFX(Transform target, bool isCrit) {
