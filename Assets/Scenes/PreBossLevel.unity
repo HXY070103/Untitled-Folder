@@ -255,7 +255,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1151336177630037018, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_Name
-      value: Object_Waypoint - Exit - EliteLevel_1_Repeat
+      value: Object_Waypoint - Exit - EliteLevel_Repeat
       objectReference: {fileID: 0}
     - target: {fileID: 2866735177992142057, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -287,7 +287,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762449764057258640, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: transferToScene
-      value: EliteLevel_1_Repeat
+      value: EliteLevel_Repeat
       objectReference: {fileID: 0}
     - target: {fileID: 6762449764057258640, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: connectedWaypoint
@@ -47164,7 +47164,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1151336177630037018, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_Name
-      value: Object_Waypoint - Exit - NormalLevel_1_Repeat
+      value: Object_Waypoint - Exit - NormalLevel_Repeat_1
       objectReference: {fileID: 0}
     - target: {fileID: 2866735177992142057, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -47204,7 +47204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762449764057258640, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: transferToScene
-      value: NormalLevel_1_Repeat
+      value: NormalLevel_Repeat_1
       objectReference: {fileID: 0}
     - target: {fileID: 6762449764057258640, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: connectedWaypoint

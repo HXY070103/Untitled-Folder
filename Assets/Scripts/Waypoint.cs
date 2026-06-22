@@ -1,5 +1,6 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class Waypoint : MonoBehaviour
 {
@@ -62,9 +63,27 @@ public class Waypoint : MonoBehaviour
             }
             return;
         }
+
+        if (transferToScene == "EliteLevel" || transferToScene == "EliteLevel_Repeat")
+        {
+            transferToScene += RandomChoose(3);
+        }
+
+        List<string> scenes = GameManager.instance.GetRepeatLevel();
+        if (scenes.Contains(transferToScene))
+        {
+            SaveManager.instance.TrytoRemoveSceneFromCleared(transferToScene);
+        }
+
         SaveManager.instance.SaveGame();
         GameManager.instance.ChangeScene(transferToScene, connectedWaypoint);
         
+    }
+
+    private string RandomChoose(int maxNum)
+    {
+        int randomIndex = Random.Range(1, maxNum + 1);
+        return "_" + randomIndex;
     }
 
     /* can go back by open this method

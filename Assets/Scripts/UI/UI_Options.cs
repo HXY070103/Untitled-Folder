@@ -23,7 +23,7 @@ public class UI_Options : MonoBehaviour
     {
         if (SaveManager.instance != null)
         {
-            SaveManager.instance.SaveGame();
+            SaveManager.instance.SaveGameIfAllowed();
         }
 
         Time.timeScale = 1f;

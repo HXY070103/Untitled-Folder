@@ -1003,7 +1003,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 76117898836642934, guid: 52b9f9d4746e34fc6a4e1006ca389488, type: 3}
       propertyPath: chestID
-      value: chest_002
+      value: Chest_001
       objectReference: {fileID: 0}
     - target: {fileID: 2843764241385937629, guid: 52b9f9d4746e34fc6a4e1006ca389488, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1208,7 +1208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Barrier
   barrierCollider: {fileID: 881865534}
   spriteRenderer: {fileID: 881865535}
-  isFade: 0
+  isFade: 1
   fadeDuration: 0.5
 --- !u!1 &915681705
 GameObject:
@@ -11304,7 +11304,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1151336177630037018, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_Name
-      value: Object_Waypoint - Exit - EliteLevel_1
+      value: Object_Waypoint - Exit - EliteLevel
       objectReference: {fileID: 0}
     - target: {fileID: 6762449764057258640, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: waypointType
@@ -11312,7 +11312,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6762449764057258640, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: transferToScene
-      value: EliteLevel_1
+      value: EliteLevel
       objectReference: {fileID: 0}
     - target: {fileID: 6762449764057258640, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: connectedWaypoint

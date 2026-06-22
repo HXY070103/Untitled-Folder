@@ -182,4 +182,9 @@ public class GameManager : MonoBehaviour
             SaveManager.instance.IncreaseNumOfLevel();
         }
     }
+
+    public List<string> GetRepeatLevel()
+    {
+        return scenesThatIncreaseBossLevel;
+    }
 }
