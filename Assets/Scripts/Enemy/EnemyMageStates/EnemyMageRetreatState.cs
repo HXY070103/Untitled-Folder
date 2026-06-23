@@ -23,17 +23,15 @@ public class EnemyMageRetreatState : EnemyState {
 
         float xVelocity = -DirectionToPlayer() * enemyMage.retreatSpeed;
         rb.linearVelocity = new Vector2(xVelocity, rb.linearVelocity.y);
-        enemy.HandleFlip(DirectionToPlayer());
+        enemyMage.HandleFlip(DirectionToPlayer());
 
-        enemy.vfx.DoImageEchoEffect(float.PositiveInfinity);
+        enemyMage.vfx.DoImageEchoEffect(float.PositiveInfinity);
     }
 
     public override void Update() {
         base.Update();
 
         if (ReachedMaxDistance() || enemyMage.CannotMoveBackwards()) {
-            rb.linearVelocity = Vector2.zero;
-            enemyMage.vfx.StopImageEchoEffect();
             stateMachine.ChangeState(enemyMage.spellCastState);
         }
     }
@@ -42,6 +40,8 @@ public class EnemyMageRetreatState : EnemyState {
         base.Exit();
 
         enemyMage.gameObject.layer = LayerMask.NameToLayer("Enemy");
+        enemyMage.SetVelocity(0, 0);
+        enemyMage.vfx.StopImageEchoEffect();
     }
 
     private bool ReachedMaxDistance() {
@@ -55,6 +55,6 @@ public class EnemyMageRetreatState : EnemyState {
             return 0;
         }
 
-        return player.position.x > enemy.transform.position.x ? 1 : -1;
+        return player.position.x > enemyMage.transform.position.x ? 1 : -1;
     }
 }

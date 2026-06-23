@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class EnemyBattleState : EnemyState {
-    private Transform player;
+    protected Transform player;
     private float lastTimeWasInBattle;
     private float lastTimeAttacked;
 

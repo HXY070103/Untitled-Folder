@@ -12,7 +12,7 @@ public class UI_BossHealthbar : MonoBehaviour
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI bossNameText;
 
-    private EnemyBoss boss;
+    private EnemyBossUpgrade boss;
 
     private void Awake()
     {
@@ -24,7 +24,7 @@ public class UI_BossHealthbar : MonoBehaviour
         }
     }
 
-    public void Show(EnemyBoss currentBoss)
+    public void Show(EnemyBossUpgrade currentBoss)
     {
         if (currentBoss == null)
         {
@@ -50,7 +50,7 @@ public class UI_BossHealthbar : MonoBehaviour
         UpdateBossHealthBar();
     }
 
-    public void Hide(EnemyBoss currentBoss)
+    public void Hide(EnemyBossUpgrade currentBoss)
     {
         if (currentBoss != boss)
         {

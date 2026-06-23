@@ -95,5 +95,4 @@ public class EnemyNecromancer : Enemy {
         Vector3 offset = dir * spellGenerationRadius;;
         return spellStartPoint.position + offset;
     }
-
 }
