@@ -124,10 +124,10 @@ MonoBehaviour:
   fadeImage: {fileID: 2582392630840430259}
   fadeDuration: 1
   scenesThatIncreaseBossLevel:
-  - EliteLevel_1_Repeat
-  - NormalLevel_1_Repeat
-  - EliteLevel_2_Repeat
-  - EliteLevel_3_Repeat
+  - EliteLevel_Repeat_1
+  - NormalLevel_Repeat_1
+  - EliteLevel_Repeat_2
+  - EliteLevel_Repeat_3
   isChangeScene: 0
 --- !u!114 &7616256750613471219
 MonoBehaviour:

@@ -48,6 +48,8 @@ public class UI_ChestReward : MonoBehaviour
         vfx = player.GetComponent<PlayerVFX>();
         playerStats = player.GetComponent<PlayerStats>();
         skillManager = player.GetComponent<PlayerSkillManager>();
+        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+        float healHP;
 
         if (playerStats == null)
         {
@@ -70,11 +72,13 @@ public class UI_ChestReward : MonoBehaviour
         if (isBetter)
         {
             detailForPurification.text = "- 3 skill decay";
+            healHP = 0.5f * playerStats.GetMaxHP();
         } else
         {
             detailForPurification.text = "- 2 skill decay";
+            healHP = 0.3f * playerStats.GetMaxHP();
         }
-
+        playerHealth.Healing(healHP);
         upgradeChoiceButton.Setup(ShowUpgrades);
         purificationChoiceButton.Setup(ShowPurification);
     }

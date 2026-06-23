@@ -70,9 +70,11 @@ public class Waypoint : MonoBehaviour
         }
 
         List<string> scenes = GameManager.instance.GetRepeatLevel();
+        Debug.Log(transferToScene);
         if (scenes.Contains(transferToScene))
         {
             SaveManager.instance.TrytoRemoveSceneFromCleared(transferToScene);
+            SaveManager.instance.TrytoRemoveChestID(transferToScene);
         }
 
         SaveManager.instance.SaveGame();

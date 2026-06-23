@@ -821,7 +821,7 @@ MonoBehaviour:
   isDead: 0
   currentHP: 0
   initialMaxHP: 100
-  isOnShotKillable: 0
+  isOnShotKillable: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -869,7 +869,7 @@ MonoBehaviour:
     baseValue: 100
     modifiers: []
   damage:
-    baseValue: 10
+    baseValue: 50
     modifiers: []
   critPower:
     baseValue: 2
