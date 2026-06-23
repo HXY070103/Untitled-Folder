@@ -351,4 +351,29 @@ public class SaveManager : MonoBehaviour
             gameData.clearedSceneNames.Remove(sceneName);
         }
     }
+
+    public void TrytoRemoveChestID(string sceneName)
+    {
+        if (!sceneName.Contains("Repeat"))
+        {
+            Debug.LogWarning("enter unrepeated room");
+            return;
+        }
+        char c = sceneName[sceneName.Length - 1];
+        string chestID = "Chest_Repeat_";
+        if (sceneName.Contains("Normal"))
+        {
+            chestID += "00" + c;
+        } else
+        {
+            chestID += "10" + c;
+        }
+        if (gameData.openedChestID.Contains(chestID))
+        {
+            gameData.openedChestID.Remove(chestID);
+        } else
+        {
+            Debug.Log(chestID);
+        }
+    }
 }

@@ -268,9 +268,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBossUpgrade
   bossName: Final Boss
-  maxHPIncreasePerLevel: 0.25
-  damageIncreasePerLevel: 0.15
-  armorIncreasePerLevel: 0.1
+  maxHPIncreasePerLevel: 0.05
+  damageIncreasePerLevel: 0.05
+  armorIncreasePerLevel: 0.05
   moveSpeedIncreasePerLevel: 0.05
 --- !u!1 &1352459420491097868
 GameObject:
