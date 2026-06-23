@@ -214,6 +214,113 @@ Transition bewteen states:
 
 ---
 
+## Combat & Health System
+
+The Combat & Health System is built around a clear separation between attack execution and damage processing.
+
+Combat interactions are initiated through the `EntityCombat` component, which is responsible for target detection and damage generation. Instead of directly modifying a target's health, attacks are delivered through the `IDamageable` interface, allowing different entity types to participate in combat using the same interaction model.
+
+Damage processing is handled by the `EntityHealth` component. Upon receiving damage, the system applies defensive calculations, updates health values, determines knockback behavior, and handles death-related logic. Additional mechanics such as damage-over-time effects, healing, revival, and health modification are also managed within this component.
+
+### Core Interfaces
+
+The combat system uses interfaces to keep it flexible and extensible.
+
+#### `IDamageable`
+
+Defines an object that can receive damage from the combat system.
+
+- TakeDamage(Damage damage, Transform damageDealer)
+
+Responsibilities: 
+
+- Receives and processes incoming damage.
+
+#### `ICounterable`
+
+Defines an object that can respond to counter mechanics.
+
+- CanBeCountered()
+- HandleCounter()
+
+Responsibilities:
+
+- Determines whether the entity is currently counterable.
+- Executes counter logic when triggered.
+
+### EntityCombat
+
+`EntityCombat` is responsible for attack execution and damage delivery.
+
+#### `PerformAttack()`
+
+- Serves as the entry point of the attack system.
+- Retrieves all valid targets within the attack range using `GetDetectedColliders()`.
+- Iterates through each detected target and applies damage through `PerformAttackOnTarget()`.
+
+#### `PerformAttackOnTarget(Transform target)`
+
+- Handles combat interactions with a single target.
+- Verifies that the target implements the `IDamageable` interface.
+- Generates damage based on the damage dealer's current statistics.
+- Delivers damage to the target through the `IDamageable` interface.
+- Plays an hit visual effect after a successful attack.
+
+#### `GetDetectedColliders(LayerMask whatToDetect)`
+
+- Detects all valid targets within the configured attack range.
+- Uses Unity's physics overlap queries to retrieve colliders.
+- Filters detected objects through layer masks to ensure only intended targets are processed.
+- Returns all valid colliders within the configured attack radius.
+
+### PlayerCombat
+
+`PlayerCombat` extends `EntityCombat` and adds player-specific combat mechanics while reusing the shared attack framework.
+
+#### `CounterAttackPerformed()`
+
+- Detects all counterable targets within the counter-attack range.
+- Checks whether each target implements the `ICounterable` interface.
+- Verifies that the target is currently in a counterable state.
+- Triggers the target's counter-handling logic through the `ICounterable` interface.
+
+### EntityHealth
+
+`EntityHealth` implements `IDamageable` and is responsible for handling all health-related logic after damage has been received.
+
+#### `TakeDamage(Damage damage, Transform damageDealer)`
+
+- Serves as the entry point of the damage taken system.
+- Checks whether the entity is already dead and ignores further damage if true.
+- Calculates final damage using `CalculateFinalDamage()`.
+- Reduces current health using `ReduceHP()`.
+- Triggers knockback using `CalculateKnockback()`.
+- Plays on damage visual effect after damage taken.
+
+#### `CalculateFinalDamage(Damage damage)`
+
+- Generates armor migitation based on the damage taker's current statistics.
+- Converts raw damage into final effective damage value.
+
+#### `ReduceHP(float damage)`
+
+- Deducts health from the current HP value.
+- Handles entity death by invoking `Die()` when HP reaches zero.
+- Invokes health update events for UI synchronization.
+
+#### `Die()`
+
+- Marks the entity as dead.
+- Triggers entity death behavior.
+
+#### `CalculateKnockback(float damage, Transform damageDealer)`
+
+- Determines knockback direction based on attacker position.
+- Chooses between normal and heavy knockback based on damage percentage.
+- Returns final knockback force applied to the entity.
+
+---
+
 ## Attribute Stats
 
 ### Resource Stats
