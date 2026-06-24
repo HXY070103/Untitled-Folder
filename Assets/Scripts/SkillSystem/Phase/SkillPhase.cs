@@ -147,7 +147,6 @@ public class SkillPhase : SkillBase {
     private void CreatePhaseTracker() {
         phaseTracker = Instantiate(phaseTrackerPrefab, transform.position, Quaternion.identity);
         phaseTracker.transform.SetParent(transform);
-        phaseTracker.GetComponent<PhaseTrackerController>().SetUpPhaseTracker(this);
     }
 
     private void DestroyPhaseTracker() {

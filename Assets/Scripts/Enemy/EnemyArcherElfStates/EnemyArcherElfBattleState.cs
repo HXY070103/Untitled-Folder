@@ -32,7 +32,7 @@ public class EnemyArcherElfBattleState : EnemyBattleState {
             stateMachine.ChangeState(enemy.attackState); 
         } else {
             if (CanWalkAway() && InWalkAwayRange()) {
-                float xVeloity = -DirectionToPlayer() * enemy.GetBattleMoveSpeed();
+                float xVeloity = -DirectionToPlayer() * enemy.BattleMoveSpeed;
                 enemy.SetVelocity(xVeloity, rb.linearVelocity.y);
             } else {
                 enemy.SetVelocity(0, rb.linearVelocity.y);

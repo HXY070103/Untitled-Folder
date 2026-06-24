@@ -10,6 +10,8 @@ public class PlayerDashState : PlayerState {
     public override void Enter() {
         base.Enter();
 
+        player.UpdateDashTimer();
+
         vfx.DoImageEchoEffect(player.dashDuration);
 
         stateTimer = player.dashDuration;
@@ -22,7 +24,7 @@ public class PlayerDashState : PlayerState {
         base.Update();
 
         CancelDashIfNeeded();
-        player.SetVelocity(dashDir * player.dashSpeed, 0);
+        player.SetVelocity(dashDir * player.DashSpeed, 0);
 
         if (stateTimer < 0) {
             HandleStateExit();

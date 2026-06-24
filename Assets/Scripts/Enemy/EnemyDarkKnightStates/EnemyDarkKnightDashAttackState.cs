@@ -37,7 +37,7 @@ public class EnemyDarkKnightDashAttackState : EnemyState {
             enemyDarkKnight.vfx.StopImageEchoEffect();
             anim.SetBool("DashAttackPerformed", true);
         } else {
-            float xVelocity = dashAttackDir * enemyDarkKnight.dashAttackSpeed;
+            float xVelocity = dashAttackDir * enemyDarkKnight.DashSpeed;
             enemyDarkKnight.SetVelocity(xVelocity, rb.linearVelocity.y);
         }
 

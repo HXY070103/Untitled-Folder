@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class EntityState {
+    protected Entity entity;
     protected StateMachine stateMachine;
     protected string animBoolName;
 
@@ -10,7 +11,8 @@ public class EntityState {
     protected float stateTimer;
     protected bool triggerCalled;
 
-    public EntityState(StateMachine stateMachine, string animBoolName) {
+    public EntityState(Entity entity, StateMachine stateMachine, string animBoolName) {
+        this.entity = entity;
         this.stateMachine = stateMachine;
         this.animBoolName = animBoolName;
     }
@@ -21,7 +23,7 @@ public class EntityState {
     }
 
     public virtual void Update() {
-        stateTimer -= Time.deltaTime;
+        stateTimer -= Time.deltaTime * entity.LocalTimeScale;
         UpdateAnimationPatameters();
     }
 

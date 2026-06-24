@@ -8,6 +8,8 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
     private EnemyCombat combat;
 
     private Transform target;
+    private float speedMultiplier;
+    private float chaseSpeed;
     private bool canChase;
 
     [SerializeField] private LayerMask whatIsTarget;
@@ -15,9 +17,6 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
     [SerializeField] private float destroyDelay = 2;
     [SerializeField] private GameObject destroyVFXPrefab;
     [SerializeField] private float waitingTime = 0.8f;
-
-    private float chaseSpeed;
-    private float slowDownPercentage;
 
     public void SetUpProjectile(float chaseSpeed, Transform target, EnemyCombat combat) {
         col = GetComponent<Collider2D>();
@@ -27,7 +26,9 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
         this.target = target;
         this.combat = combat;
 
+        speedMultiplier = 1;
         this.chaseSpeed = chaseSpeed;
+
         canChase = false;
         Invoke(nameof(StartChasing), waitingTime);
 
@@ -60,7 +61,7 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
 
     private void HandleChasing() {
         Vector2 dir =(target.transform.position - transform.position).normalized;
-        rb.linearVelocity = dir * chaseSpeed;
+        rb.linearVelocity = dir * chaseSpeed * speedMultiplier;
     }
 
     private void StartChasing() {
@@ -77,11 +78,10 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
     }
 
     public void SlowDown(float slowDownPercentage) {
-        chaseSpeed *= slowDownPercentage;
-        this.slowDownPercentage = slowDownPercentage;
+        speedMultiplier = 1 - slowDownPercentage;
     }
 
     public void RecoverSpeed() {
-        chaseSpeed /= slowDownPercentage;
+        speedMultiplier = 1;
     }
 }

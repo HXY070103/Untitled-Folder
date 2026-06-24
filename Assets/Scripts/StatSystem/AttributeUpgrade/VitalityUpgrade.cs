@@ -2,9 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 
 public class VatalityUpgrade : AttributeUpgrade {
-    [SerializeField] private float bonusMaxHP = 5;
-    [SerializeField] private float bonusArmor = 10;
-
     public VatalityUpgrade(PlayerStats stats) : base(stats) {
         name = "Vitality";
     }
@@ -16,19 +13,19 @@ public class VatalityUpgrade : AttributeUpgrade {
 
         if (health != null)
         {
-            health.IncreaseMaxHP(bonusMaxHP, name);
+            health.IncreaseMaxHP(stats.bonusMaxHP, name);
         } else
         {
-            stats.maxHP.AddModifier(bonusMaxHP, name);
+            stats.maxHP.AddModifier(stats.bonusMaxHP, name);
         }
-        stats.armor.AddModifier(bonusArmor, name);
+        stats.armor.AddModifier(stats.bonusArmor, name);
     }
     public override List<AttributeUpgradeDisplay> GetDisplayEffects()
     {
         return new List<AttributeUpgradeDisplay>
         {
-            new AttributeUpgradeDisplay("MaxHP", bonusMaxHP, false),
-            new AttributeUpgradeDisplay("Armor", bonusArmor, false)
+            new AttributeUpgradeDisplay("MaxHP", stats.bonusMaxHP, false),
+            new AttributeUpgradeDisplay("Armor", stats.bonusArmor, false)
         };
     }
 }

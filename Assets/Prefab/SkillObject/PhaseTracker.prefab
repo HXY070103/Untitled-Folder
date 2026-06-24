@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6503362599645505562}
   - component: {fileID: 6437567460873819866}
   - component: {fileID: 7170092376066920106}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: PhaseTracker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ebbaa51faaf14e8ca882d9e8eb0c69e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PhaseTrackerController
-  damageReduction: 10
+  debuffDuration: 8
+  damageReduction: 15
   armorRedection: 50
 --- !u!70 &7170092376066920106
 CapsuleCollider2D:

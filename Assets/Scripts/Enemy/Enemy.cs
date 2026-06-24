@@ -54,17 +54,9 @@ public class Enemy : Entity, ISlowable, ICounterable {
         vfx = GetComponent<EnemyVFX>();
     }
 
-    public float GetBattleMoveSpeed() {
-        return battleMoveSpeed * speedMultiplier;
-    }
-
-    public float GetMoveSpeed() {
-        return moveSpeed * speedMultiplier;
-    }
-
-    public Vector2 GetQuickRetreatSpeed() {
-        return quickRetreatSpeed * speedMultiplier;
-    }
+    public float BattleMoveSpeed => battleMoveSpeed * LocalTimeScale;
+    public float MoveSpeed => moveSpeed * LocalTimeScale;
+    public Vector2 QuickRetreatSpeed => quickRetreatSpeed * LocalTimeScale;
 
     public virtual void SpecialAttack() {}
 
@@ -102,13 +94,12 @@ public class Enemy : Entity, ISlowable, ICounterable {
     }
 
     public void SlowDown(float slowDownPercentage) {
-        float newSpeedMultiplier = 1 - slowDownPercentage;
-        speedMultiplier = newSpeedMultiplier;
-        anim.speed = newSpeedMultiplier;
+        localTimeScale = 1 - slowDownPercentage;
+        anim.speed = 1 - slowDownPercentage;
     }
 
     public void RecoverSpeed() {
-        speedMultiplier = 1;
+        localTimeScale = 1;
         anim.speed = 1;
     }
 
@@ -158,7 +149,7 @@ public class Enemy : Entity, ISlowable, ICounterable {
         return player;
     }
 
-    public virtual Transform DetectPlayer() {
+    protected virtual Transform DetectPlayer() {
         RaycastHit2D hit = Physics2D.Raycast(
                 playerCheck.position, 
                 Vector2.right, 

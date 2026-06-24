@@ -1,16 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerStats : EntityStats, ISaveable {
+    [Header("Skill")]
+    public Stat skillEffect;
+
+    [Header("Upgrade info")]
+
+    public float bonusMaxHP = 20;
+    public float bonusDamage = 30;
+    public float bonusCritPower = 0.5f;
+    public float bonusCritChance = 10;
+    public float bonusArmor = 40;
+    public float bonusSkillEffect = 0.4f;
+
     private AttributeUpgrade[] upgrades;
     private List<AttributeUpgrade> obtainAttributeUpgrades = new List<AttributeUpgrade>();
     public List<AttributeUpgrade> ObtainAttributeUpgrades => obtainAttributeUpgrades;
-
-    [Header("Skill")]
-    public Stat skillEffect;
 
     public float GetSkillEffect() {
         return skillEffect.GetValue();

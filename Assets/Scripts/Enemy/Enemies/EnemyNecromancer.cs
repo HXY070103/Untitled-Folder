@@ -5,16 +5,18 @@ public class EnemyNecromancer : Enemy {
     public EnemyNecromancerSpellCastState spellCastState;
 
     [Header("Necromancer specific info")]
+    
+    [Header("Fire info")]
     [SerializeField] private GameObject firePrefab;
     [SerializeField] private Transform fireStartPoint;
 
-    [Space]
+    [Header("Spell cast info")]
     [SerializeField] private GameObject spellPrefab;
     [SerializeField] private Transform spellStartPoint;
     [SerializeField] private float spellGenerationRadius = 0.5f;
     [SerializeField] private int amountToCast = 3;
     [SerializeField] private float spellCastCooldown = 0.3f;
-    [SerializeField] private float chaseSpeed = 10;
+    [SerializeField] private float spellChaseSpeed = 10;
     public float spellCastAttackCooldown = 5;
 
     private Coroutine spellCastCo;
@@ -77,7 +79,7 @@ public class EnemyNecromancer : Enemy {
             Vector3 position = GeneratePosition(dir);
             GameObject projectile = 
                 Instantiate(spellPrefab, position, Quaternion.identity);
-            projectile.GetComponent<EnemyNecromancerProjectile>().SetUpProjectile(chaseSpeed, player, combat);
+            projectile.GetComponent<EnemyNecromancerProjectile>().SetUpProjectile(spellChaseSpeed, player, combat);
             yield return new WaitForSeconds(spellCastCooldown);
         }
 

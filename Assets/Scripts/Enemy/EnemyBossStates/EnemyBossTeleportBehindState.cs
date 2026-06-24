@@ -20,7 +20,6 @@ public class EnemyBossTeleportBehindState : EnemyState {
 
         enemyBoss.SetVelocity(0, rb.linearVelocity.y);
         enemyBoss.SetTeleportPerformed(false);
-        enemyBoss.StartTeleportBehind();
     }
 
     public override void Update() {

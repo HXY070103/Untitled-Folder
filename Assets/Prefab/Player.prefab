@@ -883,6 +883,12 @@ MonoBehaviour:
   skillEffect:
     baseValue: 1
     modifiers: []
+  bonusMaxHP: 20
+  bonusDamage: 30
+  bonusCritPower: 0.5
+  bonusCritChance: 10
+  bonusArmor: 40
+  bonusSkillEffect: 0.4
 --- !u!114 &6596648338181236841
 MonoBehaviour:
   m_ObjectHideFlags: 0
