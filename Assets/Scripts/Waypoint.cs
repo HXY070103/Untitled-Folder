@@ -64,11 +64,30 @@ public class Waypoint : MonoBehaviour
             return;
         }
 
-        if (transferToScene == "EliteLevel" || transferToScene == "EliteLevel_Repeat")
-        {
-            transferToScene += RandomChoose(3);
-        }
+        DecideScene();
+        SaveManager.instance.SaveGame();
+        GameManager.instance.ChangeScene(transferToScene, connectedWaypoint);
+        
+    }
 
+    private void DecideScene()
+    {
+        if (transferToScene == "EliteLevel_Repeat")
+        {
+            transferToScene += RandomChoose(1,4);
+        }
+        if (transferToScene == "EliteLevel_1")
+        {
+            transferToScene = "EliteLevel" + RandomChoose(1,2);
+        }
+        if (transferToScene == "EliteLevel_2")
+        {
+            transferToScene = "EliteLevel" + RandomChoose(3,4);
+        }
+        if (transferToScene == "NormalLevel_Repeat")
+        {
+            transferToScene += RandomChoose(1,4);
+        }
         List<string> scenes = GameManager.instance.GetRepeatLevel();
         Debug.Log(transferToScene);
         if (scenes.Contains(transferToScene))
@@ -76,15 +95,11 @@ public class Waypoint : MonoBehaviour
             SaveManager.instance.TrytoRemoveSceneFromCleared(transferToScene);
             SaveManager.instance.TrytoRemoveChestID(transferToScene);
         }
-
-        SaveManager.instance.SaveGame();
-        GameManager.instance.ChangeScene(transferToScene, connectedWaypoint);
-        
     }
 
-    private string RandomChoose(int maxNum)
+    private string RandomChoose(int minNum, int maxNum)
     {
-        int randomIndex = Random.Range(1, maxNum + 1);
+        int randomIndex = Random.Range(minNum, maxNum + 1);
         return "_" + randomIndex;
     }
 

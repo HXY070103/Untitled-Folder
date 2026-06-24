@@ -12,38 +12,62 @@ EditorBuildSettings:
     path: Assets/Scenes/BeginGuide.unity
     guid: 17ca96087a80c4f3ab87cec9af369596
   - enabled: 1
-    path: Assets/Scenes/BossLevel.unity
-    guid: a4a733919eb494568ae73f3c8ff868e0
-  - enabled: 1
     path: Assets/Scenes/ChooseSkill.unity
     guid: 49af151b100474600aee31dac8bc651e
   - enabled: 1
-    path: Assets/Scenes/PreBossLevel.unity
-    guid: 6456d97f6b11045e88d5939fec58260f
-  - enabled: 1
     path: Assets/Scenes/NormalLevel_1.unity
+    guid: 4b5e823c6815047e0b4ea4cf5d0ccf10
+  - enabled: 1
+    path: Assets/Scenes/NormalLevel_2.unity
+    guid: 206a08d6e8f084836a0de89fabacdff2
+  - enabled: 1
+    path: Assets/Scenes/NormalLevel_3.unity
+    guid: f191f138b634641b18adea377205f606
+  - enabled: 1
+    path: Assets/Scenes/NormalLevel_4.unity
     guid: e29d07ed91d25419f9ef997b0c897abd
   - enabled: 1
     path: Assets/Scenes/EliteLevel_1.unity
     guid: 1089c751930c54bf3925357b42ad8f55
   - enabled: 1
     path: Assets/Scenes/EliteLevel_2.unity
-    guid: 7365be2e1c2bc4c17a5e966b950cb2d3
+    guid: b408d45bfd7b44f2ea0197f0c14e5486
   - enabled: 1
     path: Assets/Scenes/EliteLevel_3.unity
     guid: f507082d5a4f145e69518e9abde625e3
   - enabled: 1
+    path: Assets/Scenes/EliteLevel_4.unity
+    guid: 7365be2e1c2bc4c17a5e966b950cb2d3
+  - enabled: 1
     path: Assets/Scenes/RepeatLevel/NormalLevel_Repeat_1.unity
+    guid: 7b495b1bf5fcb4d7ca3d1efc698f7db4
+  - enabled: 1
+    path: Assets/Scenes/RepeatLevel/NormalLevel_Repeat_2.unity
+    guid: 314aa004171594e73a433782dd51dd2c
+  - enabled: 1
+    path: Assets/Scenes/RepeatLevel/NormalLevel_Repeat_3.unity
+    guid: 2ae813b87296b47df95f1eb7b8806753
+  - enabled: 1
+    path: Assets/Scenes/RepeatLevel/NormalLevel_Repeat_4.unity
     guid: ddf7741eeefd24497be222466a2cdbfe
   - enabled: 1
     path: Assets/Scenes/RepeatLevel/EliteLevel_Repeat_1.unity
     guid: e93b34385f51e4436ad13d2ac20861fd
   - enabled: 1
     path: Assets/Scenes/RepeatLevel/EliteLevel_Repeat_2.unity
-    guid: 301fccdaced8f4da49c4d5f5fdc12177
+    guid: ff576ea895a37433bac17c40ffdad669
   - enabled: 1
     path: Assets/Scenes/RepeatLevel/EliteLevel_Repeat_3.unity
     guid: 152ff9409a8a34d1f9c6969102d1f1d8
+  - enabled: 1
+    path: Assets/Scenes/RepeatLevel/EliteLevel_Repeat_4.unity
+    guid: 301fccdaced8f4da49c4d5f5fdc12177
+  - enabled: 1
+    path: Assets/Scenes/PreBossLevel.unity
+    guid: 6456d97f6b11045e88d5939fec58260f
+  - enabled: 1
+    path: Assets/Scenes/BossLevel.unity
+    guid: a4a733919eb494568ae73f3c8ff868e0
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
