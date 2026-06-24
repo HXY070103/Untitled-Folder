@@ -23,6 +23,8 @@ public class EnemyNecromancer : Enemy {
     private bool spellCastPerformed;
     public bool SpellCastPerformed => spellCastPerformed;
 
+    public float spellCastTimer;
+
     protected override void Awake() {
         base.Awake();
 
@@ -35,12 +37,20 @@ public class EnemyNecromancer : Enemy {
         spellCastState = new EnemyNecromancerSpellCastState(this, stateMachine, "SpellCast");
 
         anim.SetBool("HasStunnedRecovery", true);
+
+        spellCastTimer = 0;
     }
 
     protected override void Start() {
         base.Start();
 
         stateMachine.Initialize(idleState);
+    }
+
+    protected override void Update() {
+        base.Update();
+
+        spellCastTimer -= Time.deltaTime * LocalTimeScale;
     }
 
     public override void SpecialAttack() {

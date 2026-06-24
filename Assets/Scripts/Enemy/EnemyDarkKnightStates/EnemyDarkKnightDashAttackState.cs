@@ -1,4 +1,3 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class EnemyDarkKnightDashAttackState : EnemyState {
@@ -6,6 +5,7 @@ public class EnemyDarkKnightDashAttackState : EnemyState {
     private Vector3 startPosition;
     private Transform player;
     private int dashAttackDir;
+    private bool dashPerformed;
 
     public EnemyDarkKnightDashAttackState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
@@ -23,6 +23,7 @@ public class EnemyDarkKnightDashAttackState : EnemyState {
 
         startPosition = enemyDarkKnight.transform.position;
         dashAttackDir = DirectionToPlayer();
+        dashPerformed = false;
 
         enemyDarkKnight.vfx.DoImageEchoEffect(float.PositiveInfinity);
 
@@ -32,18 +33,23 @@ public class EnemyDarkKnightDashAttackState : EnemyState {
     public override void Update() {
         base.Update();
 
-        if (ReachedPlayer() || ReachedMaxDistance() || enemyDarkKnight.wallDetected) {
-            rb.linearVelocity = Vector2.zero;
-            enemyDarkKnight.vfx.StopImageEchoEffect();
-            anim.SetBool("DashAttackPerformed", true);
-        } else {
-            float xVelocity = dashAttackDir * enemyDarkKnight.DashSpeed;
-            enemyDarkKnight.SetVelocity(xVelocity, rb.linearVelocity.y);
+        if (triggerCalled) {
+            stateMachine.ChangeState(enemyDarkKnight.battleState);
         }
 
-        if (triggerCalled) {
-            stateMachine.ChangeState(enemy.battleState);
+        if (dashPerformed) {
+            return;
         }
+
+        float xVelocity = dashAttackDir * enemyDarkKnight.DashSpeed;
+        enemyDarkKnight.SetVelocity(xVelocity, rb.linearVelocity.y);
+
+        if (ReachedPlayer() || ReachedMaxDistance() || enemyDarkKnight.wallDetected) {
+            enemyDarkKnight.SetVelocity(0, 0);
+            enemyDarkKnight.vfx.StopImageEchoEffect();
+            dashPerformed = true;
+            anim.SetBool("DashAttackPerformed", true);
+        } 
     }
 
     public override void Exit() {

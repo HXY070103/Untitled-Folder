@@ -2,13 +2,9 @@ using UnityEngine;
 
 public class EnemyBattleState : EnemyState {
     protected Transform player;
-    private float battleTimer;
-    private float attackTimer;
 
     public EnemyBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
-        : base(enemy, stateMachine, animBoolName) {
-        
-    }
+        : base(enemy, stateMachine, animBoolName) {}
 
     public override void Enter() {
         base.Enter();
@@ -27,9 +23,6 @@ public class EnemyBattleState : EnemyState {
     public override void Update() {
         base.Update();
 
-        battleTimer -= Time.deltaTime * enemy.LocalTimeScale;
-        attackTimer -= Time.deltaTime * enemy.LocalTimeScale;
-
         if (enemy.PlayerDetected()) {
             UpdateBattleTimer();
         }
@@ -46,19 +39,19 @@ public class EnemyBattleState : EnemyState {
     }
 
     protected void UpdateBattleTimer() {
-        battleTimer = enemy.battleDuration;
+        enemy.battleTimer = enemy.battleDuration;
     }
 
     protected bool BattleTimeIsOver() {
-        return battleTimer < 0;
+        return enemy.battleTimer < 0;
     }
 
     protected void UpdateAttackTimer() {
-        attackTimer = enemy.attackCooldown;
+        enemy.attackTimer = enemy.attackCooldown;
     }
 
     protected bool CanAttack() {
-        return attackTimer < 0;
+        return enemy.attackTimer < 0;
     }
 
     protected void QuickRetreat() {
