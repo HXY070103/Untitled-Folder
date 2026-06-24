@@ -14,7 +14,6 @@ public class EnemySkeletonKingBattleState : EnemyBattleState {
 
     public override void Enter() {
         base.Enter();
-
     }
 
     public override void Update() {
@@ -45,11 +44,11 @@ public class EnemySkeletonKingBattleState : EnemyBattleState {
                 enemySkeletonKing.HandleFlip(DirectionToPlayer());
             }
 
-            if (WithInAttackRange() || enemySkeletonKing.wallDetected || IsLowHealth()) {
+            if (WithInAttackRange() || enemySkeletonKing.wallDetected || shouldSummon) {
                 return;
             }
 
-            float xVelocity = DirectionToPlayer() * enemySkeletonKing.GetBattleMoveSpeed();
+            float xVelocity = DirectionToPlayer() * enemySkeletonKing.BattleMoveSpeed;
             enemySkeletonKing.SetVelocity(xVelocity, rb.linearVelocity.y);
         }
     }

@@ -57,11 +57,13 @@ public class EnemyArcherElfArrow : MonoBehaviour, ICounterable, ISlowable {
     }
 
     public void SlowDown(float slowDownPercentage) {
+        anim.speed = 1 - slowDownPercentage;
         float xVelocity = arrowSpeed * (1 - slowDownPercentage);
         rb.linearVelocity = new Vector2(xVelocity, 0);
     }
 
     public void RecoverSpeed() {
+        anim.speed = 1;
         rb.linearVelocity = new Vector2(arrowSpeed, 0);
     }
 }

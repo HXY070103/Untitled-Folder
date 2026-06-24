@@ -283,7 +283,7 @@ GameObject:
   - component: {fileID: 4566610741637842900}
   - component: {fileID: 9154394922643915140}
   - component: {fileID: 6388588158143307762}
-  - component: {fileID: 5677074377790481901}
+  - component: {fileID: 7975192846300562361}
   m_Layer: 0
   m_Name: Animator
   m_TagString: Untagged
@@ -387,7 +387,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &5677074377790481901
+--- !u!114 &7975192846300562361
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -396,9 +396,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1352459420491097868}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f2c0058494a9471fb4f3a453dc1b87c, type: 3}
+  m_Script: {fileID: 11500000, guid: a2ecae177e6b04bb98c00bec5c443829, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationTrigger
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyBossAnimationTrigger
 --- !u!1 &1917123051723351203
 GameObject:
   m_ObjectHideFlags: 0

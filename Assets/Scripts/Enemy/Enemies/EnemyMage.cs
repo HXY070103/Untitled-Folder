@@ -6,12 +6,14 @@ public class EnemyMage : Enemy {
     public EnemyMageSpellCastState spellCastState;
 
     [Header("Mage specific info")]
+
+    [Header("Spell cast info")]
     [SerializeField] private GameObject spellPrefab;
     [SerializeField] private Transform spellStartPoint;
     [SerializeField] private int amountToCast = 3;
     [SerializeField] private float spellCastCooldown = 0.3f;
     
-    [Space]
+    [Header("Retreat info")]
     [SerializeField] private Transform backCollisionCheck;
     [SerializeField] private float backCollisionDistance;
     public float retreatCooldown = 5;
@@ -21,6 +23,8 @@ public class EnemyMage : Enemy {
     private Coroutine spellCastCo;
     private bool spellCastPerformed;
     public bool SpellCastPerformed => spellCastPerformed;
+
+    public float RetreatSpeed => retreatSpeed * LocalTimeScale;
 
     protected override void Awake() {
         base.Awake();

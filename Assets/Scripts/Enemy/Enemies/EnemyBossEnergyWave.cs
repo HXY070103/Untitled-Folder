@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EnemyBossEnergyWave : MonoBehaviour, ICounterable, ISlowable {
     private Rigidbody2D rb;
+    private Animator anim;
     private EntityCombat combat;
 
     [SerializeField] private LayerMask whatIsTarget;
@@ -14,6 +15,7 @@ public class EnemyBossEnergyWave : MonoBehaviour, ICounterable, ISlowable {
 
     public void SetUpEnergyWave(float energyWaveSpeed, EntityCombat combat) {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponentInChildren<Animator>();
         this.combat = combat;
 
         startPosition = transform.position;
@@ -56,11 +58,13 @@ public class EnemyBossEnergyWave : MonoBehaviour, ICounterable, ISlowable {
     }
 
     public void SlowDown(float slowDownPercentage) {
+        anim.speed = 1 - slowDownPercentage;
         float xVelocity = energyWaveSpeed * (1 - slowDownPercentage);
         rb.linearVelocity = new Vector2(xVelocity, 0);
     }
 
     public void RecoverSpeed() {
+        anim.speed = 1;
         rb.linearVelocity = new Vector2(energyWaveSpeed, 0);
     }
 }

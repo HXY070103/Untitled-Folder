@@ -52,7 +52,7 @@ public class EnemyBossBattleState : EnemyBattleState {
                 return;
             }
 
-            float xVelocity = DirectionToPlayer() * enemy.GetBattleMoveSpeed();
+            float xVelocity = DirectionToPlayer() * enemy.BattleMoveSpeed;
             enemy.SetVelocity(xVelocity, rb.linearVelocity.y);
         }
     }

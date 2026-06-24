@@ -48,10 +48,9 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
 
     protected override void HandleBattle() {
         if (WithInAttackRange() && enemyDarkKnight.PlayerDetected() && CanAttack()) {
-            UpdateAttackTimer();
-
             if (isBasicAttack) {
                 enemyDarkKnight.attackCooldown = originAttackCooldown;
+                UpdateAttackTimer();
                 UpdateBasicAttackCounter();
                 stateMachine.ChangeState(enemyDarkKnight.attackState);
                 return;
@@ -59,13 +58,14 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
 
             if (isDashAttack) {
                 enemyDarkKnight.attackCooldown = enemyDarkKnight.dashAttackCooldown;
+                UpdateAttackTimer();
                 UpdateDashAttackCounter();
                 stateMachine.ChangeState(enemyDarkKnight.dashAttackState);
                 return;
             }
         } else {
             if (CanWalkAway() && InWalkAwayRange()) {
-                float xVeloity = -DirectionToPlayer() * enemyDarkKnight.GetBattleMoveSpeed();
+                float xVeloity = -DirectionToPlayer() * enemyDarkKnight.BattleMoveSpeed;
                 enemyDarkKnight.SetVelocity(xVeloity, rb.linearVelocity.y);
             } else {
                 enemyDarkKnight.SetVelocity(0, rb.linearVelocity.y);

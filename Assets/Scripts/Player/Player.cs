@@ -53,12 +53,16 @@ public class Player : Entity {
     public float inAirMoveMultiplier = 0.8f;
     [Range(0, 1)]
     public float wallSlideMultiplier = 0.7f;
-
-    [Space]
     public float dashDuration = 0.25f;
     public float dashSpeed = 20;
+    public float dashCooldown = 1;
+
+    private float lastTimeDashed;
 
     public Vector2 moveInput { get; private set; }
+
+    public float MoveSpeed => moveSpeed * LocalTimeScale;
+    public float DashSpeed => dashSpeed * LocalTimeScale;
 
     protected override void Awake() {
         base.Awake();
@@ -83,10 +87,20 @@ public class Player : Entity {
         deadState = new PlayerDeadState(this, stateMachine, "Dead");
         counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
         heavyAttackState = new PlayerHeavyAttackState(this, stateMachine, "HeavyAttack");
+
+        lastTimeDashed = float.NegativeInfinity;
     }
 
     protected override void Start() {
         stateMachine.Initialize(idleState);
+    }
+
+    public void UpdateDashTimer() {
+        lastTimeDashed = Time.time;
+    }
+
+    public bool InDashCooldown() {
+        return Time.time < lastTimeDashed + dashCooldown;
     }
 
     public override void EntityDeath() {
@@ -112,17 +126,13 @@ public class Player : Entity {
         attackAnimSpeedMultiplier = 1;
     }
 
-    public float GetMoveSpeed() {
-        return moveSpeed * speedMultiplier;
-    }
-
     public void SpeedUp(float speedUpPercentage) {
-        speedMultiplier = speedUpPercentage;
+        localTimeScale = speedUpPercentage;
         anim.speed = speedUpPercentage;
     }
 
     public void RecoverSpeed() {
-        speedMultiplier = 1;
+        localTimeScale = 1;
         anim.speed = 1;
     }
 

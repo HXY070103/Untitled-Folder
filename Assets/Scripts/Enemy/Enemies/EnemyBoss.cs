@@ -55,6 +55,8 @@ public class EnemyBoss : Enemy {
     private float leftMoveBound;
     private float rightMoveBound;
 
+    public float DashSpeed => dashSpeed * LocalTimeScale;
+
     protected override void Awake() {
         base.Awake();
 
@@ -162,8 +164,14 @@ public class EnemyBoss : Enemy {
         SetSummonPerformed(true);
     }
 
-    public void StartTeleportBehind() {
-        Invoke(nameof(TeleportBehind), teleportDelay);
+    public void Teleport() {
+        if (stateMachine.currentState == teleportBehindState) {
+            TeleportBehind();
+        }
+
+        if (stateMachine.currentState == teleportAwayState) {
+            TeleportAway();
+        }
     }
 
     private void TeleportBehind() {
@@ -179,10 +187,6 @@ public class EnemyBoss : Enemy {
 
         transform.position = newPosition;
         SetTeleportPerformed(true);
-    }
-
-    public void StartTeleportAway() {
-        Invoke(nameof(TeleportAway), teleportDelay);
     }
 
     private void TeleportAway() {
@@ -203,7 +207,7 @@ public class EnemyBoss : Enemy {
             transform.position.x < leftMoveBound || transform.position.x > rightMoveBound;
     }
 
-    public override Transform DetectPlayer() {
+    protected override Transform DetectPlayer() {
         Collider2D player = 
             Physics2D.OverlapCircle(playerCheck.position, playerCheckDistance, whatIsPlayer);
 

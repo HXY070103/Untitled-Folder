@@ -1,9 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 public class PrecisionUpgrade : AttributeUpgrade {
-    [SerializeField] private float bonusCritPower = 0.2f;
-    [SerializeField] private float bonusCritChance = 3;
-
     public PrecisionUpgrade(PlayerStats stats) : base(stats) {
         name = "Precision";
     }
@@ -11,15 +8,15 @@ public class PrecisionUpgrade : AttributeUpgrade {
     public override void ApplyUpgrade() {
         base.ApplyUpgrade();
         
-        stats.critPower.AddModifier(bonusCritPower, name);
-        stats.critChance.AddModifier(bonusCritChance, name);
+        stats.critPower.AddModifier(stats.bonusCritPower, name);
+        stats.critChance.AddModifier(stats.bonusCritChance, name);
     }
     public override List<AttributeUpgradeDisplay> GetDisplayEffects()
     {
         return new List<AttributeUpgradeDisplay>
         {
-            new AttributeUpgradeDisplay("CritChance", bonusCritChance, true),
-            new AttributeUpgradeDisplay("CritPower", bonusCritPower * 100, true)
+            new AttributeUpgradeDisplay("CritChance", stats.bonusCritChance, true),
+            new AttributeUpgradeDisplay("CritPower", stats.bonusCritPower * 100, true)
         };
     }
 }

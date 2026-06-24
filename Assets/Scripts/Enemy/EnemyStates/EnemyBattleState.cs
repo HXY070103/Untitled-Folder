@@ -2,13 +2,12 @@ using UnityEngine;
 
 public class EnemyBattleState : EnemyState {
     protected Transform player;
-    private float lastTimeWasInBattle;
-    private float lastTimeAttacked;
+    private float battleTimer;
+    private float attackTimer;
 
     public EnemyBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
-        lastTimeWasInBattle = float.NegativeInfinity;
-        lastTimeAttacked = float.NegativeInfinity;
+        
     }
 
     public override void Enter() {
@@ -28,6 +27,9 @@ public class EnemyBattleState : EnemyState {
     public override void Update() {
         base.Update();
 
+        battleTimer -= Time.deltaTime * enemy.LocalTimeScale;
+        attackTimer -= Time.deltaTime * enemy.LocalTimeScale;
+
         if (enemy.PlayerDetected()) {
             UpdateBattleTimer();
         }
@@ -44,16 +46,24 @@ public class EnemyBattleState : EnemyState {
     }
 
     protected void UpdateBattleTimer() {
-        lastTimeWasInBattle = Time.time;
+        battleTimer = enemy.battleDuration;
+    }
+
+    protected bool BattleTimeIsOver() {
+        return battleTimer < 0;
     }
 
     protected void UpdateAttackTimer() {
-        lastTimeAttacked = Time.time;
+        attackTimer = enemy.attackCooldown;
+    }
+
+    protected bool CanAttack() {
+        return attackTimer < 0;
     }
 
     protected void QuickRetreat() {
-        float xVelocity = -DirectionToPlayer() * enemy.GetQuickRetreatSpeed().x;
-        float yVelocity = enemy.GetQuickRetreatSpeed().y;
+        float xVelocity = -DirectionToPlayer() * enemy.QuickRetreatSpeed.x;
+        float yVelocity = enemy.QuickRetreatSpeed.y;
         rb.linearVelocity = new Vector2(xVelocity, yVelocity);
         enemy.HandleFlip(DirectionToPlayer());
     }
@@ -71,17 +81,9 @@ public class EnemyBattleState : EnemyState {
                 return;
             }
 
-            float xVelocity = DirectionToPlayer() * enemy.GetBattleMoveSpeed();
+            float xVelocity = DirectionToPlayer() * enemy.BattleMoveSpeed;
             enemy.SetVelocity(xVelocity, rb.linearVelocity.y);
         }
-    }
-    
-    protected bool CanAttack() {
-        return Time.time > lastTimeAttacked + enemy.attackCooldown;
-    }
-
-    protected bool BattleTimeIsOver() {
-        return Time.time > lastTimeWasInBattle + enemy.battleDuration;
     }
 
     protected bool WithInAttackRange() {

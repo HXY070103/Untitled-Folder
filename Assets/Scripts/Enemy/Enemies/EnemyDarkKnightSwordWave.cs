@@ -41,6 +41,7 @@ public class EnemyDarkKnightSwordWave : MonoBehaviour, ICounterable, ISlowable {
     private void Explosion() {
         rb.linearVelocity = Vector2.zero;
         rb.simulated = false;
+        anim.speed = 1;
         anim.SetBool("Explosion", true);
         col.enabled = false;
         Destroy(gameObject, destroyDelay);
@@ -56,11 +57,13 @@ public class EnemyDarkKnightSwordWave : MonoBehaviour, ICounterable, ISlowable {
     }
 
     public void SlowDown(float slowDownPercentage) {
+        anim.speed = 1 - slowDownPercentage;
         float xVelocity = swordWaveSpeed * (1 - slowDownPercentage);
         rb.linearVelocity = new Vector2(xVelocity, 0);
     }
 
     public void RecoverSpeed() {
+        anim.speed = 1;
         rb.linearVelocity = new Vector2(swordWaveSpeed, 0);
     }
 }
