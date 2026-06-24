@@ -24,6 +24,7 @@ ExportedObj/
 *.mdb
 *.opendb
 *.VC.db
+_Recovery/
 
 .DS_Store
 Thumbs.db
