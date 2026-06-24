@@ -30,7 +30,8 @@ public class EnemyMageRetreatState : EnemyState {
     public override void Update() {
         base.Update();
 
-        rb.linearVelocity = new Vector2(retreatDir * enemyMage.RetreatSpeed, rb.linearVelocity.y);
+        float xVelocity = retreatDir * enemyMage.RetreatSpeed;
+        rb.linearVelocity = new Vector2(xVelocity, rb.linearVelocity.y);
 
         if (ReachedMaxDistance() || enemyMage.CannotMoveBackwards()) {
             stateMachine.ChangeState(enemyMage.spellCastState);
