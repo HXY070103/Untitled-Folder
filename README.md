@@ -59,8 +59,6 @@ Main ideas:
 
 The more details about the three skills will be introduced later.
 
----
-
 ### Skill Decay System
 
 Each combat style has a core skill that can be used repeatedly. However, every use increases the skill decay level, making the skill weaker over time.
@@ -90,8 +88,6 @@ Ways to reduce decay:
 | Clear Room | -1 Decay |
 | Purify | -2 Decay |
 
----
-
 ### Boss Growth System
 
 Before fighting the Boss, the player can choose to enter more normal or elite rooms. These rooms can give the player more upgrades or purification.
@@ -106,8 +102,6 @@ However, every extra room also strengthens the Boss. The Boss may gain:
 This creates the main risk-reward loop of the game:
 
 > The player becomes stronger, but the Boss also evolves.
-
----
 
 ### Upgrade, Purification, and Evolution
 
@@ -150,9 +144,393 @@ The game is designed to make every decision matter. Players must think carefully
 - C#
 - GitHub
 
+---
+
+## StateMachine
+
+`StateMachine` is responsible for managing the currently active state and handling state transitions.
+
+It serves as the central controller of the finite state machine architecture while delegating behavior execution to the active state.
+
+### Active State Management
+
+The currently active state is stored through:
+
+```csharp
+EntityState currentState
+```
+
+This reference determines which state receives update calls and executes behavior logic.
+
+### State Initialization
+
+#### `Initialize(EntityState startState)`
+
+- Assigns the starting state.
+- Calls the state's `Enter()` method.
+- Enables state transitions.
+
+### State Transitions
+
+#### `ChangeState(EntityState newState)`
+
+- Verifies whether state transitions are currently allowed.
+- Calls `Exit()` on the current state.
+- Updates the active state reference.
+- Calls `Enter()` on the new state.
+
+When a transition occurs:
+1. The current state's `Exit()` method is called.
+2. The active state reference is updated.
+3. The new state's `Enter()` method is called.
+
+```text
+Current State -> Exit -> Change State -> Enter -> New State
+```
+
+### State Updates
+
+#### `UpdateActiveState()`
+
+- Updates the currently active state.
+
+### Transition Control
+
+State transition availability is controlled through:
+
+```csharp
+bool canChangeState
+```
+
+#### `SwitchOff()`
+
+- Disables all future state transitions.
+
+---
+
+## EntityState
+
+`EntityState` represents a single character behavior within the state machine.
+
+Each state contains only the logic required for its specific behavior while sharing a common lifecycle and interface.
+
+### State References
+
+Every state stores references to:
+
+```csharp
+Entity entity
+StateMachine stateMachine
+```
+
+These references allow the state to access character functionality and request state transitions.
+
+### State Lifecycle
+
+Each state follows the same lifecycle:
+
+```text
+Enter() -> Update() -> Exit()
+```
+
+### Enter
+
+#### `Enter()`
+
+- Executed once when the state becomes active.
+- Starts the state's animation.
+- Resets state-specific variables.
+
+
+### Update
+
+#### `Update()`
+
+- Executed every frame while the state remains active.
+- Executes state-specific behavior.
+
+The base implementation also updates:
+
+```csharp
+stateTimer
+```
+
+which can be used for cooldowns, delays, and timed transitions.
+
+### Exit
+
+#### `Exit()`
+
+- Executed once before leaving the state.
+- Stops the state's animation.
+
+### Animation Events
+
+Animation events are forwarded through:
+
+#### `AnimationTrigger()`
+
+- Marks that an animation event has occurred.
+- Sets the internal trigger flag.
+
+The result is stored in:
+
+```csharp
+bool triggerCalled
+```
+
+This allows states to react to animation events without directly coupling gameplay logic to animation clips.
+
+---
+
+## Entity
+
+`Entity` serves as the base class for all living characters in the game, including the player, enemies, and bosses.
+
+It provides a common framework for state management, movement control, character orientation, and collision detection. By centralizing these shared systems, derived classes can focus on implementing character-specific behavior while reusing the same core functionality.
+
+### State Reference
+
+Each entity owns a state machine through:
+
+```csharp
+StateMachine stateMachine
+```
+
+This reference is responsible for managing the entity's current behavior and handling state transitions. The entity updates the state machine every frame, allowing the currently active state to execute its behavior.
+
+### State Machine Management
+
+Each entity owns a `StateMachine` instance responsible for controlling its current behavior.
+
+#### `Update()`
+
+- Serves as the main update loop of the entity.
+- Updates collision detection information through `HandleCollisionDetection()`.
+- Updates the currently active state through `stateMachine.UpdateActiveState()`.
+
+### Movement System
+
+Movement is performed through a unified velocity interface built on top of `Rigidbody2D`.
+
+#### `SetVelocity(float xVelocity, float yVelocity)`
+
+- Updates the entity's velocity.
+- Automatically updates character orientation through `HandleFlip()`.
+
+### Character Orientation
+
+The entity maintains its current facing direction through:
+
+```csharp
+int facingDir
+```
+
+- `1` indicates facing right.
+- `-1` indicates facing left.
+
+This value is commonly used by movement, AI, and combat systems to determine the entity's current orientation.
+
+#### `HandleFlip(float xVelocity)`
+
+- Determines whether the entity should change its facing direction.
+- Calls `Flip()` when movement direction differs from the current orientation.
+
+#### `Flip()`
+
+- Rotates the character horizontally.
+- Updates internal facing direction values.
+
+### Collision Detection
+
+Collision detection is continuously updated through raycasts and exposed through public properties.
+
+#### `HandleCollisionDetection()`
+
+- Updates ground detection status.
+- Updates wall detection status.
+- Stores results in `groundDetected` and `wallDetected`.
+
+#### `OnDrawGizmos()`
+
+- Draws ground detection raycasts.
+- Draws wall detection raycasts.
+
+#### Ground Detection
+
+Ground detection is performed using a downward raycast.
+
+```csharp
+bool groundDetected
+```
+
+Responsibilities:
+
+- Determines whether the entity is standing on valid ground.
+- Supports movement, jumping, and state transitions.
+
+#### Wall Detection
+
+Wall detection is performed using two forward raycasts.
+
+```csharp
+bool wallDetected
+```
+
+Responsibilities:
+
+- Detects obstacles in front of the entity.
+- Supports AI navigation and movement decisions.
+- Improves detection reliability compared to a single raycast.
+
+### Animation Events
+
+The entity provides a bridge between animation events and the state machine.
+
+#### `CurrentStateAnimationTrigger()`
+
+- Forwards animation events to the currently active state.
+
+---
+
+## State Machine Architecture
+
+The character behavior system is built around three core components:
+
+- `Entity`
+- `StateMachine`
+- `EntityState`
+
+Together, they form a reusable finite state machine (FSM) architecture that separates shared character functionality, state management, and gameplay behavior.
+
+### Component Overview
+
+#### Entity
+
+`Entity` serves as the owner of the state machine and provides shared functionality such as movement, collision detection, and character orientation.
+
+#### StateMachine
+
+`StateMachine` manages the currently active state and handles state transitions.
+
+#### EntityState
+
+`EntityState` represents a specific character behavior, such as idle, movement, attack, chase, or death.
+
+#### Relationship
+
+The relationship between these components is shown below:
+
+```text
+Entity - (owns) -> StateMachine - (controls) -> EntityState
+```
+
+- `Entity` owns a `StateMachine`.
+- `StateMachine` manages the currently active `EntityState`.
+- `EntityState` contains the actual gameplay behavior.
+
+This separation allows shared functionality, state management, and state-specific behavior to remain independent and easy to maintain.
+
+### Runtime Execution Flow
+
+Unity's frame update begins at the `Entity` level through the `Update()` method. During each frame, the entity first updates its shared systems and then passes control to the currently active state through the state machine.
+
+The following sequence occurs every frame:
+
+```text
+Entity.Update() -> StateMachine.UpdateActiveState() -> CurrentState.Update() -> Specific Behavior
+```
+
+As a result:
+
+- `Entity` manages shared character systems.
+- `StateMachine` manages which state is active.
+- `EntityState` executes the actual behavior.
+
+This clear separation of responsibilities makes the system easier to maintain, debug, and extend.
+
+---
+
+### Animation Integration
+
+#### Animation Transitions
+
+Each `EntityState` is associated with an animation parameter through:
+
+```csharp
+string animBoolName
+```
+
+When a state becomes active, the corresponding animation parameter is enabled:
+
+```csharp
+anim.SetBool(animBoolName, true)
+```
+
+When the state exits, the parameter is disabled:
+
+```csharp
+anim.SetBool(animBoolName, false)
+```
+
+This allows state transitions and animation transitions to remain synchronized.
+
+```text
+State Enter() -> Animation Parameter Set True -> Animation Plays
+State Exit() ->  Animation Parameter Set False -> Animation Ends
+```
+
+As a result, each state is responsible for activating its own animation while the state machine controls when those states become active.
+
+#### Animation Events
+
+Animation events can communicate with the state machine through:
+
+```csharp
+CurrentStateAnimationTrigger()
+```
+
+which forwards the event to:
+
+```csharp
+stateMachine.currentState.AnimationTrigger()
+```
+
+This allows animation clips to notify the currently active state when an animation event occurs without directly referencing specific state implementations.
+
+```text
+Animation Event Triggered -> CurrentStateAnimationTrigger() -> currentState.AnimationTrigger() -> Specific Behavior
+```
+
+This design keeps animation logic decoupled from gameplay logic while still allowing states to react to animation timing.
+
+---
+
 ## Character Controller
 
 The player controller is implemented using a finite state machine (FSM) architecture.
+
+### Input Handling
+
+Player input is centralized through the `PlayerInputSet` component.
+
+The input system is responsible for:
+
+- Reading keyboard input
+- Exposing movement input values
+- Exposing action inputs such as jump, dash, and attack
+
+States can access player input through:
+
+```csharp
+PlayerInputSet input;
+```
+
+This allows player behaviors to react to user input without directly querying Unity's input system.
+
+```text
+Keyboard Input -> PlayerInputSet -> FSM Architecture -> Character Behavior
+```
 
 ### Movement
 
@@ -321,37 +699,126 @@ Responsibilities:
 
 ---
 
-## Attribute Stats
+## Stats System
 
-### Resource Stats
+The stats system is responsible for storing and calculating all combat-related attributes used by entities. Each character owns an `EntityStats` component that provides a centralized interface for retrieving offensive, defensive, and resource values.
+
+### StatModifier
+
+`StatModifier` represents a single modification applied to a stat.
+
+Each modifier contains:
+
+```csharp
+float value
+string source
+```
+
+#### Value
+
+The numerical amount added to the stat.
+Examples:
+
+```text
++50 HP, +20 Damage, -40 Armor, ...
+```
+
+#### Source
+
+Identifies where the modifier originated from.
+
+Examples:
+
+```text
+Buff, Debuff, Skill, ...
+```
+
+This allows modifiers from the same source to be removed efficiently.
+
+### Stat
+
+`Stat` represents a single gameplay attribute.
+
+Each stat consists of:
+
+```csharp
+float baseValue
+List<StatModifier> modifiers
+```
+
+#### `GetValue()`
+
+- Returns the current final value of the stat using `GetFinalValue()`.
+- Uses lazy evaluation to avoid unnecessary recalculations.
+- Recomputes only when modifiers or base value have changed.
+
+#### `SetBaseValue(float baseValue)`
+
+- Sets the base value of the stat.
+- Marks the stat as dirty to trigger recalculation on next access.
+
+#### `AddModifier(float value, string source)`
+
+- Adds a new modifier to the stat.
+- Each modifier is associated with a source identifier.
+- Marks the stat for recalculation.
+
+#### `RemoveModifier(string source)`
+
+- Removes all modifiers that match the given source.
+- Marks the stat for recalculation.
+
+#### `GetFinalValue()`
+
+- Internal calculation method.
+- Iterates through all active modifiers and sums their values.
+- Returns the computed final stat value.
+
+The final stat value is calculated as:
+
+```math
+V_{final}=V_{base}+\sum_{i=1}^{n} M_i
+```
+
+### Stat Categories
+
+#### Resource Stats
 
 | Attribute | Default Value | Description |
 |---|---|---|
 | maxHP | 100 | Maximum Health |
 
-### Offensive Stats
+#### Offensive Stats
 
 | Attribute | Default Value | Description |
 |---|---|---|
-| damage | 10 | Base damage |
+| damage | 50 | Base damage |
 | critChance | 20% | Critical hit chance |
 | critPower | 200% | Critical damage multiplier |
 
-### Defensive Stats
+#### Defensive Stats
 
 | Attribute | Default Value | Description |
 |---|---|---|
 | armor | 0 | Damage reduction factor |
 
-### Special Stats
+#### Special Stats (In `PlayerStats` which implements `EntityStats` only)
 
 | Attribute | Default Value | Description |
 |---|---|---|
 | skillEffectiveness | 100% | Multiplier applied to skill effects |
 
-### Damage Calculation
+### Combat Calculations
 
-Produced damage:
+All combat-related values are exposed through `EntityStats` getter methods. These methods serve as the single entry points for both offensive and defensive computations.
+
+#### `GetMaxHP()`
+
+- Returns the maximum health of the entity.
+
+#### `GetDamage()`
+
+- Returns the outgoing damage of the entity.
 
 ```math
 outputDamage =
@@ -361,35 +828,103 @@ damage, & \text{normal hit}
 \end{cases}
 ```
 
-Produced mitigation:
+#### `GetArmorMitigation()`
+
+- Returns the damage mitigation of the entity.
 
 ```math
 damageMitigation = \frac{armor}{armor + 100}
 ```
 
-Final damage taken:
+#### `GetSkillEffect()` (In `PlayerStats` which implements `EntityStats` only)
 
-```math
-finalDamage = producedDamage \times (1 - damageMitigation)
+- Returns the skill effect of the entity.
+
+### AttributeUpgrade
+
+`AttributeUpgrade` is the base class for all upgrade types. It defines the structure and behavior of an upgrade without enforcing specific implementation details.
+
+#### Core Structure
+
+```csharp
+string name
+PlayerStats stats
 ```
 
-### Attribute Upgrades
+- `name` identifies the upgrade.
+- `stats` provides access to the player's stat system.
+
+#### `ApplyUpgrade()`
+
+- Applies the upgrade effect by targeting specific stats inside the `EntityStats` system.
+
+It first accesses the corresponding `Stat` instance from `PlayerStats`, then applies changes through the stat system.
+
+```text
+AttributeUpgrade -> PlayerStats -> Select Specific Stat -> Stat.AddModifier()
+```
+
+#### `GetDisplayEffects()`
+
+- Returns UI-friendly data for displaying upgrade effects.
+
+Return content:
+
+```text
+List<AttributeUpgradeDisplay>: [Attribute Upgrade 1, Attribute Upgrade 2, ..., ]
+```
+
+### AttributeUpgradeDisplay
+
+`AttributeUpgradeDisplay` represents a single UI display entry for an upgrade effect.
+
+#### Core Structure
+
+```csharp
+string attributeName
+float value
+bool isPercent
+```
+
+- `attributeName` represents the name of the affected attribute
+- `value` is the numerical change value
+- `isPercent` determines formatting style
+
+#### `GetValueText()`
+
+- Returns the formatted string used for UI display.
+
+The value is formatted based on its type:
+
+- If `isPercent = true`:
+
+```text
++10%
+```
+
+- If `isPercent = false`:
+
+```text
++10
+```
+
+### Upgrades Categories
 
 - **Vitality**  
   - Increases survivability by enhancing health and defense.
-  - Gives +5 Max HP and +10 Armor.
+  - Gives +20 Max HP and +40 Armor.
 
 - **Strength**  
   - Focuses on raw physical power.
-  - Gives +10 Damage.
+  - Gives +30 Damage.
 
 - **Precision**  
   - Improves critical performance and consistency.
-  - Gives +3% Crit Chance and +0.2 Crit Power.
+  - Gives +10% Crit Chance and +0.5 Crit Power.
 
 - **Technique**  
   - Enhances overall skill efficiency and scaling.
-  - Gives +0.2 Skill Effectiveness.
+  - Gives +0.4 Skill Effectiveness.
 
 ---
 
@@ -406,8 +941,6 @@ The player begins the game by selecting one of three core skills:
 Each skill defines a distinct playstyle and has its own augment paths and scaling mechanics.
 
 [Q] is used as the primary skill activation input.
-
-___
 
 ### Time Control
 
@@ -442,8 +975,6 @@ Creates a domain that slows down enemies and enemy projectiles within its area.
 | Low Temperature Domain *(Mutually Exclusive with Compression Field)* | Skill decay only reduces duration |
 | Compression Domain *(Mutually Exclusive with Low Temperature Field)* | Skill decay only reduces slow strength and domain range |
 
----
-
 ### Life Steal
 
 #### Skill Effect
@@ -475,8 +1006,6 @@ Records all damage dealt during the skill and converts it into healing after the
 | Blood Reparation | If sufficient damage is dealt during the skill, no skill decay is gained for that activation |
 | War Discipline *(Mutually Exclusive with Bloodlust)* | Skill decay no longer reduces duration |
 | Blood Pact *(Mutually Exclusive with War Discipline)* | Skill decay no longer reduces healing conversion ratio |
-
----
 
 ### Phase
 
