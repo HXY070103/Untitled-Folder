@@ -7,7 +7,7 @@ public abstract class PlayerState : EntityState{
     protected PlayerSkillManager skillManager;
 
     public PlayerState(Player player, StateMachine stateMachine, string animBoolName) 
-        : base(stateMachine, animBoolName) {
+        : base(player, stateMachine, animBoolName) {
         this.player = player;
 
         anim = player.anim;
@@ -50,6 +50,10 @@ public abstract class PlayerState : EntityState{
         }
 
         if (stateMachine.currentState == player.dashState) {
+            return false;
+        }
+
+        if (player.InDashCooldown()) {
             return false;
         }
 

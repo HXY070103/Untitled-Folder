@@ -48,33 +48,41 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
 
     protected override void HandleBattle() {
         if (WithInAttackRange() && enemyDarkKnight.PlayerDetected() && CanAttack()) {
-            UpdateAttackTimer();
-
             if (isBasicAttack) {
-                enemyDarkKnight.attackCooldown = originAttackCooldown;
-                UpdateBasicAttackCounter();
-                stateMachine.ChangeState(enemyDarkKnight.attackState);
+                ApplyBasicAttack();
                 return;
             }
 
             if (isDashAttack) {
-                enemyDarkKnight.attackCooldown = enemyDarkKnight.dashAttackCooldown;
-                UpdateDashAttackCounter();
-                stateMachine.ChangeState(enemyDarkKnight.dashAttackState);
+                ApplyDashAttack();
                 return;
             }
         } else {
-            if (CanWalkAway() && InWalkAwayRange()) {
-                float xVeloity = -DirectionToPlayer() * enemyDarkKnight.GetBattleMoveSpeed();
-                enemyDarkKnight.SetVelocity(xVeloity, rb.linearVelocity.y);
-            } else {
-                enemyDarkKnight.SetVelocity(0, rb.linearVelocity.y);
-
-                if (!enemyDarkKnight.PlayerDetected()) {
-                    enemy.HandleFlip(DirectionToPlayer());
-                }
+            if (!enemyDarkKnight.PlayerDetected()) {
+                enemyDarkKnight.HandleFlip(DirectionToPlayer());
             }
+
+            if (WithInAttackRange() || enemyDarkKnight.wallDetected) {
+                return;
+            }
+
+            float xVelocity = DirectionToPlayer() * enemyDarkKnight.BattleMoveSpeed;
+            enemyDarkKnight.SetVelocity(xVelocity, rb.linearVelocity.y);
         }
+    }
+
+    private void ApplyBasicAttack() {
+        enemyDarkKnight.attackCooldown = originAttackCooldown;
+        UpdateAttackTimer();
+        UpdateBasicAttackCounter();
+        stateMachine.ChangeState(enemyDarkKnight.attackState);
+    }
+
+    private void ApplyDashAttack() {
+        enemyDarkKnight.attackCooldown = enemyDarkKnight.dashAttackCooldown;
+        UpdateAttackTimer();
+        UpdateDashAttackCounter();
+        stateMachine.ChangeState(enemyDarkKnight.dashAttackState);
     }
 
     private bool CanWalkAway() {

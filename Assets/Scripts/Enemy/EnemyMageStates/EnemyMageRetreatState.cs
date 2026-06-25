@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class EnemyMageRetreatState : EnemyState {
     private EnemyMage enemyMage;
-    private Vector3 startPosition;
     private Transform player;
+    private Vector3 startPosition;
+    private int retreatDir;
 
     public EnemyMageRetreatState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
@@ -20,16 +21,17 @@ public class EnemyMageRetreatState : EnemyState {
         }
 
         startPosition = enemy.transform.position;
-
-        float xVelocity = -DirectionToPlayer() * enemyMage.retreatSpeed;
-        rb.linearVelocity = new Vector2(xVelocity, rb.linearVelocity.y);
+        retreatDir = -DirectionToPlayer() ;
+        
         enemyMage.HandleFlip(DirectionToPlayer());
-
         enemyMage.vfx.DoImageEchoEffect(float.PositiveInfinity);
     }
 
     public override void Update() {
         base.Update();
+
+        float xVelocity = retreatDir * enemyMage.RetreatSpeed;
+        rb.linearVelocity = new Vector2(xVelocity, rb.linearVelocity.y);
 
         if (ReachedMaxDistance() || enemyMage.CannotMoveBackwards()) {
             stateMachine.ChangeState(enemyMage.spellCastState);

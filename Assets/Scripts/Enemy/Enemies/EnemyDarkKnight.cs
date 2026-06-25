@@ -5,16 +5,20 @@ public class EnemyDarkKnight : Enemy {
     public EnemyDarkKnightDashAttackState dashAttackState;
 
     [Header("Dark knight specific info")]
+
+    [Header("Sword wave info")]
     [SerializeField] private GameObject swordWavePrefab;
     [SerializeField] private Transform swordWaveStartPoint;
     [SerializeField] private float swordWaveSpeed = 8;
 
-    [Space]
+    [Header("Dash attack info")]
     public int numOfBasicAttack = 2;
     public int numOfDashAttack = 1;
     public float dashAttackCooldown = 2f;
     public float dashAttackMaxDistance = 15;
-    public float dashAttackSpeed = 15;
+    public float dashSpeed = 15;
+
+    public float DashSpeed => dashSpeed * LocalTimeScale;
 
     protected override void Awake() {
         base.Awake();

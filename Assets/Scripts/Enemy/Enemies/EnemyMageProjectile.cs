@@ -13,7 +13,11 @@ public class EnemyMageProjectile : MonoBehaviour, ICounterable, ISlowable {
     [SerializeField] private float destroyDelay = 2;
     [SerializeField] private GameObject destroyVFXPrefab;
 
-    private float slowDownPercentage;
+    private bool isFrozen;
+    private Vector3 originVelocity;
+    private float originGravityScale;
+
+    private float speedMultiplier;
 
     public void SetUpProjectile(Transform target, EnemyCombat combat) {
         col = GetComponent<Collider2D>();
@@ -70,13 +74,22 @@ public class EnemyMageProjectile : MonoBehaviour, ICounterable, ISlowable {
     }
 
     public void SlowDown(float slowDownPercentage) {
-        rb.linearVelocity *= 1 - slowDownPercentage;
-        rb.gravityScale *= (1 - slowDownPercentage) * (1 - slowDownPercentage);
-        this.slowDownPercentage = slowDownPercentage;
+        isFrozen = slowDownPercentage == 1 ? true : false;
+        originVelocity = rb.linearVelocity;
+        originGravityScale = rb.gravityScale;
+
+        speedMultiplier = 1 - slowDownPercentage;
+        rb.linearVelocity *= speedMultiplier;
+        rb.gravityScale *= speedMultiplier * speedMultiplier;
     }
 
     public void RecoverSpeed() {
-        rb.linearVelocity /= 1 - slowDownPercentage;
-        rb.gravityScale /= (1 - slowDownPercentage) * (1 - slowDownPercentage);
+        if (isFrozen) {
+            rb.linearVelocity = originVelocity;
+            rb.gravityScale = originGravityScale;
+        } else {
+            rb.linearVelocity /= speedMultiplier;
+            rb.gravityScale /= speedMultiplier * speedMultiplier;
+        }
     }
 }

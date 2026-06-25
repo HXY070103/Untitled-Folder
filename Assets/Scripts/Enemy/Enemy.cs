@@ -45,6 +45,13 @@ public class Enemy : Entity, ISlowable, ICounterable {
     private bool onPhaseDebuff = false;
     private Coroutine phaseDebuffCo;
 
+    public float battleTimer;
+    public float attackTimer;
+
+    public float BattleMoveSpeed => battleMoveSpeed * LocalTimeScale;
+    public float MoveSpeed => moveSpeed * LocalTimeScale;
+    public Vector2 QuickRetreatSpeed => quickRetreatSpeed * LocalTimeScale;
+
     protected override void Awake() {
         base.Awake();
 
@@ -52,18 +59,16 @@ public class Enemy : Entity, ISlowable, ICounterable {
         health = GetComponent<EnemyHealth>();
         combat = GetComponent<EnemyCombat>();
         vfx = GetComponent<EnemyVFX>();
+
+        battleTimer = 0;
+        attackTimer = 0;
     }
 
-    public float GetBattleMoveSpeed() {
-        return battleMoveSpeed * speedMultiplier;
-    }
+    protected override void Update() {
+        base.Update();
 
-    public float GetMoveSpeed() {
-        return moveSpeed * speedMultiplier;
-    }
-
-    public Vector2 GetQuickRetreatSpeed() {
-        return quickRetreatSpeed * speedMultiplier;
+        battleTimer -= Time.deltaTime * LocalTimeScale;
+        attackTimer -= Time.deltaTime * LocalTimeScale;
     }
 
     public virtual void SpecialAttack() {}
@@ -102,13 +107,12 @@ public class Enemy : Entity, ISlowable, ICounterable {
     }
 
     public void SlowDown(float slowDownPercentage) {
-        float newSpeedMultiplier = 1 - slowDownPercentage;
-        speedMultiplier = newSpeedMultiplier;
-        anim.speed = newSpeedMultiplier;
+        localTimeScale = 1 - slowDownPercentage;
+        anim.speed = 1 - slowDownPercentage;
     }
 
     public void RecoverSpeed() {
-        speedMultiplier = 1;
+        localTimeScale = 1;
         anim.speed = 1;
     }
 
@@ -158,7 +162,7 @@ public class Enemy : Entity, ISlowable, ICounterable {
         return player;
     }
 
-    public virtual Transform DetectPlayer() {
+    protected virtual Transform DetectPlayer() {
         RaycastHit2D hit = Physics2D.Raycast(
                 playerCheck.position, 
                 Vector2.right, 

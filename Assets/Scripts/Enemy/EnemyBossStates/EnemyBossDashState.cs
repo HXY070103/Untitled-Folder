@@ -13,6 +13,7 @@ public class EnemyBossDashState : EnemyState {
     public override void Enter() {
         base.Enter();
 
+        enemyBoss.gameObject.layer = LayerMask.NameToLayer("Untargetable");
         enemyBoss.vfx.DoImageEchoEffect(float.PositiveInfinity);
 
         if (player == null) {
@@ -25,7 +26,7 @@ public class EnemyBossDashState : EnemyState {
     public override void Update() {
         base.Update();
 
-        enemyBoss.SetVelocity(dashDir * enemyBoss.dashSpeed, rb.linearVelocity.y);
+        enemyBoss.SetVelocity(dashDir * enemyBoss.DashSpeed, rb.linearVelocity.y);
 
         if (enemyBoss.OutOfMoveRange() || ReachedPlayer()) {
             stateMachine.ChangeState(enemyBoss.attackState);
@@ -35,6 +36,7 @@ public class EnemyBossDashState : EnemyState {
     public override void Exit() {
         base.Exit();
 
+        enemyBoss.gameObject.layer = LayerMask.NameToLayer("Enemy");
         enemyBoss.vfx.StopImageEchoEffect();
         enemyBoss.SetVelocity(0, 0);
     }

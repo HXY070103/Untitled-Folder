@@ -1,16 +1,13 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyBossBattleState : EnemyBattleState {
     private EnemyBoss enemyBoss;
 
-    private float lastTimeTeleport;
+    private float time;
 
     public EnemyBossBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
         enemyBoss = enemy as EnemyBoss;
-
-        lastTimeTeleport = float.NegativeInfinity;
     }
 
     public override void Enter() {
@@ -52,7 +49,7 @@ public class EnemyBossBattleState : EnemyBattleState {
                 return;
             }
 
-            float xVelocity = DirectionToPlayer() * enemy.GetBattleMoveSpeed();
+            float xVelocity = DirectionToPlayer() * enemy.BattleMoveSpeed;
             enemy.SetVelocity(xVelocity, rb.linearVelocity.y);
         }
     }
@@ -62,10 +59,10 @@ public class EnemyBossBattleState : EnemyBattleState {
     }
 
     private void UpdateSpecialAttackTimer() {
-        lastTimeTeleport = Time.time;
+        enemyBoss.specialAttackTimer = enemyBoss.specialAttackCooldown;
     }
 
     private bool CanUseSpecialAttack() {
-        return Time.time > lastTimeTeleport + enemyBoss.specialAttackCooldown;
+        return enemyBoss.specialAttackTimer < 0;
     }
 }

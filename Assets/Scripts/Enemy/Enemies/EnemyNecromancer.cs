@@ -5,21 +5,25 @@ public class EnemyNecromancer : Enemy {
     public EnemyNecromancerSpellCastState spellCastState;
 
     [Header("Necromancer specific info")]
+    
+    [Header("Fire info")]
     [SerializeField] private GameObject firePrefab;
     [SerializeField] private Transform fireStartPoint;
 
-    [Space]
+    [Header("Spell cast info")]
     [SerializeField] private GameObject spellPrefab;
     [SerializeField] private Transform spellStartPoint;
     [SerializeField] private float spellGenerationRadius = 0.5f;
     [SerializeField] private int amountToCast = 3;
     [SerializeField] private float spellCastCooldown = 0.3f;
-    [SerializeField] private float chaseSpeed = 10;
+    [SerializeField] private float spellChaseSpeed = 10;
     public float spellCastAttackCooldown = 5;
 
     private Coroutine spellCastCo;
     private bool spellCastPerformed;
     public bool SpellCastPerformed => spellCastPerformed;
+
+    public float spellCastTimer;
 
     protected override void Awake() {
         base.Awake();
@@ -33,12 +37,20 @@ public class EnemyNecromancer : Enemy {
         spellCastState = new EnemyNecromancerSpellCastState(this, stateMachine, "SpellCast");
 
         anim.SetBool("HasStunnedRecovery", true);
+
+        spellCastTimer = 0;
     }
 
     protected override void Start() {
         base.Start();
 
         stateMachine.Initialize(idleState);
+    }
+
+    protected override void Update() {
+        base.Update();
+
+        spellCastTimer -= Time.deltaTime * LocalTimeScale;
     }
 
     public override void SpecialAttack() {
@@ -77,7 +89,7 @@ public class EnemyNecromancer : Enemy {
             Vector3 position = GeneratePosition(dir);
             GameObject projectile = 
                 Instantiate(spellPrefab, position, Quaternion.identity);
-            projectile.GetComponent<EnemyNecromancerProjectile>().SetUpProjectile(chaseSpeed, player, combat);
+            projectile.GetComponent<EnemyNecromancerProjectile>().SetUpProjectile(spellChaseSpeed, player, combat);
             yield return new WaitForSeconds(spellCastCooldown);
         }
 
