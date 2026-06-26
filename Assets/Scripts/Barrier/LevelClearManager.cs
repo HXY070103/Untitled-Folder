@@ -10,7 +10,8 @@ public class LevelClearManager : MonoBehaviour, ISaveable
     [SerializeField] private Barrier barrier;
 
     [Header("Enemy Count")]
-    [SerializeField] private int remainingEnemies;
+    [SerializeField] private int remainingEnemies = -1;
+    [SerializeField] private int pendingEnemies = 0;
 
     private bool isLevelClear;
     private string currentSceneName;
@@ -45,11 +46,7 @@ public class LevelClearManager : MonoBehaviour, ISaveable
             SetLevelClear(true, false);
             yield break;
         }
-        EnemyHealth[] enemies = FindObjectsByType<EnemyHealth>(
-            FindObjectsInactive.Exclude,
-            FindObjectsSortMode.None
-        );
-        remainingEnemies = enemies.Length;
+        UpdateRemainingEnemy();
 
         if (remainingEnemies <= 0)
         {
@@ -59,6 +56,16 @@ public class LevelClearManager : MonoBehaviour, ISaveable
         {
             SetLevelClear(false, false);
         }
+    }
+
+    public void UpdateRemainingEnemy()
+    {
+        EnemyHealth[] enemies = FindObjectsByType<EnemyHealth>(
+            FindObjectsInactive.Exclude,
+            FindObjectsSortMode.None
+        );
+        remainingEnemies = enemies.Length;
+        pendingEnemies = 0;
     }
 
     private void HandleEnemyDeath()
@@ -73,11 +80,15 @@ public class LevelClearManager : MonoBehaviour, ISaveable
         if (remainingEnemies <= 0)
         {
             remainingEnemies = 0;
+        }
+
+        if (remainingEnemies + pendingEnemies <= 0)
+        {
             SetLevelClear(true, true);
         }
     }
 
-    private void SetLevelClear(bool clear, bool saveAfterClear)
+    public void SetLevelClear(bool clear, bool saveAfterClear)
     {
         isLevelClear = clear;
 
@@ -107,6 +118,11 @@ public class LevelClearManager : MonoBehaviour, ISaveable
         return remainingEnemies;
     }
 
+    public void SetRemainingEnemies(int x)
+    {
+        remainingEnemies = x;
+    }
+
     private void RemoveAllEnemiesInScene()
     {
         EnemyHealth[] enemies = FindObjectsByType<EnemyHealth>(
@@ -118,6 +134,33 @@ public class LevelClearManager : MonoBehaviour, ISaveable
         {
             Destroy(enemyHealth.gameObject);
         }
+    }
+
+    public void RegisterSpawnedEnemy()
+    {
+        if (remainingEnemies == -1)
+        {
+            return;
+        }
+        remainingEnemies++;
+        if (pendingEnemies > 0)
+        {
+            pendingEnemies--;
+        }
+        if (!isLevelClear)
+        {
+            return;
+        }
+        SetLevelClear(false, false);
+    }
+
+    public void AddPendingEnemies(int count)
+    {
+        if (count <= 0 || remainingEnemies == -1)
+        {
+            return;
+        }
+        pendingEnemies += count;
     }
 
     public void LoadData(GameData data)

@@ -36,12 +36,20 @@ public class UI_SkillCooldown : MonoBehaviour
 
     private void UpdateCooldownUI()
     {
+        if (skill == null)
+        {
+            skill = playerSkill.GetCurrentSkill();
+        }
         if (skill == null || cooldownMask == null)
         {
             return;
         }
+        if (skill.IsSkillActive)
+        {
+            return;
+        }
 
-        float currentCooldown = skill.GetCurrentCooldown();
+        float currentCooldown = skill.GetReaminCooldown();
         float maxCooldown = skill.GetMaxCooldown();
 
         if (currentCooldown <= 0f || maxCooldown <= 0f)

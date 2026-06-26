@@ -75,16 +75,13 @@ public class Waypoint : MonoBehaviour
         if (transferToScene == "EliteLevel_Repeat")
         {
             transferToScene += RandomChoose(1,4);
-        }
-        if (transferToScene == "EliteLevel_1")
+        } else if (transferToScene == "EliteLevel_1")
         {
             transferToScene = "EliteLevel" + RandomChoose(1,2);
-        }
-        if (transferToScene == "EliteLevel_2")
+        } else if (transferToScene == "EliteLevel_2")
         {
             transferToScene = "EliteLevel" + RandomChoose(3,4);
-        }
-        if (transferToScene == "NormalLevel_Repeat")
+        } else if (transferToScene == "NormalLevel_Repeat")
         {
             transferToScene += RandomChoose(1,4);
         }

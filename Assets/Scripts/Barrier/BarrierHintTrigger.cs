@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using System.Collections;
+
 
 public class BarrierHintTrigger : MonoBehaviour
 {
