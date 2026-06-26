@@ -1,19 +1,24 @@
+using System;
 using UnityEngine;
 
 public class Spine : MonoBehaviour
 {
-    private void OnTriggerEnter2D(Collider2D collision)
+    [SerializeField] private float cooldown = 1f;
+    private float lastTime = -1f;
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.GetComponent<Player>() == null)
+        if (Time.time < lastTime + cooldown)
         {
             return;
         }
-        PlayerHealth playerHealth = collision.GetComponent<PlayerHealth>();
-        if (playerHealth == null)
+        lastTime = Time.time;
+        EntityHealth entityHealth = collision.GetComponent<EntityHealth>();
+        EntityStats entityStats = collision.GetComponent<EntityStats>();
+        if (entityHealth == null)
         {
-            Debug.Log("Cannot find player health");
+            Debug.Log("Cannot find object health");
             return;
         }
-        playerHealth.TryApplyInstantKill();
+        entityHealth.TakeDamage(new Damage(0.2f * entityStats.GetMaxHP(), false), this.transform);
     }
 }

@@ -29,6 +29,10 @@ public class EnemySlime: Enemy {
         if (slimeToCreatePrefab == null) {
             return;
         }
+        if (LevelClearManager.instance != null)
+        {
+            LevelClearManager.instance.AddPendingEnemies(amountOfSlimesToCreate);
+        }
 
         for (int i = 0; i < amountOfSlimesToCreate; i += 1) {
             GameObject newSlime = 

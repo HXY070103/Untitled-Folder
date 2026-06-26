@@ -64,6 +64,16 @@ public class Enemy : Entity, ISlowable, ICounterable {
         attackTimer = 0;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+
+        if (LevelClearManager.instance != null)
+        {
+            LevelClearManager.instance.RegisterSpawnedEnemy();
+        }
+    }
+
     protected override void Update() {
         base.Update();
 

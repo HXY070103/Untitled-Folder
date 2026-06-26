@@ -65,5 +65,6 @@ public class Barrier : MonoBehaviour
             yield return null;
         }
         spriteRenderer.enabled = false;
+        gameObject.SetActive(false);
     }
 }

@@ -30,7 +30,7 @@ public class SkillBase : MonoBehaviour{
     [SerializeField] private float cooldown = 3;
     [SerializeField] private float skillDuration = 3;
     
-    private float lastTimeUsed;
+    private float lastTimeEnd;
     private Coroutine handleSkillCo;
     protected float remainingDuration;
     private bool isSkillActive;
@@ -42,7 +42,7 @@ public class SkillBase : MonoBehaviour{
     protected virtual void Awake() {
         stats = GetComponentInParent<PlayerStats>();
     
-        lastTimeUsed = float.MinValue;
+        lastTimeEnd = float.MinValue;
         remainingDuration = 0;
         isSkillActive = false;
         decreaseRate = new float[6] {1f, 1f, 0.8f, 0.7f, 0.6f, 0.5f}; // normal, 1decay, 2decay, 3decay, 4decay, 5decay
@@ -68,11 +68,11 @@ public class SkillBase : MonoBehaviour{
     }
 
     protected virtual void StartSkill() {
-        lastTimeUsed = Time.time;
         isSkillActive = true;
         remainingDuration = GetSkillDuration();
+        lastTimeEnd = Time.time + GetSkillDuration();
         numOfUse++;
-        //IncreaseSkillDecay();
+        IncreaseSkillDecay();
         playerSkillManager.UpdateSkillDecay(decreaseIndex);
     }
     
@@ -132,11 +132,15 @@ public class SkillBase : MonoBehaviour{
     }
 
     public bool OnCooldown() {
-        return Time.time < lastTimeUsed + cooldown;
+        return Time.time < lastTimeEnd + cooldown;
     }
 
-    public float GetCurrentCooldown() {
-        return Mathf.Max(0, cooldown - (Time.time - lastTimeUsed));
+    private float GetCurrentCooldown() {
+        if (Time.time < lastTimeEnd)
+        {
+            return cooldown;
+        }
+        return Mathf.Max(0, cooldown - (Time.time - lastTimeEnd));
     }
 
     public float GetReaminCooldown()
@@ -149,10 +153,10 @@ public class SkillBase : MonoBehaviour{
         remaining = Mathf.Clamp(remaining, 0, cooldown);
         if (remaining <= 0)
         {
-            lastTimeUsed = float.MinValue;
+            lastTimeEnd = float.MinValue;
         } else
         {
-            lastTimeUsed = Time.time - (cooldown - remaining);
+            lastTimeEnd = Time.time - (cooldown - remaining);
         }
     }
 
