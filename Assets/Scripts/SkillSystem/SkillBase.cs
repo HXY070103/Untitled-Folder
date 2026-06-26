@@ -68,11 +68,10 @@ public class SkillBase : MonoBehaviour{
     }
 
     protected virtual void StartSkill() {
-        lastTimeUsed = Time.time;
         isSkillActive = true;
         remainingDuration = GetSkillDuration();
         numOfUse++;
-        //IncreaseSkillDecay();
+        IncreaseSkillDecay();
         playerSkillManager.UpdateSkillDecay(decreaseIndex);
     }
     
@@ -93,6 +92,7 @@ public class SkillBase : MonoBehaviour{
     }
 
     protected virtual void EndSkill() {
+        lastTimeUsed = Time.time;
         isSkillActive = false;
         remainingDuration = 0;
     }

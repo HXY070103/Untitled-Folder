@@ -26,7 +26,7 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         }
         SkillBase currentSkill = skills[(int) currentSkillType];
 
-        if (!currentSkill.OnCooldown()) {
+        if (!currentSkill.IsSkillActive && !currentSkill.OnCooldown()) {
             currentSkill.ApplySkill();
         }
     }
