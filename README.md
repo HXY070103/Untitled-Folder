@@ -1037,3 +1037,260 @@ Enter a phased state where the next attack becomes a heavy strike. During the ph
 | Perfect Rhythm | Triggering Perfect Phase prevents skill decay gain for that activation |
 | Sustained Shift *(Mutually Exclusive with Shadow Strike)* | Skill decay no longer reduces phase duration |
 | Shadow Strike *(Mutually Exclusive with Sustained Shift)* | Skill decay no longer reduces heavy strike multiplier |
+
+---
+
+## Enemy
+
+All enemies use a finite state machine (FSM) architecture to control their behavior.
+
+### General Battle behaviors
+
+```text
+Patrol:
+Idle -> Move -> Idle -> Move -> Idle -> ...
+
+Battle:
+Detect player / Get attacked -> Battle
+-> Attack / Retreat
+-> Player not detected for a long period -> Idle
+```
+
+#### `Idle State`
+
+- The enemy stays still for a short period.
+- After the idle timer ends, it enters the `Move State`.
+
+#### `Move State`
+
+- The enemy patrols in its facing direction.
+- While moving, it continuously checks:
+  - Whether it reaches the edge of a platform.
+  - Whether it hits a wall.
+- If either condition is met, it turns around and enters the `Idle State`.
+
+#### `Battle State`
+
+- The enemy enters the `Battle State` when:
+  - the player is detected.
+  - the enemy is attacked by the player.
+- While in battle, the enemy:
+  - Continuously tracks the player's position.
+  - Attacks the player when the attack conditions are met.
+  - Retreats if the player gets too close.
+- If the player is not detected for a long period, it returns to the `Idle State`.
+
+### Specific Battle Behaviors
+
+Once in battle, the enemy stops patrolling and executes its combat behavior. Different enemy types override this state to implement their own attack patterns while sharing the same state machine framework.
+
+#### Skeleton
+
+1. **Attack**
+   
+   - If the player is within the attack range, the skeleton first faces the player.
+   - It then performs an attack.
+   - After attacking, it waits for the attack cooldown before attacking again.
+
+2. **Chase**
+   
+   - If the player is outside the attack range, the skeleton moves toward the player.
+   - It continues moving until one of the following conditions is met:
+     - The player enters the attack range.
+     - A wall blocks its movement.
+    
+#### Knight
+
+1. **Attack**
+   
+   - If the player is within the attack range, the skeleton first faces the player.
+   - It then performs an attack.
+   - After attacking, it waits for the attack cooldown before attacking again.
+
+2. **Chase**
+   
+   - If the player is outside the attack range, the skeleton moves toward the player.
+   - It continues moving until one of the following conditions is met:
+     - The player enters the attack range.
+     - A wall blocks its movement.
+    
+#### Evil Wizard
+
+1. **Attack**
+
+   - If the player is within the attack range, the Evil Wizard first faces the player.
+   - It then releases a beam of fire in front of itself.
+   - The fire performs multiple damage checks while active, allowing it to continuously damage the player.
+   - After attacking, it waits for the attack cooldown before attacking again.
+
+2. **Chase**
+
+   - If the player is outside the attack range, the Evil Wizard moves toward the player.
+   - It continues moving until one of the following conditions is met:
+     - The player enters the attack range.
+     - A wall blocks its movement.
+  
+#### Slime
+
+1. **Attack**
+   
+   - If the player is within the attack range, the skeleton first faces the player.
+   - It then performs an attack.
+   - After attacking, it waits for the attack cooldown before attacking again.
+
+2. **Chase**
+   
+   - If the player is outside the attack range, the skeleton moves toward the player.
+   - It continues moving until one of the following conditions is met:
+     - The player enters the attack range.
+     - A wall blocks its movement.
+
+3. **Split**
+
+   - When the slime dies, it spawns multiple smaller slimes.
+
+#### Archer Elf
+
+1. **Attack**
+
+   - If the player is within the attack range, the Archer Elf faces the player.
+   - It then shoots an arrow at the player.
+   - After attacking, it waits for the attack cooldown before shooting again.
+
+2. **Retreat**
+
+   - If the Archer Elf is not attacking, it moves away from the player to maintain a safe distance.
+   - It continues retreating until one of the following conditions is met:
+     - It reaches a wall.
+     - It reaches the edge of a platform.
+     - It has created enough distance from the player.
+
+#### Mage
+
+1. **Attack**
+   
+   - If the player is within the attack range, the skeleton first faces the player.
+   - It then performs an attack.
+   - After attacking, it waits for the attack cooldown before attacking again.
+
+2. **Chase**
+   
+   - If the player is outside the attack range, the skeleton moves toward the player.
+   - It continues moving until one of the following conditions is met:
+     - The player enters the attack range.
+     - A wall blocks its movement.
+
+3. **Retreat and Spell Cast**
+
+   - At regular intervals, the mage checks the distance to the player.
+   - If the player is too close, the mage quickly retreats.
+   - It continues retreating until one of the following conditions is met:
+     - It reaches a wall.
+     - It reaches the edge of a platform.
+     - It has retreated a sufficient distance from the player.
+   - The mage then immediately casts a spell.
+   - The spell launches three magic projectiles that travel in parabolic trajectories toward the player.
+
+#### Skeleton King
+
+**Phase 1 (Health > 50%)**
+
+1. **Attack**
+   
+   - If the player is within the attack range, the skeleton first faces the player.
+   - It then performs an attack.
+   - After attacking, it waits for the attack cooldown before attacking again.
+
+2. **Chase**
+   
+   - If the player is outside the attack range, the skeleton moves toward the player.
+   - It continues moving until one of the following conditions is met:
+     - The player enters the attack range.
+     - A wall blocks its movement.
+
+**Phase 2 (Health ≤ 50%)**
+
+1. **Summon Skeletons**
+
+   - The Skeleton King stops moving.
+   - At regular intervals, it summons three small skeletons.
+
+#### Dark Knight
+
+1. **Attack**
+
+   - If the player is within the attack range, the Dark Knight performs one of two attacks.
+   - The attack pattern follows a fixed cycle:
+     - Perform a sword slash while releasing a sword wave.
+     - Perform another sword slash while releasing a sword wave.
+     - Dash toward the player.
+   - During the dash, the Dark Knight continues moving until one of the following conditions is met:
+     - It reaches the player.
+     - It collides with a wall.
+     - It reaches the maximum dash distance.
+   - After the dash ends, it immediately performs an attack.
+   - After each attack, it waits for the attack cooldown before executing the next attack in the cycle.
+
+2. **Chase**
+
+   - If the player is outside the attack range, the Dark Knight moves toward the player.
+   - It continues moving until one of the following conditions is met:
+     - The player enters the attack range.
+     - A wall blocks its movement.
+
+#### Necromancer
+
+1. **Attack**
+
+   - If the player is within the attack range, the Necromancer first faces the player.
+   - It then releases a beam of fire in front of itself.
+   - After attacking, it waits for the attack cooldown before attacking again.
+
+2. **Chase**
+
+   - If the player is outside the attack range, the Necromancer moves toward the player.
+   - It continues moving until one of the following conditions is met:
+     - The player enters the attack range.
+     - A wall blocks its movement.
+
+3. **Cast Homing Projectiles**
+
+   - At regular intervals, the Necromancer casts a spell.
+   - The spell launches three homing magic projectiles.
+   - Each projectile continuously tracks the player's position until it hits the player or is destroyed.
+
+#### Boss
+
+
+
+The boss is confined to a fixed combat area throughout the battle.
+
+- The boss cannot leave this designated area.
+- All movement abilities, including walking, dashing, and teleporting, are restricted to the combat area.
+- As a result, the boss does not need to avoid walls or platform edges during combat.
+
+1. **Attack and Chase**
+
+   - If the player is within the attack range, the boss performs an attack.
+   - If the player is outside the attack range but within the dash range, the boss moves toward the player until the player enters the attack range, then performs anattack.
+   - If the player is outside the dash range, the boss dashes toward the player.
+   - The dash ends when one of the following conditions is met:
+     - The boss reaches the player.
+     - The maximum dash distance is reached.
+   - After the dash ends, the boss immediately performs an attack.
+
+2. **Special Attack**
+
+   - At regular intervals, the boss performs a special attack.
+   - One of the following attacks is selected at random:
+     - **Teleport Strike**
+       - Teleports behind the player.
+       - Immediately performs a melee attack.
+     - **Skeleton Summon**
+       - Summons three skeletons.
+       - The summoned skeletons fight independently using the normal skeleton battle behavior
+     - **Magic Attack**
+       - Teleports to a position far away from the player.
+       - Then performs one of the following attacks at random:
+         - Summons three lightning spells above the player's position.
+         - Releases an energy wave toward the player.
