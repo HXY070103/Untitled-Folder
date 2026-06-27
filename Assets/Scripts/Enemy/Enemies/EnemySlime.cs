@@ -1,3 +1,4 @@
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class EnemySlime: Enemy {
@@ -43,27 +44,13 @@ public class EnemySlime: Enemy {
 
     public void SetUpRespawnSlime(Vector2 positionOffset, Transform player) {
         ApplyRespwanPosition(positionOffset);
-        StartBattleStateCheck(player);
+        HandleFlip(facingDir);
+        TryToEnterBattleState(player);
     }
 
     private void ApplyRespwanPosition(Vector2 positionOffset) {
         float xPosition = transform.position.x + positionOffset.x * Random.Range(-1f, 1f);
         float yPosition = transform.position.y + positionOffset.y * Random.Range(1f, 2f);
         transform.position = new Vector2(xPosition, yPosition);
-    }
-
-    private void StartBattleStateCheck(Transform player) {
-        TryToEnterBattleState(player);
-        InvokeRepeating(nameof(ReEnterBattleState), 0, 0.3f);
-    }
-
-    private void ReEnterBattleState() {
-        if (stateMachine.currentState == battleState 
-            || stateMachine.currentState == attackState) {
-            CancelInvoke(nameof(ReEnterBattleState));
-            return;
-        }
-
-        stateMachine.ChangeState(battleState);
     }
 }

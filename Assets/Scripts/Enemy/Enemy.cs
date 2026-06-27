@@ -45,6 +45,8 @@ public class Enemy : Entity, ISlowable, ICounterable {
     private bool onPhaseDebuff = false;
     private Coroutine phaseDebuffCo;
 
+    private Coroutine tryToEnterBattleStateCo;
+
     public float battleTimer;
     public float attackTimer;
 
@@ -153,6 +155,16 @@ public class Enemy : Entity, ISlowable, ICounterable {
     }
 
     public void TryToEnterBattleState(Transform player) {
+        if (tryToEnterBattleStateCo != null) {
+            StopCoroutine(tryToEnterBattleStateCo);
+        }
+
+        tryToEnterBattleStateCo = StartCoroutine(TryToEnterBattleStateCo(player));
+    }
+
+    private IEnumerator TryToEnterBattleStateCo(Transform player) {
+        yield return new WaitForEndOfFrame();
+
         if (stateMachine.currentState == idleState 
             || stateMachine.currentState == moveState) {
             this.player = player;
