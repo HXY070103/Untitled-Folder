@@ -93,7 +93,6 @@ public class SkillBase : MonoBehaviour{
     }
 
     protected virtual void EndSkill() {
-        lastTimeUsed = Time.time;
         isSkillActive = false;
         remainingDuration = 0;
     }
