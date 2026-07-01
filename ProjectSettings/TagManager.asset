@@ -14,11 +14,11 @@ TagManager:
   - Ground
   - Player
   - Enemy
-  - 
-  - 
-  - 
-  - 
-  - 
+  - EnemyProjectile
+  - Untargetable
+  - HurtChecker
+  - Domain
+  - PhaseTracker
   - 
   - 
   - 
@@ -46,6 +46,9 @@ TagManager:
     locked: 0
   - name: Ground
     uniqueID: 3778138835
+    locked: 0
+  - name: CheckPoint
+    uniqueID: 498959099
     locked: 0
   - name: Chest
     uniqueID: 3935080143

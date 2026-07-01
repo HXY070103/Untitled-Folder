@@ -1,8 +1,10 @@
 using UnityEngine;
 
 public class SkillLifeSteal : SkillBase {
-    private EntityHealth health;
+    private PlayerHealth health;
+    private Player player;
 
+    [Header("Skill info")]
     [SerializeField] private GameObject fireVFXPrefab;
     [SerializeField] private GameObject fireballPrefab;
     [SerializeField] private float conversionRate = 0.3f;
@@ -10,29 +12,46 @@ public class SkillLifeSteal : SkillBase {
     [SerializeField] private float minFireballGenerationRadius = 1.5f;
     [SerializeField] private float maxFireballGenerationRadius = 2;
     [SerializeField] private int fireballAmount = 5;
-    [Space]
+    
+    [Header("Unshakable resolve info")]
     [SerializeField] private float reviveHPMultiplier = 0.2f;
+
+    [Header("Desperate gambit info")]
     [SerializeField] private float maxConversionRate = 2;
+
+    [Header("Blood growth info")]
     [SerializeField] private float healingHPThreshold = 0.2f;
     [SerializeField] private float bonusMaxHP = 10;
+
+    [Header("Blood frenzy info")]
+    [SerializeField] private float damageTakenMultiplier = 2;
+    [SerializeField] private float damageApplyMultiplier = 2;
+    [SerializeField] private float attackAnimSpeedMultiplier = 1.5f;
+
+    [SerializeField] private float amountOfBloodBack;
 
     private float totalHealingHP;
     private GameObject fireVFX;
 
     public float GetConversionRate() {
+        float bonusConversionRate;
         if (UnLocked("Desperate Gambit")) {
-            float bonusConversionRate = 
-                (maxConversionRate - conversionRate) * (1 - health.GetHPPercentage());
-            return conversionRate + bonusConversionRate;
+            bonusConversionRate = (maxConversionRate - conversionRate) * (1 - health.GetHPPercentage());
+        } else {
+            bonusConversionRate = 0;
         }
-
-        return conversionRate * stats.GetSkillEffect();
+        if (UnlockedForBetterUpgrade("Fixed Blood"))
+        {
+            return (conversionRate + bonusConversionRate) * stats.GetSkillEffect();
+        }
+        return (conversionRate + bonusConversionRate) * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
     protected override void Awake() {
         base.Awake();
 
-        health = GetComponentInParent<EntityHealth>();
+        health = GetComponentInParent<PlayerHealth>();
+        player = GetComponentInParent<Player>();
     }
 
     protected override void StartSkill() {
@@ -44,6 +63,12 @@ public class SkillLifeSteal : SkillBase {
         if (UnLocked("Unshakable Resolve")) {
             health.StartDeathPrevention(reviveHPMultiplier);
         }
+
+        if (UnLocked("Blood Frenzy")) {
+            health.StartVulnerability(damageTakenMultiplier);
+            IncreaseDamage();
+            player.IncreaseAttackSpeed(attackAnimSpeedMultiplier);
+        }
     }
 
     protected override void EndSkill() {
@@ -52,24 +77,51 @@ public class SkillLifeSteal : SkillBase {
         EndAccumulateDamage();
         DestroyFireVFX();
 
+        if (UnlockedForBetterUpgrade("Blood Back"))
+        {
+            HandleBloodBack();
+        }
+
         if (!UnLocked("Unshakable Resolve") && !UnLocked("Stable Gain")) {
             CreateFireball();
         }
 
         if (UnLocked("Unshakable Resolve")) {
-            health.EndDeathPrevention();
+            health.StopDeathPrevention();
         }
 
         if (UnLocked("Blood Growth")) {
             HandleMaxHPIncrease();
         }
 
-        Debug.Log(stats.GetMaxHP());
+        if (UnLocked("Blood Frenzy")) {
+            health.EndVulnerability();
+            ResetDamage();
+            player.ResetAttackSpeed();
+        }
+    }
+
+    private void HandleBloodBack()
+    {
+        if (totalHealingHP >= amountOfBloodBack)
+        {
+            DecreaseDecay(1);
+        }
     }
 
     public void HealingAtEnd() {
         float healingHP = totalHealingHP / fireballAmount;
         health.Healing(healingHP);
+    }
+
+    private void IncreaseDamage() {
+        float baseDamage = stats.damage.GetValue();
+        float bonusDamage = baseDamage * (damageApplyMultiplier - 1);
+        stats.damage.AddModifier(bonusDamage, "BloodFrenzy");
+    }
+
+    private void ResetDamage() {
+        stats.damage.RemoveModifier("BloodFrenzy");
     }
 
     private void HandleMaxHPIncrease() {

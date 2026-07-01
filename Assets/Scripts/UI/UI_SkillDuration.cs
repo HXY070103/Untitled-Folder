@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class UI_SkillDuration : MonoBehaviour
 {
     [SerializeField] private PlayerSkillManager manager;
-    [SerializeField] private SkillBase skill;
+    private SkillBase skill;
 
     [Header("UI")]
     [SerializeField] private GameObject durationGroup;
@@ -15,11 +15,15 @@ public class UI_SkillDuration : MonoBehaviour
     private void Update()
     {
         skill = manager.GetCurrentSkill();
+        if (skill == null)
+        {
+            return;
+        }
         if (skill.IsSkillActive)
         {
             durationGroup.SetActive(true);
             durationText.text = skill.RemainingDuration.ToString("F1") + "s";
-            float fillAmount = skill.RemainingDuration / skill.SkillDuration;
+            float fillAmount = skill.RemainingDuration / skill.GetSkillDuration();
             durationFillImage.fillAmount = fillAmount;
         }
         else

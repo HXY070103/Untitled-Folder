@@ -1,8 +1,10 @@
 using UnityEngine;
 
 public class EnemyBattleState : EnemyState {
-    private Transform player;
-    private float lastTimeWasInBattle;
+    protected Transform player;
+
+    private float lastTimeBattle;
+    private float lastTimeAttack;
 
     public EnemyBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {}
@@ -17,11 +19,7 @@ public class EnemyBattleState : EnemyState {
         }
 
         if (ShouldRetreat()) {
-            rb.linearVelocity = new Vector2(
-                    -DirectionToPlayer() * enemy.retreatSpeed.x, 
-                    enemy.retreatSpeed.y
-                );
-            enemy.HandleFlip(DirectionToPlayer());
+            QuickRetreat();
         }
     }
 
@@ -32,6 +30,10 @@ public class EnemyBattleState : EnemyState {
             UpdateBattleTimer();
         }
 
+        if (BattleTimeIsOver()) {
+            stateMachine.ChangeState(enemy.idleState);
+        }
+
         HandleBattle();
     }
 
@@ -39,38 +41,56 @@ public class EnemyBattleState : EnemyState {
         base.Exit();
     }
 
-    private void UpdateBattleTimer() {
-        lastTimeWasInBattle = Time.time;
+    protected void UpdateBattleTimer() {
+        lastTimeBattle = tc.time;
     }
 
-    private void HandleBattle() {
-        if (BattleTimeIsOver()) {
-            stateMachine.ChangeState(enemy.idleState);
+    protected bool BattleTimeIsOver() {
+        return tc.time > lastTimeBattle + enemy.battleDuration;
+    }
+
+    protected void UpdateAttackTimer() {
+        lastTimeAttack = tc.time;
+    }
+
+    protected bool CanAttack() {
+        return tc.time > lastTimeAttack + enemy.attackCooldown;
+    }
+
+    protected void QuickRetreat() {
+        float xVelocity = -DirectionToPlayer() * enemy.quickRetreatSpeed.x;
+        float yVelocity = enemy.quickRetreatSpeed.y;
+        enemy.MoveRaw(xVelocity, yVelocity);
+        enemy.HandleFlip(DirectionToPlayer());
+    }
+
+    protected virtual void HandleBattle() {
+        if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
+            UpdateAttackTimer();
+            stateMachine.ChangeState(enemy.preAttackState); 
         } else {
-            if (WithInAttackRange() && enemy.PlayerDetected()) {
-                stateMachine.ChangeState(enemy.attackState);
-            } else {
-                enemy.SetVelocity(
-                        DirectionToPlayer() * enemy.GetBattleMoveSpeed(), 
-                        rb.linearVelocity.y
-                    );
+            if (!enemy.PlayerDetected()) {
+                enemy.HandleFlip(DirectionToPlayer());
             }
+
+            if (WithInAttackRange() || enemy.wallDetected) {
+                return;
+            }
+
+            float xVelocity = DirectionToPlayer() * enemy.battleMoveSpeed;
+            enemy.Move(xVelocity, rb.linearVelocity.y);
         }
     }
 
-    private bool BattleTimeIsOver() {
-        return Time.time > lastTimeWasInBattle + enemy.battleDuration;
-    }
-
-    private bool WithInAttackRange() {
+    protected bool WithInAttackRange() {
         return DistanceToPlayer() < enemy.attackDistance;
     }
 
-    private bool ShouldRetreat() {
+    protected bool ShouldRetreat() {
         return DistanceToPlayer() < enemy.minRetreatDistance;
     }
 
-    private float DistanceToPlayer() {
+    protected float DistanceToPlayer() {
         if (player == null) {
             return float.MaxValue;
         }
@@ -78,7 +98,7 @@ public class EnemyBattleState : EnemyState {
         return Mathf.Abs(player.position.x - enemy.transform.position.x);
     }
 
-    private int DirectionToPlayer() {
+    protected int DirectionToPlayer() {
         if (player == null) {
             return 0;
         }

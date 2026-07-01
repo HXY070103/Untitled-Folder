@@ -5,17 +5,23 @@ public class SkillTimeControl : SkillBase {
     public static event Action<float> OnSetFirstAttack;
     public static event Action OnResetFirstAttack;
 
+    [Header("Skill info")]
     [SerializeField] private GameObject domainPrefab;
     [SerializeField] private float maxSize = 20;
     [SerializeField] private float slowDownPercentage = 0.8f;
-    [Space]
+    
+    [Header("Hunting time info")]
     [SerializeField] private float bonusDuration = 1;
+
+    [Header("Precision targeting info")]
     [SerializeField] private float damageMultiplier = 2;
+    
+    [SerializeField] private PlayerHealth playerHealth;
 
     private GameObject domain;
 
     public float GetMaxSize() {
-        return maxSize * stats.GetSkillEffect();
+        return maxSize * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
     public float GetSlowDownPercentage() {
@@ -23,13 +29,18 @@ public class SkillTimeControl : SkillBase {
             return 1;
         }
 
-        return slowDownPercentage * stats.GetSkillEffect();
+        if (UnlockedForBetterUpgrade("Fixed Rate"))
+        {
+            return slowDownPercentage * stats.GetSkillEffect();
+        }
+        return slowDownPercentage * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
-
 
     protected override void StartSkill() {
         base.StartSkill();
 
+        playerHealth.isAttacked = false;
+        
         CreateDomain();
 
         if (UnLocked("Hunting Time")) {
@@ -52,6 +63,14 @@ public class SkillTimeControl : SkillBase {
 
         if (UnLocked("Precision Targeting")) {
             OnResetFirstAttack?.Invoke();
+        }
+        
+        if (UnlockedForBetterUpgrade("Calm Fight"))
+        {
+            if (playerHealth.isAttacked == false)
+            {
+                DecreaseDecay(1);
+            }
         }
     }
 

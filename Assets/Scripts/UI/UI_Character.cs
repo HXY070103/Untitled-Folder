@@ -3,7 +3,9 @@ using UnityEngine;
 public class UI_Character : MonoBehaviour
 {
     private UI_StatSlot[] statSlots;
-
+    [SerializeField] private UI_SkillSlot skillSlot;
+    [SerializeField] private PlayerSkillManager playerSkill;
+    [SerializeField] private UI_SkillDecay skillDecayUI;
     private void Awake()
     {
         statSlots = GetComponentsInChildren<UI_StatSlot>(true);
@@ -19,6 +21,8 @@ public class UI_Character : MonoBehaviour
         if (shouldOpen)
         {
             UpdateAllStatSlots();
+            skillSlot.UpdateSkillInfo();
+            skillDecayUI.UpdateDecayUI(playerSkill.SkillDecay);
         }
     }
 

@@ -14,11 +14,13 @@ public class PlayerJumpAttackState : PlayerState {
 
         if (player.IsHeavyAttack) {
             phase.InterruptSkill();
-            IncreaseDamage(phase.DamageMultiplier);
+            IncreaseDamage();
+            HandleInstantKill();
+            StartHandleBonusPhase();
         }
 
         touchedGround = false;
-        player.SetVelocity(player.facingDir * player.jumpAttackSpeed.x, player.jumpAttackSpeed.y);
+        player.Move(player.facingDir * player.jumpAttackSpeed.x, player.jumpAttackSpeed.y);
     }
 
     public override void Update() {
@@ -27,7 +29,7 @@ public class PlayerJumpAttackState : PlayerState {
         if (player.groundDetected && !touchedGround) {
             touchedGround = true;
             anim.SetTrigger("JumpAttackTrigger"); 
-            player.SetVelocity(0, rb.linearVelocity.y);
+            player.Move(0, rb.linearVelocity.y);
         }
 
         if (triggerCalled && player.groundDetected) {
@@ -40,13 +42,33 @@ public class PlayerJumpAttackState : PlayerState {
 
         if (player.IsHeavyAttack) {
             ResetDamage();
-            player.ResetNextAttack();
+            player.UpdateHeavyAttack();
+            EndHandleBonusPhase();
         }
     }
 
-    private void IncreaseDamage(float damageMultiplier) {
+    private void StartHandleBonusPhase() {
+        if (phase.UnLocked("Shadow Execution")) {
+            phase.EnableBonusPhase();
+        }
+    }
+
+    private void EndHandleBonusPhase() {
+        if (phase.UnLocked("Shadow Execution")) {
+            phase.DisableBonusPhase();
+            phase.TryToEnterBonusPhase();
+        }
+    }
+
+    private void HandleInstantKill() {
+        if (phase.UnLocked("Shadow Assassination")) {
+            player.combat.SetNextAttackToInstantKill();
+        }
+    }
+
+    private void IncreaseDamage() {
         float baseDamage = player.stats.damage.GetValue();
-        float bonusDamage = baseDamage * (damageMultiplier - 1);
+        float bonusDamage = baseDamage * (phase.GetDamageMultiplier() - 1);
         player.stats.damage.AddModifier(bonusDamage, "HeavyAttack");
     }
 

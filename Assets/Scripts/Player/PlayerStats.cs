@@ -1,13 +1,23 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class PlayerStats : EntityStats {
+public class PlayerStats : EntityStats, ISaveable {
+    [Header("Skill")]
+    public Stat skillEffect;
+
+    [Header("Upgrade info")]
+
+    public float bonusMaxHP = 20;
+    public float bonusDamage = 30;
+    public float bonusCritPower = 0.5f;
+    public float bonusCritChance = 10;
+    public float bonusArmor = 40;
+    public float bonusSkillEffect = 0.4f;
+
     private AttributeUpgrade[] upgrades;
     private List<AttributeUpgrade> obtainAttributeUpgrades = new List<AttributeUpgrade>();
     public List<AttributeUpgrade> ObtainAttributeUpgrades => obtainAttributeUpgrades;
-
-    [Header("Skill")]
-    public Stat skillEffect;
 
     public float GetSkillEffect() {
         return skillEffect.GetValue();
@@ -22,14 +32,13 @@ public class PlayerStats : EntityStats {
         upgrades[(int) AttributeUpgrageType.Technique] = new TechniqueUpgrade(this);
     }
 
-    public void addUpgrade(AttributeUpgrageType upgrageType) {
-        
-        AttributeUpgrade upgrade = upgrades[(int) upgrageType];
+    public void AddUpgrade(AttributeUpgrade upgrade) {
         if (upgrade == null)
         {
-            Debug.LogError("Attribute upgrade is null: " + upgrageType);
+            Debug.LogError("Attribute upgrade is null: " + upgrade);
             return;
         }
+
         upgrade.ApplyUpgrade();
         obtainAttributeUpgrades.Add(upgrade);
     }
@@ -42,5 +51,56 @@ public class PlayerStats : EntityStats {
         }
 
         skillEffect.SetBaseValue(defaultStatSetup.skillEffect);
+    }
+    
+    public AttributeUpgrade[] GetAttributeUpgrades() {
+        return upgrades;
+    }
+
+    public void LoadData(GameData data)
+    {
+        obtainAttributeUpgrades.Clear();
+
+        foreach(AttributeUpgradeSaveData saveData in data.attributeUpgrades)
+        {
+            AttributeUpgrageType type = (AttributeUpgrageType) saveData.upgradeType;
+            if (type < 0 || (int) type >= upgrades.Length)
+            {
+                continue;
+            }
+            AttributeUpgrade upgrade = upgrades[(int) type];
+            if (upgrade == null)
+            {
+                continue;
+            }
+            for (int i = 0; i < saveData.count; ++i)
+            {
+                AddUpgrade(upgrade);
+            }
+        }
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.attributeUpgrades.Clear();
+
+        for (int i = 0; i < upgrades.Length; ++i)
+        {
+            AttributeUpgrade upgrade = upgrades[i];
+            if (upgrade == null)
+            {
+                continue;
+            }
+            int count = obtainAttributeUpgrades.Count(x => x.Upgradename == upgrade.Upgradename);
+            if (count <= 0)
+            {
+                continue;
+            }
+            AttributeUpgradeSaveData saveData = new AttributeUpgradeSaveData();
+            saveData.upgradeType = i;
+            saveData.count = count;
+
+            data.attributeUpgrades.Add(saveData);
+        }
     }
 }

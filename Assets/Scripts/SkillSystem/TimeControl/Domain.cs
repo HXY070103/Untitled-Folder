@@ -1,6 +1,7 @@
 using UnityEngine;
 
 public class Domain : MonoBehaviour {
+    [Header("Domain info")]
     [SerializeField] private float expandSpeed = 2;
     [SerializeField] private float damage = 1;
     [SerializeField] private float damageInterval = 0.5f;
@@ -69,11 +70,11 @@ public class Domain : MonoBehaviour {
 
     private void ApplyDomainDamage(Collider2D collision) {
         EnemyHealth enemyHealth = collision.GetComponent<EnemyHealth>();
-        enemyHealth?.ApplyDot(damage, damageInterval);
+        enemyHealth?.StartDot(damage, damageInterval, float.PositiveInfinity);
     }
 
     private void EndDomainDamage(Collider2D collision) {
         EnemyHealth enemyHealth = collision.GetComponent<EnemyHealth>();
-        enemyHealth?.EndDot();
+        enemyHealth?.StopDot();
     }
 }

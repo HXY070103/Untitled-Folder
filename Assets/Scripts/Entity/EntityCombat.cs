@@ -4,12 +4,9 @@ public class EntityCombat : MonoBehaviour {
     private EntityVFX vfx;
     private EntityStats stats;
 
-    [Header("Damage info")]
-    public float damage = 10;
-
     [Header("Target detection info")]
     [SerializeField] private float targetCheckRadius = 1;
-    [SerializeField] private LayerMask whatIsTarget;
+    [SerializeField] protected LayerMask whatIsTarget;
     [SerializeField] private Transform targetCheck;
 
     private void Awake() {
@@ -17,26 +14,27 @@ public class EntityCombat : MonoBehaviour {
         stats = GetComponent<EntityStats>();
     }
 
-    public void PerformAttack() {
-        foreach (var target in GetDetectedColliders()) {
-            IDamageable damageable = target.GetComponent<IDamageable>();
-            
-            if (damageable == null) {
-                continue;
-            }
-
-            Damage damage = stats.GetDamage();
-            damageable.TakeDamage(damage, transform);
-
-            if (!damageable.IsInvulnerable()) {
-                vfx.CreateOnHitVFX(target.transform, damage.isCrit);
-            }
+    public virtual void PerformAttack() {
+        foreach (var target in GetDetectedColliders(whatIsTarget)) {
+            PerformAttackOnTarget(target.transform);
         }
     } 
 
-    protected Collider2D[] GetDetectedColliders() {
+    public virtual void PerformAttackOnTarget(Transform target) {
+        IDamageable damageable = target.GetComponent<IDamageable>();
+
+        if (damageable == null) {
+            return;
+        }
+
+        Damage damage = stats.GetDamage();
+        damageable.TakeDamage(damage, transform);
+        vfx.CreateOnHitVFX(target.transform, damage.isCrit);
+    }
+
+    protected Collider2D[] GetDetectedColliders(LayerMask whatToDetect) {
         return 
-            Physics2D.OverlapCircleAll(targetCheck.position, targetCheckRadius, whatIsTarget);
+            Physics2D.OverlapCircleAll(targetCheck.position, targetCheckRadius, whatToDetect);
     }
 
     private void OnDrawGizmos() {

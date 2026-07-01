@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Player : Entity {
     public static event Action OnPlayerDeath;
+    public static Player instance;
 
     public PlayerInputSet input { get; private set; }
     public PlayerVFX vfx { get; private set; }
     public PlayerSkillManager skillManager { get; private set; }
     public PlayerStats stats { get; private set; }
-    public EntityHealth health { get; private set; }
+    public PlayerHealth health { get; private set; }
+    public PlayerCombat combat { get; private set; }
 
     public PlayerIdleState idleState { get; private set; }
     public PlayerMoveState moveState { get; private set; }
@@ -27,17 +29,21 @@ public class Player : Entity {
     [Header("Attack info")]
     public Vector2 heavyAttackSpeed = new Vector2(5, 1.5f);
     public Vector2 jumpAttackSpeed = new Vector2(5, -6);
-    public Vector2[] attackSpped;
+    public Vector2[] attackSpeed;
     public float attackMovementDuration = 0.1f;
     public float comboResetTime = 0.5f;
+    public float attackAnimSpeedMultiplier = 1;
     
     private Coroutine queueAttackCo;
+    private Coroutine setHeavyAttackCo;
     private bool isHeavyAttack = false;
+    private int numOfHeavyAttack = 0;
     private bool canAttack = true;
-    private Coroutine lockAttackCo;
 
     public bool IsHeavyAttack => isHeavyAttack;
+    public int NumOfHeavyAttack => numOfHeavyAttack;
     public bool CanAttack => canAttack;
+
 
     [Header("Movement info")]
     public float moveSpeed = 8;
@@ -47,19 +53,22 @@ public class Player : Entity {
     public float inAirMoveMultiplier = 0.8f;
     [Range(0, 1)]
     public float wallSlideMultiplier = 0.7f;
-
-    [Space]
     public float dashDuration = 0.25f;
     public float dashSpeed = 20;
+    public float dashCooldown = 1;
+
+    private float lastTimeDashed;
 
     public Vector2 moveInput { get; private set; }
 
     protected override void Awake() {
         base.Awake();
 
+        instance = this;
         input = new PlayerInputSet();
         stats = GetComponent<PlayerStats>();
-        health = GetComponent<EntityHealth>();
+        health = GetComponent<PlayerHealth>();
+        combat = GetComponent<PlayerCombat>();
         vfx = GetComponent<PlayerVFX>();
         skillManager = GetComponent<PlayerSkillManager>();
 
@@ -75,10 +84,20 @@ public class Player : Entity {
         deadState = new PlayerDeadState(this, stateMachine, "Dead");
         counterAttackState = new PlayerCounterAttackState(this, stateMachine, "CounterAttack");
         heavyAttackState = new PlayerHeavyAttackState(this, stateMachine, "HeavyAttack");
+
+        lastTimeDashed = float.NegativeInfinity;
     }
 
     protected override void Start() {
         stateMachine.Initialize(idleState);
+    }
+
+    public void UpdateDashTimer() {
+        lastTimeDashed = Time.time;
+    }
+
+    public bool InDashCooldown() {
+        return Time.time < lastTimeDashed + dashCooldown;
     }
 
     public override void EntityDeath() {
@@ -91,39 +110,58 @@ public class Player : Entity {
         stateMachine.ChangeState(deadState);
     }
 
-    public float GetMoveSpeed() {
-        return moveSpeed * speedMultiplier;
+    public void TeleportPlayer(Vector3 position)
+    {
+        transform.position = position;
+    }
+
+    public void IncreaseAttackSpeed(float attackAnimSpeedMultiplier) {
+        this.attackAnimSpeedMultiplier = attackAnimSpeedMultiplier;
+    }
+
+    public void ResetAttackSpeed() {
+        attackAnimSpeedMultiplier = 1;
     }
 
     public void SpeedUp(float speedUpPercentage) {
-        speedMultiplier = speedUpPercentage;
+        tc.SetLocalTimeScale(speedUpPercentage);
         anim.speed = speedUpPercentage;
     }
 
     public void RecoverSpeed() {
-        speedMultiplier = 1;
+        tc.ResetLocalTimeScale();
         anim.speed = 1;
     }
 
-    public void SetNextAttackToHeavyAttack() {
-        isHeavyAttack = true;
-    }
-
-    public void ResetNextAttack() {
-        isHeavyAttack = false;
-    }
-
-    public void LockAttack(float duration) {
-        if (lockAttackCo != null) {
-            StopCoroutine(lockAttackCo);
+    public void SetHeavyAttack(float duration, int numOfHeavyAttack) {
+        if (setHeavyAttackCo != null) {
+            StopCoroutine(setHeavyAttackCo);
         }
 
-        lockAttackCo = StartCoroutine(LockAttackCo(duration));
+        setHeavyAttackCo = StartCoroutine(SetHeavyAttackCo(duration, numOfHeavyAttack));
     }
 
-    private IEnumerator LockAttackCo(float duration) {
-        canAttack = false;
+    private IEnumerator SetHeavyAttackCo(float duration, int numOfHeavyAttack) {
+        isHeavyAttack = true;
+        this.numOfHeavyAttack = numOfHeavyAttack;
         yield return new WaitForSeconds(duration);
+        isHeavyAttack = false;
+        this.numOfHeavyAttack = 0;
+    }
+
+    public void UpdateHeavyAttack() {
+        if (numOfHeavyAttack > 1) {
+            numOfHeavyAttack -= 1;
+        } else {
+            isHeavyAttack = false;
+        }
+    }
+
+    public void LockAttack() {
+        canAttack = false;
+    }
+
+    public void UnLockAttack() {
         canAttack = true;
     }
 

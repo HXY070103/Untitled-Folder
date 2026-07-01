@@ -8,7 +8,7 @@ public class EnemyHealth : EntityHealth {
     private Enemy enemy;
 
     private bool isFirstAttack = false;
-    private float damageMultiplier = 1;
+    private float damageMultiplier;
 
     protected override void Awake() {
         base.Awake();

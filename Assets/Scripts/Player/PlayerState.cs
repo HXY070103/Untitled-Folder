@@ -7,11 +7,9 @@ public abstract class PlayerState : EntityState{
     protected PlayerSkillManager skillManager;
 
     public PlayerState(Player player, StateMachine stateMachine, string animBoolName) 
-        : base(stateMachine, animBoolName) {
+        : base(player, stateMachine, animBoolName) {
         this.player = player;
 
-        anim = player.anim;
-        rb = player.rb;
         input = player.input;
         vfx = player.vfx;
         skillManager = player.skillManager;
@@ -41,6 +39,7 @@ public abstract class PlayerState : EntityState{
         base.UpdateAnimationPatameters();
 
         anim.SetFloat("yVelocity", rb.linearVelocity.y);
+        anim.SetFloat("AttackAnimSpeedMultiplier", player.attackAnimSpeedMultiplier);
     }
 
     private bool CanDash() {
@@ -49,6 +48,10 @@ public abstract class PlayerState : EntityState{
         }
 
         if (stateMachine.currentState == player.dashState) {
+            return false;
+        }
+
+        if (player.InDashCooldown()) {
             return false;
         }
 

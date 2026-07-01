@@ -1,4 +1,3 @@
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 public class PlayerAirState : PlayerState {
@@ -13,10 +12,8 @@ public class PlayerAirState : PlayerState {
         base.Update();
 
         if (player.moveInput.x != 0) {
-            player.SetVelocity(
-                    player.moveInput.x * player.moveSpeed * player.inAirMoveMultiplier, 
-                    rb.linearVelocity.y
-                );
+            float xVelocity = player.moveInput.x * player.moveSpeed * player.inAirMoveMultiplier;
+            player.Move(xVelocity, rb.linearVelocity.y);
         }
 
         if (player.CanAttack && input.Player.Attack.WasPressedThisFrame()) {

@@ -20,7 +20,7 @@ public class PlayerCounterAttackState : PlayerState {
     public override void Update() {
         base.Update();
 
-        player.SetVelocity(0, rb.linearVelocity.y);
+        player.Move(0, rb.linearVelocity.y);
             
         if (triggerCalled) {
             stateMachine.ChangeState(player.idleState);

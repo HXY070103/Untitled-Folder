@@ -34,7 +34,7 @@ public class Stat {
         needToCalculate = true;
     }
 
-    public float GetFinalValue() {
+    private float GetFinalValue() {
         float finalValue = baseValue;
 
         foreach (var mod in modifiers) {

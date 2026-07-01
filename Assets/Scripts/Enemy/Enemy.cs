@@ -1,19 +1,28 @@
+using System.Collections;
 using UnityEngine;
 
-public class Enemy : Entity, ISlowable{
+public class Enemy : Entity, ISlowable, ICounterable {
+    public EntityStats stats { get; private set; }
+    public EnemyHealth health { get; private set; }
+    public EnemyCombat combat { get; private set; }
+    public EnemyVFX vfx { get; private set; }
+
     public EnemyIdleState idleState;
     public EnemyMoveState moveState;
-    public EnemyAttackState attackState;
     public EnemyBattleState battleState;
+    public EnemyPreAttackState preAttackState;
+    public EnemyAttackState attackState;
     public EnemyDeadState deadState;
     public EnemyStunnedState stunnedState;
 
     [Header("Battle info")]
     public float battleMoveSpeed = 3;
     public float attackDistance = 2;
+    public float preAttackDuration = 0.5f;
+    public float attackCooldown = 0.5f;
     public float battleDuration = 5;
     public float minRetreatDistance = 1;
-    public Vector2 retreatSpeed = new Vector2(5, 3);
+    public Vector2 quickRetreatSpeed = new Vector2(5, 3);
 
     [Header("Stunned info")]
     public Vector2 stunnedSpeed = new Vector2(7, 7);
@@ -26,32 +35,92 @@ public class Enemy : Entity, ISlowable{
     public float moveAnimSpeedMultiplier = 1;
 
     [Header("Player Detection info")]
-    [SerializeField] private float playerCheckDistance = 10;
-    [SerializeField] private LayerMask whatIsPlayer;
-    [SerializeField] private Transform playerCheck;
+    [SerializeField] protected float playerCheckDistance = 10;
+    [SerializeField] protected LayerMask whatIsPlayer;
+    [SerializeField] protected Transform playerCheck;
 
     public Transform player { get; private set; }
 
     private bool inAttackWindow = false;
     public bool InAttackWindow => inAttackWindow;
 
-    public float GetBattleMoveSpeed() {
-        return battleMoveSpeed * speedMultiplier;
+    private bool onPhaseDebuff = false;
+    private Coroutine phaseDebuffCo;
+
+    private Coroutine enterBattleStateWithDelayCo;
+
+    protected override void Awake() {
+        base.Awake();
+
+        stats = GetComponent<EntityStats>();
+        health = GetComponent<EnemyHealth>();
+        combat = GetComponent<EnemyCombat>();
+        vfx = GetComponent<EnemyVFX>();
     }
 
-    public float GetMoveSpeed() {
-        return moveSpeed * speedMultiplier;
+    protected override void Start() {
+        base.Start();
+
+        if (LevelClearManager.instance != null) {
+            LevelClearManager.instance.RegisterSpawnedEnemy();
+        }
+    }
+
+    protected override void Update() {
+        base.Update();
+    }
+
+    public virtual void SpecialAttack() {}
+
+    public void 
+        ApplyPhaseDebuff(float debuffDuration, float damageReduction, float armorReduction) {
+        if (onPhaseDebuff) {
+            return;
+        }
+
+        if (phaseDebuffCo != null) {
+            StopCoroutine(phaseDebuffCo);
+        }
+
+        phaseDebuffCo = 
+            StartCoroutine(PhaseDebuffCo(debuffDuration, damageReduction, armorReduction));
+    }
+
+    private IEnumerator 
+        PhaseDebuffCo(float debuffDuration, float damageReduction, float armorReduction) {
+        StartPhaseDebuff(damageReduction, armorReduction);
+        yield return new WaitForSeconds(debuffDuration);
+        EndPhaseDebuff();
+    }
+
+    private void StartPhaseDebuff(float damageReduction, float armorReduction) {
+        onPhaseDebuff = true;
+        stats.damage.AddModifier(-damageReduction, "WeaknessMarking");
+        stats.armor.AddModifier(-armorReduction, "WeaknessMarking");
+    }
+
+    private void EndPhaseDebuff() {
+        onPhaseDebuff = false;
+        stats.damage.RemoveModifier("WeaknessMarking");
+        stats.armor.RemoveModifier("WeaknessMarking");
     }
 
     public void SlowDown(float slowDownPercentage) {
-        float newSpeedMultiplier = 1 - slowDownPercentage;
-        speedMultiplier = newSpeedMultiplier;
-        anim.speed = newSpeedMultiplier;
+        tc.SetLocalTimeScale(1 - slowDownPercentage);
+        anim.speed = 1 - slowDownPercentage;
     }
 
     public void RecoverSpeed() {
-        speedMultiplier = 1;
+        tc.ResetLocalTimeScale();
         anim.speed = 1;
+    }
+
+    public bool CanBeCountered() {
+        return InAttackWindow;
+    }
+    
+    public void HandleCounter() {
+        stateMachine.ChangeState(stunnedState);
     }
 
     public void EnterAttackWindow() {
@@ -73,24 +142,38 @@ public class Enemy : Entity, ISlowable{
     }
 
     public void TryToEnterBattleState(Transform player) {
-        if (stateMachine.currentState == battleState 
-            || stateMachine.currentState == attackState) {
-            return;
+        if (stateMachine.currentState == idleState || stateMachine.currentState == moveState) {
+            EnterBattleStateWithDelay(player);
+        }
+    }
+
+    private void EnterBattleStateWithDelay(Transform player) {
+        if (enterBattleStateWithDelayCo != null) {
+            StopCoroutine(enterBattleStateWithDelayCo);
         }
 
+        enterBattleStateWithDelayCo = StartCoroutine(EnterBattleStateWithDelayCo(player));
+    }
+
+    private IEnumerator EnterBattleStateWithDelayCo(Transform player) {
+        yield return new WaitForEndOfFrame();
         this.player = player;
         stateMachine.ChangeState(battleState);
     }
 
+    public void DestoryGameObjectWithDelay(float delay) {
+        Destroy(gameObject, delay);
+    }
+
     public Transform GetPlayerReference() {
         if (player == null) {
-            player = PlayerDetected().transform;
+            player = DetectPlayer();
         }
 
         return player;
     }
 
-    public RaycastHit2D PlayerDetected() {
+    protected virtual Transform DetectPlayer() {
         RaycastHit2D hit = Physics2D.Raycast(
                 playerCheck.position, 
                 Vector2.right, 
@@ -103,7 +186,11 @@ public class Enemy : Entity, ISlowable{
             return default;
         }
 
-        return hit;
+        return hit.transform;
+    }
+
+    public bool PlayerDetected() {
+        return DetectPlayer() != null;
     }
 
     protected override void OnDrawGizmos() {
