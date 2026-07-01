@@ -70,14 +70,14 @@ public class PlayerHeavyAttackState : PlayerState {
 
     public void ApplyAttackMovement() {
         attackMovementTimer = player.attackMovementDuration;
-        player.SetVelocity(attackDir * player.heavyAttackSpeed.x, player.heavyAttackSpeed.y);
+        player.Move(attackDir * player.heavyAttackSpeed.x, player.heavyAttackSpeed.y);
     }
 
     private void HandleAttackMovement() {
         attackMovementTimer -= Time.deltaTime;
 
         if (attackMovementTimer < 0) {
-            player.SetVelocity(0, rb.linearVelocity.y);
+            player.Move(0, rb.linearVelocity.y);
         }
     }
 }

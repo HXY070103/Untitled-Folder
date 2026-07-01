@@ -20,7 +20,7 @@ public class PlayerJumpAttackState : PlayerState {
         }
 
         touchedGround = false;
-        player.SetVelocity(player.facingDir * player.jumpAttackSpeed.x, player.jumpAttackSpeed.y);
+        player.Move(player.facingDir * player.jumpAttackSpeed.x, player.jumpAttackSpeed.y);
     }
 
     public override void Update() {
@@ -29,7 +29,7 @@ public class PlayerJumpAttackState : PlayerState {
         if (player.groundDetected && !touchedGround) {
             touchedGround = true;
             anim.SetTrigger("JumpAttackTrigger"); 
-            player.SetVelocity(0, rb.linearVelocity.y);
+            player.Move(0, rb.linearVelocity.y);
         }
 
         if (triggerCalled && player.groundDetected) {

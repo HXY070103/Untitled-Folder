@@ -11,7 +11,7 @@ private EnemyNecromancer enemyNecromancer;
     public override void Enter() {
         base.Enter();
 
-        enemyNecromancer.SetVelocity(0, rb.linearVelocity.y);
+        enemyNecromancer.Move(0, rb.linearVelocity.y);
         enemyNecromancer.SetSpellCastPerformed(false);
     }
 

@@ -11,7 +11,7 @@ public class EnemyMageSpellCastState : EnemyState {
     public override void Enter() {
         base.Enter();
 
-        enemyMage.SetVelocity(0, rb.linearVelocity.y);
+        enemyMage.Move(0, rb.linearVelocity.y);
         enemyMage.SetSpellCastPerformed(false);
     }
 
