@@ -41,11 +41,11 @@ public class EnemyDarkKnightDashAttackState : EnemyState {
             return;
         }
 
-        float xVelocity = dashAttackDir * enemyDarkKnight.DashSpeed;
-        enemyDarkKnight.SetVelocity(xVelocity, rb.linearVelocity.y);
+        float xVelocity = dashAttackDir * enemyDarkKnight.dashSpeed;
+        enemyDarkKnight.Move(xVelocity, rb.linearVelocity.y);
 
         if (ReachedPlayer() || ReachedMaxDistance() || enemyDarkKnight.wallDetected) {
-            enemyDarkKnight.SetVelocity(0, 0);
+            enemyDarkKnight.Move(0, 0);
             enemyDarkKnight.vfx.StopImageEchoEffect();
             dashPerformed = true;
             anim.SetBool("DashAttackPerformed", true);

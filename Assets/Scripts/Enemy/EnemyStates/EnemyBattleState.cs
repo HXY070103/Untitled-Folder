@@ -3,6 +3,9 @@ using UnityEngine;
 public class EnemyBattleState : EnemyState {
     protected Transform player;
 
+    private float lastTimeBattle;
+    private float lastTimeAttack;
+
     public EnemyBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {}
 
@@ -39,32 +42,32 @@ public class EnemyBattleState : EnemyState {
     }
 
     protected void UpdateBattleTimer() {
-        enemy.battleTimer = enemy.battleDuration;
+        lastTimeBattle = tc.time;
     }
 
     protected bool BattleTimeIsOver() {
-        return enemy.battleTimer < 0;
+        return tc.time > lastTimeBattle + enemy.battleDuration;
     }
 
     protected void UpdateAttackTimer() {
-        enemy.attackTimer = enemy.attackCooldown;
+        lastTimeAttack = tc.time;
     }
 
     protected bool CanAttack() {
-        return enemy.attackTimer < 0;
+        return tc.time > lastTimeAttack + enemy.attackCooldown;
     }
 
     protected void QuickRetreat() {
-        float xVelocity = -DirectionToPlayer() * enemy.QuickRetreatSpeed.x;
-        float yVelocity = enemy.QuickRetreatSpeed.y;
-        rb.linearVelocity = new Vector2(xVelocity, yVelocity);
+        float xVelocity = -DirectionToPlayer() * enemy.quickRetreatSpeed.x;
+        float yVelocity = enemy.quickRetreatSpeed.y;
+        enemy.MoveRaw(xVelocity, yVelocity);
         enemy.HandleFlip(DirectionToPlayer());
     }
 
     protected virtual void HandleBattle() {
         if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
             UpdateAttackTimer();
-            stateMachine.ChangeState(enemy.attackState); 
+            stateMachine.ChangeState(enemy.preAttackState); 
         } else {
             if (!enemy.PlayerDetected()) {
                 enemy.HandleFlip(DirectionToPlayer());
@@ -74,8 +77,8 @@ public class EnemyBattleState : EnemyState {
                 return;
             }
 
-            float xVelocity = DirectionToPlayer() * enemy.BattleMoveSpeed;
-            enemy.SetVelocity(xVelocity, rb.linearVelocity.y);
+            float xVelocity = DirectionToPlayer() * enemy.battleMoveSpeed;
+            enemy.Move(xVelocity, rb.linearVelocity.y);
         }
     }
 

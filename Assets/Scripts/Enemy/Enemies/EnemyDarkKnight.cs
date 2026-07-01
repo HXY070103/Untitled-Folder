@@ -18,15 +18,14 @@ public class EnemyDarkKnight : Enemy {
     public float dashAttackMaxDistance = 15;
     public float dashSpeed = 15;
 
-    public float DashSpeed => dashSpeed * LocalTimeScale;
-
     protected override void Awake() {
         base.Awake();
 
         idleState = new EnemyIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
-        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         battleState = new EnemyDarkKnightBattleState(this, stateMachine, "Battle");
+        preAttackState = new EnemyPreAttackState(this, stateMachine, "Battle");
+        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
         dashAttackState = new EnemyDarkKnightDashAttackState(this, stateMachine, "DashAttack");

@@ -11,7 +11,6 @@ public class PlayerDashState : PlayerState {
         base.Enter();
 
         player.UpdateDashTimer();
-
         vfx.DoImageEchoEffect(player.dashDuration);
 
         stateTimer = player.dashDuration;
@@ -24,7 +23,9 @@ public class PlayerDashState : PlayerState {
         base.Update();
 
         CancelDashIfNeeded();
-        player.SetVelocity(dashDir * player.DashSpeed, 0);
+
+        float xVelocity = dashDir * player.dashSpeed;
+        player.Move(xVelocity, 0);
 
         if (stateTimer < 0) {
             HandleStateExit();
@@ -35,7 +36,7 @@ public class PlayerDashState : PlayerState {
         base.Exit();
 
         rb.gravityScale = originalGravityScale;
-        player.SetVelocity(0, 0);
+        player.Move(0, 0);
     }
 
     private void HandleStateExit() {

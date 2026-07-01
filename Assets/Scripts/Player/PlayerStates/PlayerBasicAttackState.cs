@@ -74,7 +74,7 @@ public class PlayerBasicAttackState : PlayerState {
 
     private void ApplyAttackMovement() {
         attackMovementTimer = player.attackMovementDuration;
-        player.SetVelocity(
+        player.Move(
                 attackDir * player.attackSpeed[comboIndex - FirstComboIndex].x, 
                 player.attackSpeed[comboIndex - FirstComboIndex].y
             );
@@ -84,7 +84,7 @@ public class PlayerBasicAttackState : PlayerState {
         attackMovementTimer -= Time.deltaTime;
 
         if (attackMovementTimer < 0) {
-            player.SetVelocity(0, rb.linearVelocity.y);
+            player.Move(0, rb.linearVelocity.y);
         }
     }
 }

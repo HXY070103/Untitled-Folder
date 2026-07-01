@@ -9,14 +9,16 @@ public class Enemy : Entity, ISlowable, ICounterable {
 
     public EnemyIdleState idleState;
     public EnemyMoveState moveState;
-    public EnemyAttackState attackState;
     public EnemyBattleState battleState;
+    public EnemyPreAttackState preAttackState;
+    public EnemyAttackState attackState;
     public EnemyDeadState deadState;
     public EnemyStunnedState stunnedState;
 
     [Header("Battle info")]
     public float battleMoveSpeed = 3;
     public float attackDistance = 2;
+    public float preAttackDuration = 0.5f;
     public float attackCooldown = 0.5f;
     public float battleDuration = 5;
     public float minRetreatDistance = 1;
@@ -45,14 +47,7 @@ public class Enemy : Entity, ISlowable, ICounterable {
     private bool onPhaseDebuff = false;
     private Coroutine phaseDebuffCo;
 
-    private Coroutine tryToEnterBattleStateCo;
-
-    public float battleTimer;
-    public float attackTimer;
-
-    public float BattleMoveSpeed => battleMoveSpeed * LocalTimeScale;
-    public float MoveSpeed => moveSpeed * LocalTimeScale;
-    public Vector2 QuickRetreatSpeed => quickRetreatSpeed * LocalTimeScale;
+    private Coroutine enterBattleStateWithDelayCo;
 
     protected override void Awake() {
         base.Awake();
@@ -61,26 +56,18 @@ public class Enemy : Entity, ISlowable, ICounterable {
         health = GetComponent<EnemyHealth>();
         combat = GetComponent<EnemyCombat>();
         vfx = GetComponent<EnemyVFX>();
-
-        battleTimer = 0;
-        attackTimer = 0;
     }
 
-    protected override void Start()
-    {
+    protected override void Start() {
         base.Start();
 
-        if (LevelClearManager.instance != null)
-        {
+        if (LevelClearManager.instance != null) {
             LevelClearManager.instance.RegisterSpawnedEnemy();
         }
     }
 
     protected override void Update() {
         base.Update();
-
-        battleTimer -= Time.deltaTime * LocalTimeScale;
-        attackTimer -= Time.deltaTime * LocalTimeScale;
     }
 
     public virtual void SpecialAttack() {}
@@ -119,12 +106,12 @@ public class Enemy : Entity, ISlowable, ICounterable {
     }
 
     public void SlowDown(float slowDownPercentage) {
-        localTimeScale = 1 - slowDownPercentage;
+        tc.SetLocalTimeScale(1 - slowDownPercentage);
         anim.speed = 1 - slowDownPercentage;
     }
 
     public void RecoverSpeed() {
-        localTimeScale = 1;
+        tc.ResetLocalTimeScale();
         anim.speed = 1;
     }
 
@@ -155,21 +142,23 @@ public class Enemy : Entity, ISlowable, ICounterable {
     }
 
     public void TryToEnterBattleState(Transform player) {
-        if (tryToEnterBattleStateCo != null) {
-            StopCoroutine(tryToEnterBattleStateCo);
+        if (stateMachine.currentState == idleState || stateMachine.currentState == moveState) {
+            EnterBattleStateWithDelay(player);
         }
-
-        tryToEnterBattleStateCo = StartCoroutine(TryToEnterBattleStateCo(player));
     }
 
-    private IEnumerator TryToEnterBattleStateCo(Transform player) {
-        yield return new WaitForEndOfFrame();
-
-        if (stateMachine.currentState == idleState 
-            || stateMachine.currentState == moveState) {
-            this.player = player;
-            stateMachine.ChangeState(battleState);
+    private void EnterBattleStateWithDelay(Transform player) {
+        if (enterBattleStateWithDelayCo != null) {
+            StopCoroutine(enterBattleStateWithDelayCo);
         }
+
+        enterBattleStateWithDelayCo = StartCoroutine(EnterBattleStateWithDelayCo(player));
+    }
+
+    private IEnumerator EnterBattleStateWithDelayCo(Transform player) {
+        yield return new WaitForEndOfFrame();
+        this.player = player;
+        stateMachine.ChangeState(battleState);
     }
 
     public void DestoryGameObjectWithDelay(float delay) {

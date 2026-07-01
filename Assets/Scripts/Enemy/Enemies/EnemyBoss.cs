@@ -55,17 +55,14 @@ public class EnemyBoss : Enemy {
     private float leftMoveBound;
     private float rightMoveBound;
 
-    public float specialAttackTimer;
-
-    public float DashSpeed => dashSpeed * LocalTimeScale;
-
     protected override void Awake() {
         base.Awake();
 
         idleState = new EnemyIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
-        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         battleState = new EnemyBossBattleState(this, stateMachine, "Battle");
+        preAttackState = new EnemyPreAttackState(this, stateMachine, "Battle");
+        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
         dashState = new EnemyBossDashState(this, stateMachine, "Battle");
@@ -86,8 +83,6 @@ public class EnemyBoss : Enemy {
             };
 
         anim.SetBool("HasStunnedRecovery", false);
-
-        specialAttackTimer = 0;
     }
 
     protected override void Start() {
@@ -101,8 +96,6 @@ public class EnemyBoss : Enemy {
 
     protected override void Update() {
         base.Update();
-
-        specialAttackTimer -= Time.deltaTime * LocalTimeScale;
     }
 
     public override void SpecialAttack() {

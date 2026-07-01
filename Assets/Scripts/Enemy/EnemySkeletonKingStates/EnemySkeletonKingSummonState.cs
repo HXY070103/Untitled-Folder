@@ -11,7 +11,7 @@ public class EnemySkeletonKingSummonState : EnemyState{
     public override void Enter() {
         base.Enter();
 
-        enemySkeletonKing.SetVelocity(0, 0);
+        enemySkeletonKing.Move(0, 0);
         enemySkeletonKing.StartSummon();
         enemySkeletonKing.SetSummonPerformed(false);
     }

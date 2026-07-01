@@ -11,7 +11,7 @@ public class EnemyBossSummonState : EnemyState {
     public override void Enter() {
         base.Enter();
 
-        enemyBoss.SetVelocity(0, 0);
+        enemyBoss.Move(0, 0);
         enemyBoss.StartSummon();
         enemyBoss.SetSummonPerformed(false);
     }

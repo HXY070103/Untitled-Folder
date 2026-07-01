@@ -3,6 +3,8 @@ using UnityEngine;
 public class EnemyMageBattleState : EnemyBattleState {
     private EnemyMage enemyMage;
 
+    private float lastTimeRetreat;
+
     public EnemyMageBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
         enemyMage = enemy as EnemyMage;
@@ -26,10 +28,10 @@ public class EnemyMageBattleState : EnemyBattleState {
     }
 
     private void UpdateRetreatTimer() {
-        enemyMage.retreatTimer = enemyMage.retreatCooldown;
+        lastTimeRetreat = tc.time;
     }
 
     private bool CanUseRetreat() {
-        return enemyMage.retreatTimer < 0;
+        return tc.time > lastTimeRetreat + enemyMage.retreatCooldown;
     }
 }

@@ -24,25 +24,20 @@ public class EnemyMage : Enemy {
     private bool spellCastPerformed;
     public bool SpellCastPerformed => spellCastPerformed;
 
-    public float retreatTimer;
-
-    public float RetreatSpeed => retreatSpeed * LocalTimeScale;
-
     protected override void Awake() {
         base.Awake();
-
+                
         idleState = new EnemyIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
-        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         battleState = new EnemyMageBattleState(this, stateMachine, "Battle");
+        preAttackState = new EnemyPreAttackState(this, stateMachine, "Battle");
+        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
         retreatState = new EnemyMageRetreatState(this, stateMachine, "Battle");
         spellCastState = new EnemyMageSpellCastState(this, stateMachine, "SpellCast");
 
         anim.SetBool("HasStunnedRecovery", true);
-
-        retreatTimer = 0;
     }
 
     protected override void Start() {
@@ -53,8 +48,6 @@ public class EnemyMage : Enemy {
 
     protected override void Update() {
         base.Update();
-
-        retreatTimer -= Time.deltaTime * LocalTimeScale;
     }
 
     public override void SpecialAttack() {

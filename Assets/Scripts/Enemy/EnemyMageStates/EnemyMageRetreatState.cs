@@ -30,8 +30,8 @@ public class EnemyMageRetreatState : EnemyState {
     public override void Update() {
         base.Update();
 
-        float xVelocity = retreatDir * enemyMage.RetreatSpeed;
-        rb.linearVelocity = new Vector2(xVelocity, rb.linearVelocity.y);
+        float xVelocity = retreatDir * enemyMage.retreatSpeed;
+        enemyMage.MoveRaw(xVelocity, rb.linearVelocity.y);
 
         if (ReachedMaxDistance() || enemyMage.CannotMoveBackwards()) {
             stateMachine.ChangeState(enemyMage.spellCastState);
@@ -42,7 +42,7 @@ public class EnemyMageRetreatState : EnemyState {
         base.Exit();
 
         enemyMage.gameObject.layer = LayerMask.NameToLayer("Enemy");
-        enemyMage.SetVelocity(0, 0);
+        enemyMage.Move(0, 0);
         enemyMage.vfx.StopImageEchoEffect();
     }
 
