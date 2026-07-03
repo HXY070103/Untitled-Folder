@@ -17,6 +17,7 @@ public class ChestUpgradeOption
     public PlayerStats playerStats;
     public SkillBase skill;
     public SkillUpgradeDisplayData skillUpgrade;
+    public bool isBetter;
 
     public string GetTitle()
     {

@@ -246,6 +246,7 @@ public class UI_ChestReward : MonoBehaviour
             option.attributeUpgrade = upgrade;
             option.playerStats = playerStats;
             option.vfx = vfx;
+            option.isBetter = false;
 
             pool.Add(option);
         }
@@ -271,6 +272,7 @@ public class UI_ChestReward : MonoBehaviour
             option.skill = currentSkill;
             option.skillUpgrade = skillUpgrade;
             option.vfx = vfx;
+            option.isBetter = false;
 
             pool.Add(option);
         }
@@ -299,6 +301,7 @@ public class UI_ChestReward : MonoBehaviour
             option.skill = currentSkill;
             option.skillUpgrade = skillUpgrade;
             option.vfx = vfx;
+            option.isBetter = true;
 
             pool.Add(option);
         }
@@ -306,39 +309,10 @@ public class UI_ChestReward : MonoBehaviour
 
     private bool check(SkillBase skill, SkillUpgradeDisplayData upgrade)
     {
-        if (skill.SkillType == SkillType.LifeSteal)
-        {
-            if (upgrade.upgradeName == "Fixed Time")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Blood");
-            }
-            if (upgrade.upgradeName == "Fixed Blood")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Time");
-            }
-        }
-        if (skill.SkillType == SkillType.TimeControl)
-        {
-            if (upgrade.upgradeName == "Fixed Rate")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Time");
-            }
-            if (upgrade.upgradeName == "Fixed Time")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Rate");
-            }
-        }
-        if (skill.SkillType == SkillType.Phase)
-        {
-            if (upgrade.upgradeName == "Fixed Time")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Attack");
-            }
-            if (upgrade.upgradeName == "Fixed Attack")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Time");
-            }
-        }
-        return true;
+        if (!upgrade.upgradeName.Contains("+"))
+            return false;
+        string name = upgrade.upgradeName.Substring(0, upgrade.upgradeName.Length - 1);
+        name = name.TrimEnd();
+        return !skill.UnLocked(name);
     }
 }

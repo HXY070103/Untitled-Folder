@@ -86,7 +86,7 @@ public class UI_UpgradePanel : MonoBehaviour
         }
         foreach (var upgrade in currentSkill.upgrades)
         {
-            if (upgrade.unlocked)
+            if (upgrade.unlocked && !checkIfBetterUnlocked(upgrade.upgradeName + "+"))
             {
                 hasUnlockedUpgrade = true;
                 sb.AppendLine($"[{upgrade.upgradeName}]");
@@ -100,6 +100,18 @@ public class UI_UpgradePanel : MonoBehaviour
             sb.AppendLine("No skill upgrades yet");
         }
         contentText.text = sb.ToString();
+    }
+
+    private bool checkIfBetterUnlocked(string name)
+    {
+        foreach(var upgrade in currentSkill.betterUpgrades)
+        {
+            if (upgrade.upgradeName.Equals(name))
+            {
+                return upgrade.unlocked;
+            }
+        }
+        return false;
     }
 
     public void ShowAttributeUpgrades()
