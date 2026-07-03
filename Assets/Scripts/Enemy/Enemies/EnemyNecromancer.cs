@@ -15,30 +15,27 @@ public class EnemyNecromancer : Enemy {
     [SerializeField] private Transform spellStartPoint;
     [SerializeField] private float spellGenerationRadius = 0.5f;
     [SerializeField] private int amountToCast = 3;
-    [SerializeField] private float spellCastCooldown = 0.3f;
+    [SerializeField] private float spellCastInterval = 0.3f;
     [SerializeField] private float spellChaseSpeed = 10;
-    public float spellCastAttackCooldown = 5;
+    public float spellCastCooldown = 5;
 
     private Coroutine spellCastCo;
     private bool spellCastPerformed;
     public bool SpellCastPerformed => spellCastPerformed;
-
-    public float spellCastTimer;
 
     protected override void Awake() {
         base.Awake();
 
         idleState = new EnemyIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
-        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         battleState = new EnemyNecromancerBattleState(this, stateMachine, "Battle");
+        preAttackState = new EnemyPreAttackState(this, stateMachine, "Battle");
+        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
         spellCastState = new EnemyNecromancerSpellCastState(this, stateMachine, "SpellCast");
 
         anim.SetBool("HasStunnedRecovery", true);
-
-        spellCastTimer = 0;
     }
 
     protected override void Start() {
@@ -49,8 +46,6 @@ public class EnemyNecromancer : Enemy {
 
     protected override void Update() {
         base.Update();
-
-        spellCastTimer -= Time.deltaTime * LocalTimeScale;
     }
 
     public override void SpecialAttack() {
@@ -90,7 +85,7 @@ public class EnemyNecromancer : Enemy {
             GameObject projectile = 
                 Instantiate(spellPrefab, position, Quaternion.identity);
             projectile.GetComponent<EnemyNecromancerProjectile>().SetUpProjectile(spellChaseSpeed, player, combat);
-            yield return new WaitForSeconds(spellCastCooldown);
+            yield return new WaitForSeconds(spellCastInterval);
         }
 
         SetSpellCastPerformed(true);

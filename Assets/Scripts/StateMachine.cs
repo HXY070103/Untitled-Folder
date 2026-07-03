@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class StateMachine {
     public EntityState currentState { get; private set; }
-    public bool canChangeState;
+    private bool isActive = true;
 
     public void Initialize(EntityState startState) {
         currentState = startState;
         currentState.Enter();
-        canChangeState = true;
+        isActive = true;
     } 
 
     public void ChangeState(EntityState newState) {
-        if (!canChangeState) {
+        if (!isActive) {
             return;
         }
 
@@ -21,10 +21,18 @@ public class StateMachine {
     }
 
     public void UpdateActiveState() {
+        if (!isActive) {
+            return;
+        }
+
         currentState.Update();
     }
 
+    public void SwitchOn() {
+        isActive = true;
+    }
+
     public void SwitchOff() {
-        canChangeState = false;
+        isActive = false;
     }
 }

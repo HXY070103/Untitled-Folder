@@ -18,7 +18,7 @@ public class EnemyBossTeleportBehindState : EnemyState {
             player = enemy.GetPlayerReference();
         }
 
-        enemyBoss.SetVelocity(0, rb.linearVelocity.y);
+        enemyBoss.Move(0, rb.linearVelocity.y);
         enemyBoss.SetTeleportPerformed(false);
     }
 

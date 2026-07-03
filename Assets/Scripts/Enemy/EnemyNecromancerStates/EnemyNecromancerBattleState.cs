@@ -3,6 +3,8 @@ using UnityEngine;
 public class EnemyNecromancerBattleState : EnemyBattleState {
     private EnemyNecromancer enemyNecromancer;
 
+    private float lastTimeSpellCast;
+
     public EnemyNecromancerBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
         enemyNecromancer = enemy as EnemyNecromancer;
@@ -26,10 +28,10 @@ public class EnemyNecromancerBattleState : EnemyBattleState {
     }
 
     private void UpdateSpellCastTimer() {
-        enemyNecromancer.spellCastTimer = enemyNecromancer.spellCastAttackCooldown;
+        lastTimeSpellCast = tc.time;
     }
 
     private bool CanUseSpellCast() {
-        return enemyNecromancer.spellCastTimer < 0;
+        return tc.time > lastTimeSpellCast + enemyNecromancer.spellCastCooldown;
     }
 }

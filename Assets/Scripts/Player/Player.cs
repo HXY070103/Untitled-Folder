@@ -61,9 +61,6 @@ public class Player : Entity {
 
     public Vector2 moveInput { get; private set; }
 
-    public float MoveSpeed => moveSpeed * LocalTimeScale;
-    public float DashSpeed => dashSpeed * LocalTimeScale;
-
     protected override void Awake() {
         base.Awake();
 
@@ -127,12 +124,12 @@ public class Player : Entity {
     }
 
     public void SpeedUp(float speedUpPercentage) {
-        localTimeScale = speedUpPercentage;
+        tc.SetLocalTimeScale(speedUpPercentage);
         anim.speed = speedUpPercentage;
     }
 
     public void RecoverSpeed() {
-        localTimeScale = 1;
+        tc.ResetLocalTimeScale();
         anim.speed = 1;
     }
 

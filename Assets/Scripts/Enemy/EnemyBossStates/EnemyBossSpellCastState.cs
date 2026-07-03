@@ -11,7 +11,7 @@ public class EnemyBossSpellCastState : EnemyState {
     public override void Enter() {
         base.Enter();
 
-        enemyBoss.SetVelocity(0, rb.linearVelocity.y);
+        enemyBoss.Move(0, rb.linearVelocity.y);
         enemyBoss.SetSpellCastPerformed(false);
     }
 

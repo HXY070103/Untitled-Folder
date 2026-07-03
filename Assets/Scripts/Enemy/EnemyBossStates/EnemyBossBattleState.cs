@@ -3,7 +3,7 @@ using UnityEngine;
 public class EnemyBossBattleState : EnemyBattleState {
     private EnemyBoss enemyBoss;
 
-    private float time;
+    private float lastTimeSpecialAttack;
 
     public EnemyBossBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
@@ -34,7 +34,7 @@ public class EnemyBossBattleState : EnemyBattleState {
     protected override void HandleBattle() {
         if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
             UpdateAttackTimer();
-            stateMachine.ChangeState(enemyBoss.attackState); 
+            stateMachine.ChangeState(enemyBoss.preAttackState); 
         } else {
             if (!enemy.PlayerDetected()) {
                 enemy.HandleFlip(DirectionToPlayer());
@@ -49,8 +49,8 @@ public class EnemyBossBattleState : EnemyBattleState {
                 return;
             }
 
-            float xVelocity = DirectionToPlayer() * enemy.BattleMoveSpeed;
-            enemy.SetVelocity(xVelocity, rb.linearVelocity.y);
+            float xVelocity = DirectionToPlayer() * enemy.battleMoveSpeed;
+            enemy.Move(xVelocity, rb.linearVelocity.y);
         }
     }
 
@@ -59,10 +59,10 @@ public class EnemyBossBattleState : EnemyBattleState {
     }
 
     private void UpdateSpecialAttackTimer() {
-        enemyBoss.specialAttackTimer = enemyBoss.specialAttackCooldown;
+        lastTimeSpecialAttack = tc.time;
     }
 
     private bool CanUseSpecialAttack() {
-        return enemyBoss.specialAttackTimer < 0;
+        return tc.time > lastTimeSpecialAttack + enemyBoss.specialAttackCooldown;
     }
 }

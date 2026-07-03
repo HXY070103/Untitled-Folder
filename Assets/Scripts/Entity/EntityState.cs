@@ -7,6 +7,7 @@ public class EntityState {
 
     protected Animator anim;
     protected Rigidbody2D rb;
+    protected TimeController tc;
 
     protected float stateTimer;
     protected bool triggerCalled;
@@ -15,6 +16,10 @@ public class EntityState {
         this.entity = entity;
         this.stateMachine = stateMachine;
         this.animBoolName = animBoolName;
+
+        anim = entity.anim;
+        rb = entity.rb;
+        tc = entity.tc;
     }
 
     public virtual void Enter() {
@@ -23,7 +28,7 @@ public class EntityState {
     }
 
     public virtual void Update() {
-        stateTimer -= Time.deltaTime * entity.LocalTimeScale;
+        stateTimer -= Time.deltaTime * tc.localTimeScale;
         UpdateAnimationPatameters();
     }
 

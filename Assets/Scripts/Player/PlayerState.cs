@@ -10,8 +10,6 @@ public abstract class PlayerState : EntityState{
         : base(player, stateMachine, animBoolName) {
         this.player = player;
 
-        anim = player.anim;
-        rb = player.rb;
         input = player.input;
         vfx = player.vfx;
         skillManager = player.skillManager;

@@ -3,9 +3,6 @@ using UnityEngine;
 public class EnemyDarkKnightBattleState : EnemyBattleState {
     private EnemyDarkKnight enemyDarkKnight;
 
-    private bool reachDeadEnd;
-    private int deadEndDir;
-
     private int basicAttackCounter;
     private bool isBasicAttack;
 
@@ -17,8 +14,6 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
     public EnemyDarkKnightBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
         enemyDarkKnight = enemy as EnemyDarkKnight;
-
-        reachDeadEnd = false;
 
         basicAttackCounter = 0;
         isBasicAttack = true;
@@ -34,11 +29,6 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
     }
 
     public override void Update() {
-        if (!enemyDarkKnight.groundDetected || enemyDarkKnight.wallDetected) {
-            reachDeadEnd = true;
-            deadEndDir = enemyDarkKnight.facingDir;
-        }
-
         base.Update();
     }
 
@@ -66,8 +56,8 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
                 return;
             }
 
-            float xVelocity = DirectionToPlayer() * enemyDarkKnight.BattleMoveSpeed;
-            enemyDarkKnight.SetVelocity(xVelocity, rb.linearVelocity.y);
+            float xVelocity = DirectionToPlayer() * enemyDarkKnight.battleMoveSpeed;
+            enemyDarkKnight.Move(xVelocity, rb.linearVelocity.y);
         }
     }
 
@@ -75,7 +65,7 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
         enemyDarkKnight.attackCooldown = originAttackCooldown;
         UpdateAttackTimer();
         UpdateBasicAttackCounter();
-        stateMachine.ChangeState(enemyDarkKnight.attackState);
+        stateMachine.ChangeState(enemyDarkKnight.preAttackState);
     }
 
     private void ApplyDashAttack() {
@@ -83,14 +73,6 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
         UpdateAttackTimer();
         UpdateDashAttackCounter();
         stateMachine.ChangeState(enemyDarkKnight.dashAttackState);
-    }
-
-    private bool CanWalkAway() {
-        return !reachDeadEnd || -DirectionToPlayer() != deadEndDir;
-    }
-
-    private bool InWalkAwayRange() {
-        return DistanceToPlayer() < enemyDarkKnight.attackDistance * 0.8f;
     }
 
     private void UpdateBasicAttackCounter() {

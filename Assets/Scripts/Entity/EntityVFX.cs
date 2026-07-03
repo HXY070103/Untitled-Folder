@@ -27,7 +27,7 @@ public class EntityVFX : MonoBehaviour {
     [SerializeField] GameObject onHitVFX;
     [SerializeField] GameObject onCritHitVFX;
 
-    private void Awake() {
+    protected virtual void Awake() {
         sr = GetComponentInChildren<SpriteRenderer>();
         entity = GetComponent<Entity>();
         originalMaterial = sr.material;

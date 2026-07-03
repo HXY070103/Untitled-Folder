@@ -7,13 +7,14 @@ public class Entity : MonoBehaviour {
 
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
+    public TimeController tc;
     protected StateMachine stateMachine;
-
-    protected float localTimeScale = 1; 
-    public float LocalTimeScale => localTimeScale;
 
     private bool facingRight = true;
     public int facingDir { get; private set; } = 1;
+
+    private Coroutine knockbackCo;
+    private bool isKnocked;
 
     [Header("Collision detection info")]
     [SerializeField] private float groundCheckDistance;
@@ -27,19 +28,20 @@ public class Entity : MonoBehaviour {
     public bool groundDetected { get; private set; } 
     public bool wallDetected { get; private set; }
 
-    private Coroutine knockbackCo;
-    private bool isKnocked;
-
     protected virtual void Awake() {
         anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        tc = new TimeController();
         stateMachine = new StateMachine();
     }
  
-    protected virtual void Start() {}
+    protected virtual void Start() {
+        tc.Initialize();
+    }
 
     protected virtual void Update() {
         HandleCollisionDetection();
+        tc.Tick();
         stateMachine.UpdateActiveState();
     }
 
@@ -63,17 +65,17 @@ public class Entity : MonoBehaviour {
         rb.linearVelocity = Vector2.zero;
     }
 
-    public void CurrentStateAnimationTrigger() {
-        stateMachine.currentState.AnimationTrigger();
+    public void Move(float xVelocity, float yVelocity) {
+        MoveRaw(xVelocity, yVelocity);
+        HandleFlip(xVelocity);
     }
 
-    public void SetVelocity(float xVelocity, float yVelocity) {
+    public void MoveRaw(float xVelocity, float yVelocity) {
         if (isKnocked) {
             return;
         }
 
-        rb.linearVelocity = new Vector2(xVelocity, yVelocity);
-        HandleFlip(xVelocity);
+        rb.linearVelocity = new Vector2(xVelocity, yVelocity) * tc.localTimeScale;
     }
 
     public void HandleFlip(float xVelocity) {
@@ -90,6 +92,10 @@ public class Entity : MonoBehaviour {
         if (OnFlipped != null) {
             OnFlipped.Invoke();
         }
+    }
+
+    public void CurrentStateAnimationTrigger() {
+        stateMachine.currentState.AnimationTrigger();
     }
 
     private void HandleCollisionDetection() {

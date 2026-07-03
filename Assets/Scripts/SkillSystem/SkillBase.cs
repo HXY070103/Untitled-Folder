@@ -72,7 +72,7 @@ public class SkillBase : MonoBehaviour{
         remainingDuration = GetSkillDuration();
         lastTimeEnd = Time.time + GetSkillDuration();
         numOfUse++;
-        IncreaseSkillDecay();
+        //IncreaseSkillDecay();
         playerSkillManager.UpdateSkillDecay(decreaseIndex);
     }
     

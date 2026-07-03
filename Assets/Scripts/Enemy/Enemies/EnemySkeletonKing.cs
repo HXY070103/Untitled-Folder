@@ -22,11 +22,11 @@ public class EnemySkeletonKing : Enemy {
 
         idleState = new EnemyIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
-        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         battleState = new EnemySkeletonKingBattleState(this, stateMachine, "Battle");
+        preAttackState = new EnemyPreAttackState(this, stateMachine, "Battle");
+        attackState = new EnemyAttackState(this, stateMachine, "Attack");
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
-        summonState = new EnemySkeletonKingSummonState(this, stateMachine, "Battle");
 
         anim.SetBool("HasStunnedRecovery", false);
     }

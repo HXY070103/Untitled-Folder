@@ -29,13 +29,13 @@ public class EnemyArcherElfBattleState : EnemyBattleState {
     protected override void HandleBattle() {
         if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
             UpdateAttackTimer();
-            stateMachine.ChangeState(enemy.attackState); 
+            stateMachine.ChangeState(enemy.preAttackState); 
         } else {
             if (CanWalkAway() && InWalkAwayRange()) {
-                float xVeloity = -DirectionToPlayer() * enemy.BattleMoveSpeed;
-                enemy.SetVelocity(xVeloity, rb.linearVelocity.y);
+                float xVeloity = -DirectionToPlayer() * enemy.battleMoveSpeed;
+                enemy.Move(xVeloity, rb.linearVelocity.y);
             } else {
-                enemy.SetVelocity(0, rb.linearVelocity.y);
+                enemy.Move(0, rb.linearVelocity.y);
 
                 if (!enemy.PlayerDetected()) {
                     enemy.HandleFlip(DirectionToPlayer());
