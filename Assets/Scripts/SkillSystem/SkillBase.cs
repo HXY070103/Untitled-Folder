@@ -20,6 +20,8 @@ public class SkillBase : MonoBehaviour{
     [SerializeField] protected int decreaseIndex;
     [SerializeField] protected PlayerSkillManager playerSkillManager;
 
+    public int numOfUpgradesGet;
+    private bool level4Skill = false;
     public string SkillName => skillName;
     public SkillType SkillType => skillType;
     public string Description => description;
@@ -48,6 +50,7 @@ public class SkillBase : MonoBehaviour{
         decreaseRate = new float[6] {1f, 1f, 0.8f, 0.7f, 0.6f, 0.5f}; // normal, 1decay, 2decay, 3decay, 4decay, 5decay
         decreaseIndex = 0;
         numOfUse = 0;
+        numOfUpgradesGet = 0;
     }
 
     public void ApplySkill() {
@@ -79,7 +82,7 @@ public class SkillBase : MonoBehaviour{
     protected void IncreaseSkillDecay()
     {
         //if (unlock 磨损1 && numOfUse % 2 == 0  ||  !unlock 磨损1)
-        if ((UnlockedForBetterUpgrade("Stable") && numOfUse % 2 == 0) || !UnlockedForBetterUpgrade("Stable"))
+        if ((level4Skill && numOfUse % 2 == 0) || !level4Skill)
         {
             if (decreaseIndex == decreaseRate.Length - 1) {
                 PlayerHealth playerHealth = GetComponentInParent<PlayerHealth>();
@@ -186,6 +189,8 @@ public class SkillBase : MonoBehaviour{
             if (upgrade.upgradeName == upgradeName)
             {
                 upgrade.unlocked = true;
+                numOfUpgradesGet++;
+                CheckIfNextPhase();
                 return;
             }
         }
@@ -194,10 +199,32 @@ public class SkillBase : MonoBehaviour{
             if (upgrade.upgradeName == upgradeName)
             {
                 upgrade.unlocked = true;
+                numOfUpgradesGet++;
+                CheckIfNextPhase();
                 return;
             }
         }
         Debug.Log("there is no upgrade");
+    }
+
+    private void CheckIfNextPhase()
+    {
+        if (numOfUpgradesGet == 2)
+        {
+            stats.ReachLevel2Skill();
+        }
+        if (numOfUpgradesGet == 4)
+        {
+            level4Skill = true;
+        }
+        if (numOfUpgradesGet == 6)
+        {
+            stats.ReachLevel6Skill();
+        }
+        if (numOfUpgradesGet == upgrades.Count + betterUpgrades.Count)
+        {
+            stats.ReachFullLevel();
+        }
     }
 
     public List<string> GetUnlockedUpgrades()

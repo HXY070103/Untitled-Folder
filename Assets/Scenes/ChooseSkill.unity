@@ -791,7 +791,7 @@ SpriteRenderer:
   m_SortingLayer: -5
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1328961470, guid: b5849a24935144390a029b9425eaa5aa, type: 3}
+  m_Sprite: {fileID: 1328961470, guid: 0f2d35081db8b2746aed901899e27f62, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1059,7 +1059,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9801b64bf1f02427d99139313da3740f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 900a1527ede688546b67b9c82b8f4715, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1371,7 +1371,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Skills
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 49edb30b39a364338bd0f2b313014934, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
   m_sharedMaterial: {fileID: -8065883861848785263, guid: 49edb30b39a364338bd0f2b313014934, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1438,7 +1438,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &694519542
@@ -1497,7 +1497,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 717153769}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb8712c6a4dd84e7db0b5d58211d54b8, type: 3}
   m_Name: 
@@ -1507,6 +1507,8 @@ MonoBehaviour:
   button: {fileID: 717153772}
   backgroundImage: {fileID: 717153773}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
+  betterColor: {r: 0, g: 1, b: 0, a: 1}
+  highlightColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickEffectDuration: 0.2
 --- !u!114 &717153772
@@ -1839,6 +1841,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34e409b24eb124fa8b8e77ae3117ecd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spine
+  cooldown: 1
 --- !u!61 &762876705
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2329,8 +2332,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Press E to choose skill
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 49edb30b39a364338bd0f2b313014934, type: 2}
-  m_sharedMaterial: {fileID: -8065883861848785263, guid: 49edb30b39a364338bd0f2b313014934, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
+  m_sharedMaterial: {fileID: -8065883861848785263, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2427,7 +2430,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8065883861848785263, guid: 49edb30b39a364338bd0f2b313014934, type: 2}
+  - {fileID: -8065883861848785263, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -48189,7 +48192,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1944381428}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb8712c6a4dd84e7db0b5d58211d54b8, type: 3}
   m_Name: 
@@ -48199,6 +48202,8 @@ MonoBehaviour:
   button: {fileID: 1944381431}
   backgroundImage: {fileID: 1944381432}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
+  betterColor: {r: 0, g: 1, b: 0, a: 1}
+  highlightColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickEffectDuration: 0.2
 --- !u!114 &1944381431
@@ -48483,7 +48488,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2104104429}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb8712c6a4dd84e7db0b5d58211d54b8, type: 3}
   m_Name: 
@@ -48493,6 +48498,8 @@ MonoBehaviour:
   button: {fileID: 2104104432}
   backgroundImage: {fileID: 2104104433}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
+  betterColor: {r: 0, g: 1, b: 0, a: 1}
+  highlightColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickEffectDuration: 0.2
 --- !u!114 &2104104432

@@ -15,11 +15,11 @@ public class EntityStats : MonoBehaviour {
     [Header("Defense")]
     public Stat armor;
 
-    public float GetMaxHP() {
+    public virtual float GetMaxHP() {
         return maxHP.GetValue();
     }
 
-    public Damage GetDamage() {
+    public virtual Damage GetDamage() {
         float chance = Mathf.Clamp(critChance.GetValue(), 0, 90);
         bool isCrit = Random.Range(0, 100) < chance;
         float finalDamage = isCrit ? damage.GetValue() * critPower.GetValue() : damage.GetValue();
@@ -31,7 +31,7 @@ public class EntityStats : MonoBehaviour {
         return new Damage(finalDamage, isCrit);
     }
 
-    public float GetArmorMitigation() {
+    public virtual float GetArmorMitigation() {
         float finalArmor = armor.GetValue();
 
         if (finalArmor < 0) {

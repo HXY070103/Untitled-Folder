@@ -51,37 +51,38 @@ MonoBehaviour:
   description: Creates a domain that slows down enemies and enemy projectiles within
     its area.
   upgrades:
-  - upgradeName: Temporal Freeze
-    description: Enemies within the field are immobilized
+  - upgradeName: Temporal Corrosion
+    description: Enemies within the field take continuous damage over time
     unlocked: 0
-  - upgradeName: Hunting Time
-    description: Killing enemies during the skill extends its duration
+  - upgradeName: Vulnerable Field
+    description: Enemies within the field gain vulnerable effect.
     unlocked: 0
   - upgradeName: Synchronized Field
     description: "The field follows the player\u2019s movement"
     unlocked: 0
-  - upgradeName: Temporal Corrosion
-    description: Enemies within the field take continuous damage over time
-    unlocked: 0
-  - upgradeName: Precision Targeting
-    description: The first attack against each enemy during the skill deals increased
-      damage
+  - upgradeName: Hunting Time
+    description: Killing enemies during the skill extends its duration
     unlocked: 0
   betterUpgrades:
-  - upgradeName: Stable
-    description: use 2 times of skill will increase 1 skill decay
+  - upgradeName: Temporal Corrosion+
+    description: Enemies take a burst of damage when entering the field, but no longer
+      take continuous damage afterward.
     unlocked: 0
-  - upgradeName: Calm Fight
-    description: 'if player is not injured during the skill duration, then this skill
-      will not increase skill decay '
+  - upgradeName: Vulnerable Field+
+    description: Enemies inside the field have their armor reduced to zero and gain
+      vulnerable effect.
     unlocked: 0
-  - upgradeName: Fixed Rate
-    description: (manual exclusive with Fixed Time) skill decay will not decrease
-      the rate of slow
+  - upgradeName: Synchronized Field+
+    description: "The field follows the player\u2019s movement, after the domain
+      is moved, its effect will still persist in the original location for a short
+      period of time."
     unlocked: 0
-  - upgradeName: Fixed Time
-    description: (manual exclusive with Fixed Rate) skill decay will not decrease
-      the skill dutation
+  - upgradeName: Hunting Time+
+    description: Killing enemies during the skill extends its duration and releases
+      a small time shockwave from the dead enemy, damaging nearby enemies.
+    unlocked: 0
+  - upgradeName: Stasis Field
+    description: Enemies inside the field stop moving and acting.
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
@@ -111,44 +112,42 @@ MonoBehaviour:
   description: heal yourself after the skill end. The more damage you make, the higher
     healing amount you have.
   upgrades:
-  - upgradeName: Unshakable Resolve
-    description: If the player takes fatal damage during the skill, instantly restore
-      20% max HP, but cannot heal after the skill ends
-    unlocked: 0
   - upgradeName: Stable Gain
-    description: Restores HP over time during the skill, but cannot heal after the
-      skill ends
+    description: 'Restores HP over time during the skill instead of after skill.
+      (the amount is still related to damage) '
     unlocked: 0
   - upgradeName: Desperate Gambit
-    description: Damage conversion ratio increases as HP decreases during the skill
+    description: During the skill, the lower the HP, the higher the conversion rate.
     unlocked: 0
   - upgradeName: Blood Growth
     description: If post-skill healing exceeds 20% max HP, permanently increases
       max HP
     unlocked: 0
-  - upgradeName: Blood Frenzy
-    description: Increases damage taken during the skill, but also increases damage
-      and attack speed
+  - upgradeName: Overflowing Aegis
+    description: "During the skill, part of the player\u2019s excess healing is converted
+      into a shield."
     unlocked: 0
   betterUpgrades:
-  - upgradeName: Stable
-    description: use 2 times of skill will increase 1 skill decay
+  - upgradeName: Stable Gain+
+    description: 'Restores HP over time during the skill instead of after skill and
+      gains a shield when the skill starts. (the amount is still related to damage) '
     unlocked: 0
-  - upgradeName: Blood Back
-    description: if you heal enough amount of HP by this skill during skill duration,
-      then this skill will not increase skill decay
+  - upgradeName: Desperate Gambit+
+    description: "During the skill, the lower the player\u2019s health, the higher
+      the conversion rate, damage, and attack speed."
     unlocked: 0
-  - upgradeName: Fixed Time
-    description: '(mutual exclusive with Fixed Blood)
-
-      skill decay will not
-      decrease the skill duration'
+  - upgradeName: Blood Growth+
+    description: If the healing amount exceeds 20% of max health, increase max health,
+      armor, and attack.
     unlocked: 0
-  - upgradeName: Fixed Blood
-    description: '(mutual exclusive with Fixed Time)
-
-      skill decay will not
-      decrease the ratio of healing by making damage '
+  - upgradeName: Overflowing Aegis+
+    description: During the skill, part of excess healing becomes a shield. While
+      the shield exists, the player gains increased damage and attack speed.
+    unlocked: 0
+  - upgradeName: Deathbound Bargain
+    description: If the player takes fatal damage while the skill is active, they
+      immediately recover to 20% max health, but lose the ability to recover health
+      after the skill ends.
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
@@ -188,37 +187,42 @@ MonoBehaviour:
     speed. If the player attacks, the phase state ends immediately. If the player
     times the phase just before an enemy attack, a perfect phase is triggered.
   upgrades:
-  - upgradeName: Shadow Assassination
-    description: Converts heavy strike into a lethal strike
-    unlocked: 0
-  - upgradeName: Weakness Marking
-    description: Passing through enemies during phase reduces their damage and armor
-    unlocked: 0
-  - upgradeName: Shadow Execution
-    description: After killing an enemy with a heavy strike, briefly re-enter phase
+  - upgradeName: Perfect Echo
+    description: Restores a portion of HP when Perfect Phase is triggered
     unlocked: 0
   - upgradeName: Chain Strikes
     description: After triggering Perfect Phase, the next 3 attacks become heavy
       strikes
     unlocked: 0
-  - upgradeName: Perfect Echo
-    description: Restores a portion of HP when Perfect Phase is triggered
+  - upgradeName: Weakness Marking
+    description: Passing through enemies during phase reduces their damage and armor
+    unlocked: 0
+  - upgradeName: Shadow Assassination
+    description: Heavy strikes after phasing execute normal enemies below 50% health.
+      If a perfect phase was triggered, the threshold increases by 10%. Deals bonus
+      damage to elites and bosses.
     unlocked: 0
   betterUpgrades:
-  - upgradeName: Stable
-    description: use 2 times of skill will increase 1 skill decay
+  - upgradeName: Perfect Echo+
+    description: "Restore part of the player\u2019s health when the skill ends, even
+      without triggering a perfect phase."
     unlocked: 0
-  - upgradeName: Perfect Timing
-    description: If you make perfect phase, then this skill will not increase skill
-      decay
+  - upgradeName: Chain Strikes+
+    description: When the skill ends, the next three attacks become heavy strikes,
+      even without triggering a perfect phase.
     unlocked: 0
-  - upgradeName: Fixed Time
-    description: (manual exclusive with Fixed Attack) skill decay will not decrease
-      the skill duration
+  - upgradeName: Weakness Marking+
+    description: Passing through enemies while phased reduces their damage and armor
+      and also deals damage to them.
     unlocked: 0
-  - upgradeName: Fixed Attack
-    description: (manual exclusive with Fixed Time) skill decay will not decrease
-      the rate of heavy attack
+  - upgradeName: Shadow Assassination+
+    description: Heavy strikes after phasing execute normal enemies below 75% health.
+      If a perfect phase was triggered, the threshold increases by 10%. Deals increased
+      damage to elites and bosses.
+    unlocked: 0
+  - upgradeName: Chain Phantasm
+    description: Killing an enemy with a heavy strike makes the player enter a short
+      phase again.
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0

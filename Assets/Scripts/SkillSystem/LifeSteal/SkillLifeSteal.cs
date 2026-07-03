@@ -115,7 +115,7 @@ public class SkillLifeSteal : SkillBase {
     }
 
     private void IncreaseDamage() {
-        float baseDamage = stats.damage.GetValue();
+        float baseDamage = stats.GetFinalDamage();
         float bonusDamage = baseDamage * (damageApplyMultiplier - 1);
         stats.damage.AddModifier(bonusDamage, "BloodFrenzy");
     }

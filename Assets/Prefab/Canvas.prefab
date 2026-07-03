@@ -2086,7 +2086,7 @@ MonoBehaviour:
   statType: 3
   statName: {fileID: 5088629273011606718}
   statValue: {fileID: 5283219989909092674}
-  entityStats: {fileID: 0}
+  playerStats: {fileID: 0}
 --- !u!222 &7759283454494009815
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2469,7 +2469,7 @@ MonoBehaviour:
   statType: 2
   statName: {fileID: 800858838996327740}
   statValue: {fileID: 2171605385321232343}
-  entityStats: {fileID: 0}
+  playerStats: {fileID: 0}
 --- !u!222 &2589360784383346353
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3872,7 +3872,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.98039216, g: 0.9490196, b: 0.5137255, a: 1}
@@ -3914,6 +3914,8 @@ MonoBehaviour:
   button: {fileID: 4399929246538684629}
   backgroundImage: {fileID: 3139039260639675161}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
+  betterColor: {r: 0, g: 1, b: 0, a: 0.78431374}
+  highlightColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickEffectDuration: 0.2
 --- !u!1 &2608647393043598413
@@ -5249,7 +5251,7 @@ MonoBehaviour:
   statType: 4
   statName: {fileID: 6828613963121704845}
   statValue: {fileID: 5012591562098422927}
-  entityStats: {fileID: 0}
+  playerStats: {fileID: 0}
 --- !u!222 &3689793959226528937
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6166,7 +6168,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.98039216, g: 0.9490196, b: 0.5137255, a: 1}
@@ -6208,6 +6210,8 @@ MonoBehaviour:
   button: {fileID: 611043817601326534}
   backgroundImage: {fileID: 2371902287168972112}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
+  betterColor: {r: 0, g: 1, b: 0, a: 0.78431374}
+  highlightColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickEffectDuration: 0.2
 --- !u!1 &3713989214641259703
@@ -12183,7 +12187,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.98039216, g: 0.9490196, b: 0.5137255, a: 1}
@@ -12225,6 +12229,8 @@ MonoBehaviour:
   button: {fileID: 1430593659473791435}
   backgroundImage: {fileID: 6280071086985671136}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
+  betterColor: {r: 0, g: 1, b: 0, a: 0.78431374}
+  highlightColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickColor: {r: 1, g: 0.85, b: 0.25, a: 1}
   clickEffectDuration: 0.2
 --- !u!1 &7648047317501713390
@@ -12282,7 +12288,7 @@ MonoBehaviour:
   statType: 6
   statName: {fileID: 8534803212284021931}
   statValue: {fileID: 3204460490931379894}
-  entityStats: {fileID: 0}
+  playerStats: {fileID: 0}
 --- !u!222 &4108725412246325332
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14154,7 +14160,7 @@ MonoBehaviour:
   statType: 0
   statName: {fileID: 5171521901594399625}
   statValue: {fileID: 5106372522550914444}
-  entityStats: {fileID: 0}
+  playerStats: {fileID: 0}
 --- !u!222 &4838090750826313326
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15325,7 +15331,7 @@ MonoBehaviour:
   statType: 5
   statName: {fileID: 2141767912768424911}
   statValue: {fileID: 6654784082441569718}
-  entityStats: {fileID: 0}
+  playerStats: {fileID: 0}
 --- !u!222 &3314510181376638391
 CanvasRenderer:
   m_ObjectHideFlags: 0
