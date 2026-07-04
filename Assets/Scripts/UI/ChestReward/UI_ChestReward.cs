@@ -313,6 +313,6 @@ public class UI_ChestReward : MonoBehaviour
             return false;
         string name = upgrade.upgradeName.Substring(0, upgrade.upgradeName.Length - 1);
         name = name.TrimEnd();
-        return !skill.UnLocked(name);
+        return !skill.Unlocked(name);
     }
 }

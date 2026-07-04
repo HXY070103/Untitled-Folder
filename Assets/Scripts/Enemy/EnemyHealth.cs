@@ -7,9 +7,6 @@ public class EnemyHealth : EntityHealth {
 
     private Enemy enemy;
 
-    private bool isFirstAttack = false;
-    private float damageMultiplier;
-
     protected override void Awake() {
         base.Awake();
 
@@ -17,11 +14,6 @@ public class EnemyHealth : EntityHealth {
     }
 
     public override void TakeDamage(Damage damage, Transform damageDealer) {
-        if (isFirstAttack) {
-            damage = new Damage(damage.value * damageMultiplier, damage.isCrit);
-            isFirstAttack = false;
-        }
-
         base.TakeDamage(damage, damageDealer);
 
         if (isDead) {
@@ -39,24 +31,5 @@ public class EnemyHealth : EntityHealth {
     private float CalculateFinalDamage(Damage damage) {
         float mitigation = stats.GetArmorMitigation();
         return damage.value * (1 - mitigation);
-    }
-
-    private void SetFirstAttack(float damageMultiplier) {
-        isFirstAttack = true;
-        this.damageMultiplier = damageMultiplier;
-    }
-
-    private void ResetFirstAttack() {
-        isFirstAttack = false;
-    }
-
-    private void OnEnable() {
-        SkillTimeControl.OnSetFirstAttack += SetFirstAttack;
-        SkillTimeControl.OnResetFirstAttack += ResetFirstAttack;
-    }
-
-    private void OnDisable() {
-        SkillTimeControl.OnSetFirstAttack -= SetFirstAttack;
-        SkillTimeControl.OnResetFirstAttack -= ResetFirstAttack;
     }
 }

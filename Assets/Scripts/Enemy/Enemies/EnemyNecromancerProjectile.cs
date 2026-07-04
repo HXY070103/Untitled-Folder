@@ -78,10 +78,16 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
     }
 
     public void SlowDown(float slowDownPercentage) {
+        CancelInvoke(nameof(RecoverSpeed));
+
         speedMultiplier = 1 - slowDownPercentage;
     }
 
     public void RecoverSpeed() {
         speedMultiplier = 1;
+    }
+
+    public void RecoverSpeedWithDelay(float delay) {
+        Invoke(nameof(RecoverSpeed), delay);
     }
 }

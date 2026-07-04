@@ -16,6 +16,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] private float currentHP;
     [SerializeField] private float initialMaxHP = 100f;
     [SerializeField] private bool isOnShotKillable = false;
+    [SerializeField] private float damageTakenMultiplier = 1;
 
     [Header("On damage knockback info")]
     [SerializeField] private Vector2 onDamageKnockback = new Vector2(1.5f, 2.5f);
@@ -28,8 +29,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] private float heavyKnockbackDuration = 0.5f;
 
     public bool miniHealthBarActive;
-
-    private Coroutine dotCo;
 
     private bool canRevival = false;
     private float reviveHPMultiplier;
@@ -58,31 +57,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public void StopDeathPrevention() {
         canRevival = false;
-    }
-
-    public void StartDot(float damage, float dotInterval, float duration) {
-        if (dotCo != null) {
-            StopCoroutine(dotCo);
-        }
-
-        dotCo = StartCoroutine(DotCo(damage, dotInterval, duration));
-    }
-
-    public void StopDot() {
-        if (dotCo != null) {
-            StopCoroutine(dotCo);
-        }
-    }
-
-    private IEnumerator DotCo(float damage, float dotInterval, float duration) {
-        float timeTracker = 0;
-
-        while (timeTracker < duration) {
-            ReduceHP(damage);
-            vfx.PlayOnDamageVFX();
-            yield return new WaitForSeconds(dotInterval);
-            timeTracker += dotInterval;
-        }
     }
  
     public virtual void TakeDamage(Damage damage, Transform damageDealer) {
@@ -135,8 +109,12 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         OnHealthUpdate?.Invoke();
     }
 
-    protected void ReduceHP(float damage) {
-        currentHP -= damage;
+    public void SetDamageTakenMultiplier(float damageTakenMultiplier) {
+        this.damageTakenMultiplier = damageTakenMultiplier;
+    }
+
+    public void ReduceHP(float damage) {
+        currentHP -= damage * damageTakenMultiplier;
 
         if (currentHP <= 0) {
             currentHP = 0;
