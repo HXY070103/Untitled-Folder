@@ -686,7 +686,7 @@ Transform:
   m_GameObject: {fileID: 6697198589784538443}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -784,6 +784,7 @@ MonoBehaviour:
   attackAnimSpeedMultiplier: 1
   moveSpeed: 8
   jumpSpeed: 12
+  wallJumpDuration: 0.2
   wallJumpSpeed: {x: 6, y: 12}
   inAirMoveMultiplier: 0.8
   wallSlideMultiplier: 0.7
@@ -871,7 +872,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
   defaultStatSetup: {fileID: 11400000, guid: b970993ca290b4cf4a0ece4687e71472, type: 2}
   maxHP:
-    baseValue: 100
+    baseValue: 10000
     modifiers: []
   damage:
     baseValue: 50

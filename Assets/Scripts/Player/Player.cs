@@ -48,6 +48,7 @@ public class Player : Entity {
     [Header("Movement info")]
     public float moveSpeed = 8;
     public float jumpSpeed = 12;
+    public float wallJumpDuration = 0.2f;
     public Vector2 wallJumpSpeed = new Vector2(6, 12);
     [Range(0, 1)]
     public float inAirMoveMultiplier = 0.8f;
