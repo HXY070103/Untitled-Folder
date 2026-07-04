@@ -89,6 +89,88 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &1023070708908358634
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8365232685563852362}
+  - component: {fileID: 7409718442614441357}
+  - component: {fileID: 8002484856720264062}
+  m_Layer: 8
+  m_Name: SkillEffectReceiver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8365232685563852362
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023070708908358634}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5939796045182456773}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7409718442614441357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023070708908358634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f708670e79784eae83d8b2d2b868c70, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySkillEffectReceiver
+--- !u!70 &8002484856720264062
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023070708908358634}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: -0.25}
+  m_Size: {x: 0.6, y: 1.5}
+  m_Direction: 0
 --- !u!1 &2132822256409236208
 GameObject:
   m_ObjectHideFlags: 0
@@ -332,6 +414,7 @@ Transform:
   - {fileID: 7963739379977170035}
   - {fileID: 831638389733654531}
   - {fileID: 6151946227587515500}
+  - {fileID: 8365232685563852362}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &802951399104089180
@@ -359,6 +442,7 @@ MonoBehaviour:
   secondaryWallCheck: {fileID: 5939796045182456773}
   battleMoveSpeed: 3
   attackDistance: 2
+  preAttackDuration: 0.5
   attackCooldown: 1.5
   battleDuration: 5
   minRetreatDistance: 1
@@ -470,6 +554,7 @@ MonoBehaviour:
   currentHP: 0
   initialMaxHP: 100
   isOnShotKillable: 1
+  damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -497,6 +582,8 @@ MonoBehaviour:
   onHitVFX: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
   onCritHitVFX: {fileID: 1321752846314756928, guid: b9426da7f34ab4e6dac992440f1c4583, type: 3}
   attackAlert: {fileID: 2132822256409236208}
+  preAttackVFXColor: {r: 1, g: 0, b: 0, a: 1}
+  preAttackVFXDuration: 0.3
 --- !u!114 &4587777559165797030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -513,18 +600,23 @@ MonoBehaviour:
   maxHP:
     baseValue: 100
     modifiers: []
+    multipliers: []
   damage:
     baseValue: 10
     modifiers: []
+    multipliers: []
   critPower:
     baseValue: 2
     modifiers: []
+    multipliers: []
   critChance:
     baseValue: 0
     modifiers: []
+    multipliers: []
   armor:
     baseValue: 100
     modifiers: []
+    multipliers: []
 --- !u!1 &6149481810110311598
 GameObject:
   m_ObjectHideFlags: 0

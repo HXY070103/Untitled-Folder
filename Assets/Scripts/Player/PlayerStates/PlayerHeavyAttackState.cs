@@ -40,20 +40,20 @@ public class PlayerHeavyAttackState : PlayerState {
     }
 
     private void StartHandleBonusPhase() {
-        if (phase.UnLocked("Shadow Execution")) {
+        if (phase.Unlocked("Shadow Execution")) {
             phase.EnableBonusPhase();
         }
     }
 
     private void EndHandleBonusPhase() {
-        if (phase.UnLocked("Shadow Execution")) {
+        if (phase.Unlocked("Shadow Execution")) {
             phase.DisableBonusPhase();
             phase.TryToEnterBonusPhase();
         }
     }
 
     private void HandleInstantKill() {
-        if (phase.UnLocked("Shadow Assassination")) {
+        if (phase.Unlocked("Shadow Assassination")) {
             player.combat.SetNextAttackToInstantKill();
         }
     }

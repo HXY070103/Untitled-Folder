@@ -35,12 +35,12 @@ public class SkillLifeSteal : SkillBase {
 
     public float GetConversionRate() {
         float bonusConversionRate;
-        if (UnLocked("Desperate Gambit")) {
+        if (Unlocked("Desperate Gambit")) {
             bonusConversionRate = (maxConversionRate - conversionRate) * (1 - health.GetHPPercentage());
         } else {
             bonusConversionRate = 0;
         }
-        if (UnlockedForBetterUpgrade("Fixed Blood"))
+        if (Unlocked("Fixed Blood"))
         {
             return (conversionRate + bonusConversionRate) * stats.GetSkillEffect();
         }
@@ -60,14 +60,8 @@ public class SkillLifeSteal : SkillBase {
         StartAccumulateDamage();
         CreatFireVFX();
 
-        if (UnLocked("Unshakable Resolve")) {
+        if (Unlocked("Unshakable Resolve")) {
             health.StartDeathPrevention(reviveHPMultiplier);
-        }
-
-        if (UnLocked("Blood Frenzy")) {
-            health.StartVulnerability(damageTakenMultiplier);
-            IncreaseDamage();
-            player.IncreaseAttackSpeed(attackAnimSpeedMultiplier);
         }
     }
 
@@ -77,27 +71,21 @@ public class SkillLifeSteal : SkillBase {
         EndAccumulateDamage();
         DestroyFireVFX();
 
-        if (UnlockedForBetterUpgrade("Blood Back"))
+        if (Unlocked("Blood Back"))
         {
             HandleBloodBack();
         }
 
-        if (!UnLocked("Unshakable Resolve") && !UnLocked("Stable Gain")) {
+        if (!Unlocked("Unshakable Resolve") && !Unlocked("Stable Gain")) {
             CreateFireball();
         }
 
-        if (UnLocked("Unshakable Resolve")) {
+        if (Unlocked("Unshakable Resolve")) {
             health.StopDeathPrevention();
         }
 
-        if (UnLocked("Blood Growth")) {
+        if (Unlocked("Blood Growth")) {
             HandleMaxHPIncrease();
-        }
-
-        if (UnLocked("Blood Frenzy")) {
-            health.EndVulnerability();
-            ResetDamage();
-            player.ResetAttackSpeed();
         }
     }
 
@@ -177,7 +165,7 @@ public class SkillLifeSteal : SkillBase {
         float healingHP = damage * GetConversionRate();
         totalHealingHP += healingHP;
 
-        if (UnLocked("Stable Gain")) {
+        if (Unlocked("Stable Gain")) {
             health.Healing(healingHP);
         }
     }

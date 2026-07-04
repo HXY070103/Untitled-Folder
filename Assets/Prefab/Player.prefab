@@ -87,6 +87,7 @@ MonoBehaviour:
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 6596648338181236841}
+  numOfUpgradesGet: 0
   cooldown: 3
   skillDuration: 3
   domainPrefab: {fileID: 8066122577892052930, guid: df04f63a1809d442482117ff6dbc340b, type: 3}
@@ -152,6 +153,7 @@ MonoBehaviour:
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 6596648338181236841}
+  numOfUpgradesGet: 0
   cooldown: 3
   skillDuration: 3
   fireVFXPrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
@@ -227,6 +229,7 @@ MonoBehaviour:
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 6596648338181236841}
+  numOfUpgradesGet: 0
   cooldown: 3
   skillDuration: 3
   hurtCheckerPrefab: {fileID: 5438744945553926496, guid: 2ecd1dda1b74f4093bb4e3002ce09fa7, type: 3}
@@ -828,6 +831,7 @@ MonoBehaviour:
   currentHP: 0
   initialMaxHP: 100
   isOnShotKillable: 1
+  damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -874,21 +878,27 @@ MonoBehaviour:
   maxHP:
     baseValue: 10000
     modifiers: []
+    multipliers: []
   damage:
     baseValue: 50
     modifiers: []
+    multipliers: []
   critPower:
     baseValue: 2
     modifiers: []
+    multipliers: []
   critChance:
     baseValue: 20
     modifiers: []
+    multipliers: []
   armor:
     baseValue: 0
     modifiers: []
+    multipliers: []
   skillEffect:
     baseValue: 1
     modifiers: []
+    multipliers: []
   bonusMaxHP: 20
   bonusDamage: 30
   bonusCritPower: 0.5

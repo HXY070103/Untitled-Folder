@@ -58,6 +58,7 @@ public class EnemyBossEnergyWave : MonoBehaviour, ICounterable, ISlowable {
     }
 
     public void SlowDown(float slowDownPercentage) {
+        CancelInvoke(nameof(RecoverSpeed));
         anim.speed = 1 - slowDownPercentage;
         float xVelocity = energyWaveSpeed * (1 - slowDownPercentage);
         rb.linearVelocity = new Vector2(xVelocity, 0);
@@ -66,5 +67,9 @@ public class EnemyBossEnergyWave : MonoBehaviour, ICounterable, ISlowable {
     public void RecoverSpeed() {
         anim.speed = 1;
         rb.linearVelocity = new Vector2(energyWaveSpeed, 0);
+    }
+
+    public void RecoverSpeedWithDelay(float delay) {
+        Invoke(nameof(RecoverSpeed), delay);
     }
 }

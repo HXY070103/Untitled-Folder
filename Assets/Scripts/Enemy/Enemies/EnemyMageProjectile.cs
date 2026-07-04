@@ -74,6 +74,8 @@ public class EnemyMageProjectile : MonoBehaviour, ICounterable, ISlowable {
     }
 
     public void SlowDown(float slowDownPercentage) {
+        CancelInvoke(nameof(RecoverSpeed));
+
         isFrozen = slowDownPercentage == 1 ? true : false;
         originVelocity = rb.linearVelocity;
         originGravityScale = rb.gravityScale;
@@ -91,5 +93,9 @@ public class EnemyMageProjectile : MonoBehaviour, ICounterable, ISlowable {
             rb.linearVelocity /= speedMultiplier;
             rb.gravityScale /= speedMultiplier * speedMultiplier;
         }
+    }
+
+    public void RecoverSpeedWithDelay(float delay) {
+        Invoke(nameof(RecoverSpeed), delay);
     }
 }
