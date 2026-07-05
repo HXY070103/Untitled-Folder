@@ -116,7 +116,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     public void ReduceHP(float damage) {
         currentHP -= damage * damageTakenMultiplier;
 
-        if (currentHP <= 0) {
+        if (currentHP <= 0.5) {
             currentHP = 0;
             Die();
         }

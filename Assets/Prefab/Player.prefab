@@ -93,9 +93,14 @@ MonoBehaviour:
   domainPrefab: {fileID: 8066122577892052930, guid: df04f63a1809d442482117ff6dbc340b, type: 3}
   maxSize: 20
   slowDownPercentage: 0.8
-  bonusDuration: 1
+  expandSpeed: 2
+  damage: 5
+  damageInterval: 0.5
   damageMultiplier: 2
-  playerHealth: {fileID: 647535936263750144}
+  reducedMaxSize: 10
+  increasedSkillDuration: 4
+  recoverSpeedDelay: 1
+  bonusDuration: 1
 --- !u!114 &227365949848170611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -876,7 +881,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
   defaultStatSetup: {fileID: 11400000, guid: b970993ca290b4cf4a0ece4687e71472, type: 2}
   maxHP:
-    baseValue: 10000
+    baseValue: 100
     modifiers: []
     multipliers: []
   damage:

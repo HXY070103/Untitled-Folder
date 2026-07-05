@@ -37,10 +37,19 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
-        StartCoroutine(LoadSceneCo(sceneName));
+        StartCoroutine(LoadSceneCo(sceneName, false));
     }
 
-    private IEnumerator LoadSceneCo(string sceneName)
+    public void LoadSavedScene(string sceneName)
+    {
+        if (isChangeScene)
+        {
+            return;
+        }
+        StartCoroutine(LoadSceneCo(sceneName, true));
+    } 
+
+    private IEnumerator LoadSceneCo(string sceneName, bool loadSaveData)
     {
         isChangeScene = true;
 
@@ -54,7 +63,11 @@ public class GameManager : MonoBehaviour
         if (SaveManager.instance != null)
         {
             SaveManager.instance.RefreshSavables();
-            SaveManager.instance.LoadDataToCurrentScene();
+            if (loadSaveData)
+            {
+                SaveManager.instance.LoadDataToCurrentScene();
+            }
+            SaveManager.instance.SaveLevelStart();
         }
 
         //fade in

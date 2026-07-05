@@ -19,7 +19,7 @@ public class EnemyDeadState : EnemyState {
 
         stateMachine.SwitchOff();
         tc.SwitchOff();
-        receiver.SwitchOff();
+        //receiver.SwitchOff();
         enemy.StopAllCoroutines();
         
         enemy.DestoryGameObjectWithDelay(10);

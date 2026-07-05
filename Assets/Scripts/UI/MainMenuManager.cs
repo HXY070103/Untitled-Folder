@@ -141,7 +141,7 @@ public class MainMenuManager : MonoBehaviour
 
         if (GameManager.instance != null)
         {
-            GameManager.instance.LoadScene(data.currentSceneName);
+            GameManager.instance.LoadSavedScene(data.currentSceneName);
         }
         else
         {

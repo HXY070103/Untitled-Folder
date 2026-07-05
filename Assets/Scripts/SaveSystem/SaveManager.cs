@@ -11,6 +11,11 @@ public class SaveManager : MonoBehaviour
     private GameData gameData;
     private List<ISaveable> allSaveables;
     [SerializeField] private string fileName = "saveData.json";
+    [SerializeField] private List<string> noSaveSceneNames = new List<string>
+    {
+        "Mainscene",
+        "BeginGuide"
+    };
 
     private void Awake()
     {
@@ -38,6 +43,11 @@ public class SaveManager : MonoBehaviour
 
     public void SaveGame()
     {
+        if (IsCurrentSceneNoSave())
+        {
+            Debug.Log("Current scene does not need to save");
+            return;
+        }
         if (gameData == null)
         {
             gameData = new GameData();
@@ -68,6 +78,11 @@ public class SaveManager : MonoBehaviour
 
     private IEnumerator LoadGameCo()
     {
+        if (IsCurrentSceneNoSave())
+        {
+            Debug.Log("Current scene does not need to save");
+            yield break;
+        }
         gameData = dataHandler.LoadData();
         if (gameData == null)
         {
@@ -89,6 +104,11 @@ public class SaveManager : MonoBehaviour
 
     public void LoadDataToCurrentScene()
     {
+        if (IsCurrentSceneNoSave())
+        {
+            Debug.Log("Current scene does not need to save");
+            return;
+        }
         if (gameData == null)
         {
             gameData = dataHandler.LoadData();
@@ -228,6 +248,11 @@ public class SaveManager : MonoBehaviour
 
     public void MarkGameOver()
     {
+        if (IsCurrentSceneNoSave())
+        {
+            Debug.Log("Current scene does not need to save");
+            return;
+        }
         EnsureGameDataLoaded();
 
         gameData.isGameInProgess = false;
@@ -317,6 +342,11 @@ public class SaveManager : MonoBehaviour
 
     public void SaveGameIfAllowed()
     {
+        if (IsCurrentSceneNoSave())
+        {
+            Debug.Log("Current scene does not need to save");
+            return;
+        }
         if (!CanSaveCurrentSceneProgress())
         {
             Debug.Log("Current level is not cleared. Progress will not be saved.");
@@ -375,5 +405,25 @@ public class SaveManager : MonoBehaviour
         {
             Debug.Log(chestID);
         }
+    }
+
+    public bool IsNoSaveScene(string sceneName)
+    {
+        return noSaveSceneNames.Contains(sceneName);
+    }
+
+    public bool IsCurrentSceneNoSave()
+    {
+        return IsNoSaveScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void SaveLevelStart()
+    {
+        if (IsCurrentSceneNoSave())
+        {
+            Debug.Log("Current scene does not need to save");
+            return;
+        }
+        SaveGame();
     }
 }

@@ -8,10 +8,17 @@ public class UI_StatSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI statName;
     [SerializeField] private TextMeshProUGUI statValue;
 
-    [SerializeField] private PlayerStats playerStats;
+    private PlayerStats playerStats;
 
     private void Start() 
     {
+        FindPlayerStat();
+        UpdateStatValue();
+    }
+
+    private void OnEnable()
+    {
+        FindPlayerStat();
         UpdateStatValue();
     }
 
@@ -19,6 +26,14 @@ public class UI_StatSlot : MonoBehaviour
     {
         gameObject.name = "UI_Stat - " + GetStatNameByType(statType);
         statName.text = GetStatNameByType(statType);
+    }
+
+    private void FindPlayerStat()
+    {
+        if (Player.instance != null)
+        {
+            playerStats = Player.instance.stats;
+        }
     }
 
     public void UpdateStatValue() 

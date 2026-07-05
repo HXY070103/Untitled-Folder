@@ -20,6 +20,10 @@ public class UI_Character : MonoBehaviour
         
         if (shouldOpen)
         {
+            if (Player.instance != null)
+            {
+                playerSkill = Player.instance.skillManager;
+            }
             UpdateAllStatSlots();
             skillSlot.UpdateSkillInfo();
             skillDecayUI.UpdateDecayUI(playerSkill.SkillDecay);

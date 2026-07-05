@@ -20,6 +20,11 @@ public class UI_UpgradePanel : MonoBehaviour
 
     private void OnEnable()
     {
+        if (Player.instance != null)
+        {
+            playerStats = Player.instance.stats;
+            skillManager = Player.instance.skillManager;
+        }
         if (skillManager != null)
         {
             SetCurrentSkill(skillManager.GetCurrentSkill());
