@@ -1,8 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using System;
-using NUnit.Framework;
 
 public class SkillBase : MonoBehaviour{
     protected PlayerStats stats;
@@ -73,7 +71,6 @@ public class SkillBase : MonoBehaviour{
     protected virtual void StartSkill() {
         isSkillActive = true;
         remainingDuration = GetSkillDuration();
-        lastTimeEnd = Time.time + GetSkillDuration();
         numOfUse++;
         //IncreaseSkillDecay();
         playerSkillManager.UpdateSkillDecay(decreaseIndex);
@@ -98,35 +95,26 @@ public class SkillBase : MonoBehaviour{
     protected virtual void EndSkill() {
         isSkillActive = false;
         remainingDuration = 0;
+        lastTimeEnd = Time.time;
     }
 
     public virtual float GetSkillDuration() {
-        if (UnlockedForBetterUpgrade("Fixed Time"))
-        {
-            return skillDuration * stats.GetSkillEffect();
-        }
         return skillDuration * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
-    public bool UnLocked(string upgradeName) {
+    public bool Unlocked(string upgradeName) {
         foreach (var upgrade in upgrades) {
             if (upgrade.upgradeName.Equals(upgradeName)) {
                 return upgrade.unlocked;
             }
         }
 
-        return false;
-    }
-
-    public bool UnlockedForBetterUpgrade(string upgradeName)
-    {
-        foreach(var upgrade in betterUpgrades)
-        {
-            if (upgrade.upgradeName.Equals(upgradeName))
-            {
+        foreach(var upgrade in betterUpgrades) {
+            if (upgrade.upgradeName.Equals(upgradeName)) {
                 return upgrade.unlocked;
             }
         }
+
         return false;
     }
 
@@ -241,7 +229,7 @@ public class SkillBase : MonoBehaviour{
         return result;
     }
 
-    public List<string> GetUnLockedBetterUpgrades()
+    public List<string> GetUnlockedBetterUpgrades()
     {
         List<string> result = new List<string>();
 

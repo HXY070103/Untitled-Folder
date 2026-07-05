@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Enemy : Entity, ISlowable, ICounterable {
+public class Enemy : Entity, ICounterable {
     public EntityStats stats { get; private set; }
     public EnemyHealth health { get; private set; }
     public EnemyCombat combat { get; private set; }
@@ -103,16 +103,6 @@ public class Enemy : Entity, ISlowable, ICounterable {
         onPhaseDebuff = false;
         stats.damage.RemoveModifier("WeaknessMarking");
         stats.armor.RemoveModifier("WeaknessMarking");
-    }
-
-    public void SlowDown(float slowDownPercentage) {
-        tc.SetLocalTimeScale(1 - slowDownPercentage);
-        anim.speed = 1 - slowDownPercentage;
-    }
-
-    public void RecoverSpeed() {
-        tc.ResetLocalTimeScale();
-        anim.speed = 1;
     }
 
     public bool CanBeCountered() {

@@ -120,6 +120,6 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         data.numOfUse = currentSkill.GetNumOfUse();
         data.remainSkillColldown = currentSkill.GetReaminCooldown();
         data.unlockedSkillUpgrades = currentSkill.GetUnlockedUpgrades();
-        data.unlockedBetterUpgrades = currentSkill.GetUnLockedBetterUpgrades();
+        data.unlockedBetterUpgrades = currentSkill.GetUnlockedBetterUpgrades();
     }
 }

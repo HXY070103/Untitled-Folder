@@ -37,7 +37,7 @@ public class SkillPhase : SkillBase {
     }
 
     public float GetDamageMultiplier() {
-        if (UnlockedForBetterUpgrade("Fixed Attack"))
+        if (Unlocked("Fixed Attack"))
         {
             return damageMultiplier * stats.GetSkillEffect();
         }
@@ -66,7 +66,7 @@ public class SkillPhase : SkillBase {
         player.SpeedUp(GetSpeedUpPercentage());
         vfx.DoFadeEffect();
 
-        if (UnLocked("Weakness Marking")) {
+        if (Unlocked("Weakness Marking")) {
             CreatePhaseTracker();
         }
     }
@@ -81,15 +81,15 @@ public class SkillPhase : SkillBase {
 
         isBonusPhase = false;
 
-        if (UnLocked("Weakness Marking")) {
+        if (Unlocked("Weakness Marking")) {
             DestroyPhaseTracker();
         }
 
-        if (UnLocked("Perfect Echo") && isPerfectPhase) {
+        if (Unlocked("Perfect Echo") && isPerfectPhase) {
             health.Healing(bonusHP);
         }
 
-        if (UnlockedForBetterUpgrade("Perfect Timing"))
+        if (Unlocked("Perfect Timing"))
         {
             DecreaseDecay(1);
         }
@@ -111,7 +111,7 @@ public class SkillPhase : SkillBase {
     }
 
     private int GetNumOfHeavyAttack() {
-        if (UnLocked("Chain Strikes") && isPerfectPhase) {
+        if (Unlocked("Chain Strikes") && isPerfectPhase) {
             return bonusNumOfHeavyAttack;
         }
 
