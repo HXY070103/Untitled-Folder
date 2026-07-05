@@ -65,7 +65,10 @@ public class Waypoint : MonoBehaviour
         }
 
         DecideScene();
-        SaveManager.instance.SaveGame();
+        if (SaveManager.instance != null && !SaveManager.instance.IsCurrentSceneNoSave())
+        {
+            SaveManager.instance.SaveGame();
+        }
         GameManager.instance.ChangeScene(transferToScene, connectedWaypoint);
         
     }

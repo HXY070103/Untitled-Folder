@@ -36,17 +36,17 @@ public class GameOverManager : MonoBehaviour
 
     public void ShowDeath()
     {
-        ShowGameOver("You Died");
+        ShowGameOver("You Died", false);
     }
 
     public void ShowWin()
     {
-        ShowGameOver("You Win");
+        ShowGameOver("You Win", true);
     }
 
-    private void ShowGameOver(string message)
+    private void ShowGameOver(string message, bool finishGame)
     {
-        if (SaveManager.instance != null)
+        if (finishGame && SaveManager.instance != null)
         {
             SaveManager.instance.MarkGameOver();
         }

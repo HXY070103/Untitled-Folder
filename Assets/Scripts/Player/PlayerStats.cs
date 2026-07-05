@@ -69,12 +69,42 @@ public class PlayerStats : EntityStats, ISaveable {
     }
 
     private void Awake() {
+        InitializeAttributeUpgrades();
+    }
+    
+    private void InitializeAttributeUpgrades()
+    {
         upgrades = new AttributeUpgrade[4];
-        
+
         upgrades[(int) AttributeUpgrageType.Vatality] = new VatalityUpgrade(this);
         upgrades[(int) AttributeUpgrageType.Power] = new PowerUpgrage(this);
         upgrades[(int) AttributeUpgrageType.Precision] = new PrecisionUpgrade(this);
         upgrades[(int) AttributeUpgrageType.Technique] = new TechniqueUpgrade(this);
+    }
+
+    private void ClearAllAttributeUpgradeModifiers()
+    {
+        if (upgrades == null)
+        {
+            InitializeAttributeUpgrades();
+        }
+
+        foreach (AttributeUpgrade upgrade in upgrades)
+        {
+            if (upgrade == null)
+            {
+                continue;
+            }
+
+            string source = upgrade.Upgradename;
+
+            maxHP.RemoveModifier(source);
+            damage.RemoveModifier(source);
+            critPower.RemoveModifier(source);
+            critChance.RemoveModifier(source);
+            armor.RemoveModifier(source);
+            skillEffect.RemoveModifier(source);
+        }
     }
 
     public void AddUpgrade(AttributeUpgrade upgrade) {
@@ -118,6 +148,11 @@ public class PlayerStats : EntityStats, ISaveable {
 
     public void LoadData(GameData data)
     {
+        if (upgrades == null)
+        {
+            InitializeAttributeUpgrades();
+        }
+        ClearAllAttributeUpgradeModifiers();    
         obtainAttributeUpgrades.Clear();
 
         foreach(AttributeUpgradeSaveData saveData in data.attributeUpgrades)

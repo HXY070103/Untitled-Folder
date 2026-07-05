@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using NUnit.Framework;
 
 public class PlayerSkillManager : MonoBehaviour, ISaveable {
     private SkillBase[] skills;
@@ -113,6 +114,7 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         {
             return;
         }
+        data.hasChosenSkill = true;
         SkillBase currentSkill = GetCurrentSkill();
 
         data.chosenSkillType = (int) currentSkillType;
