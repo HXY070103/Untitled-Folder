@@ -59,6 +59,7 @@ public class SkillChoosePanel : MonoBehaviour
 
     private void ChooseSkill(SkillType skillType)
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         PlayerSkillManager skillManager = FindFirstObjectByType<PlayerSkillManager>();
 
         if (skillManager == null)

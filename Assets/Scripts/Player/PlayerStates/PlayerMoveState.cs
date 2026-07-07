@@ -17,6 +17,7 @@ public class PlayerMoveState : PlayerGroundedState {
 
         float xVelocity = player.moveInput.x * player.moveSpeed;
         player.Move(xVelocity, rb.linearVelocity.y);
+        player.sfx?.TryPlayMove();
     }
 
     public override void Exit() {

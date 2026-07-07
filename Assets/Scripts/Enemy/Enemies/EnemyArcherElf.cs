@@ -29,7 +29,7 @@ public class EnemyArcherElf : Enemy {
 
     public override void SpecialAttack() {
         base.SpecialAttack();
-
+        
         GameObject arrow = 
             Instantiate(arrowPrefab, arrowStartPoint.position, Quaternion.identity);
         arrow.GetComponent<EnemyArcherElfArrow>().SetUpArrow(facingDir * arrowSpeed, combat);

@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using System.Collections;
+using System;
 
 public class GameOverManager : MonoBehaviour
 {
@@ -8,6 +10,7 @@ public class GameOverManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private float waitSecondsDead = 1f;
 
     [Header("Scene")]
     [SerializeField] private string mainMenuSceneName = "Mainscene";
@@ -26,12 +29,23 @@ public class GameOverManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Player.OnPlayerDeath += ShowDeath;
+        Player.OnPlayerDeath += PlayerDeath;
     }
 
     private void OnDisable()
     {
-        Player.OnPlayerDeath -= ShowDeath;
+        Player.OnPlayerDeath -= PlayerDeath;
+    }
+
+    private void PlayerDeath()
+    {
+        StartCoroutine(DelayCall(waitSecondsDead, ShowDeath));
+    }
+
+    private IEnumerator DelayCall(float decay, Action callback)
+    {
+        yield return new WaitForSeconds(decay);
+        callback?.Invoke();
     }
 
     public void ShowDeath()

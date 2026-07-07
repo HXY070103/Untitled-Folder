@@ -21,6 +21,7 @@ public class UI_Options : MonoBehaviour
 
     public void SaveAndExitToMainMenu()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (SaveManager.instance != null)
         {
             SaveManager.instance.SaveGameIfAllowed();

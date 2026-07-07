@@ -8,6 +8,7 @@ public class Player : Entity {
 
     public PlayerInputSet input { get; private set; }
     public PlayerVFX vfx { get; private set; }
+    public PlayerSFX sfx { get; private set; }
     public PlayerSkillManager skillManager { get; private set; }
     public PlayerStats stats { get; private set; }
     public PlayerHealth health { get; private set; }
@@ -71,6 +72,7 @@ public class Player : Entity {
         health = GetComponent<PlayerHealth>();
         combat = GetComponent<PlayerCombat>();
         vfx = GetComponent<PlayerVFX>();
+        sfx = GetComponent<PlayerSFX>();
         skillManager = GetComponent<PlayerSkillManager>();
 
         idleState = new PlayerIdleState(this, stateMachine, "Idle");

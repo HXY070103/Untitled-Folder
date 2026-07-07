@@ -10,6 +10,7 @@ public class EnemyDeadState : EnemyState {
     
     public override void Enter() {
         base.Enter();
+        enemy.sfx.PlayDeath();
 
         anim.enabled = false;
         col.enabled = false;

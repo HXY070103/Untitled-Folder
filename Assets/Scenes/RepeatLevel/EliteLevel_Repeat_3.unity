@@ -245,6 +245,63 @@ MonoBehaviour:
   - background: {fileID: 1151643987}
     parallaxMultiplier: 0.85
     imageWidthOffset: 10
+--- !u!1001 &412107991
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.91919
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -22.94262
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3944550022295774834, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4714370634200725343, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
+      propertyPath: m_Name
+      value: ___AUDIO MANAGER___
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1c7113ad2234246fb8d3a6cd249054d0, type: 3}
 --- !u!1001 &488676748
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -900,6 +957,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34e409b24eb124fa8b8e77ae3117ecd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spine
+  cooldown: 1
 --- !u!61 &742581685
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -49930,6 +49988,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34e409b24eb124fa8b8e77ae3117ecd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spine
+  cooldown: 1
 --- !u!61 &2034784875
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -50504,3 +50563,4 @@ SceneRoots:
   - {fileID: 2009743471}
   - {fileID: 1930520590}
   - {fileID: 1780839824}
+  - {fileID: 412107991}

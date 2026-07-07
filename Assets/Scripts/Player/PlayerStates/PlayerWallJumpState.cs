@@ -12,6 +12,7 @@ public class PlayerWallJumpState : PlayerState {
         float xVelocity = -player.facingDir * player.wallJumpSpeed.x;
         float yVelocity = player.wallJumpSpeed.y;
         player.Move(xVelocity, yVelocity);
+        player.sfx?.PlayJump();
     }
 
     public override void Update() {

@@ -38,6 +38,7 @@ public class UI_ChestChoiceButton : MonoBehaviour
 
     private void OnClick()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         button.interactable = false;
 
         if (backgroundImage != null)

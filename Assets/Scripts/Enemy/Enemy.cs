@@ -6,6 +6,7 @@ public class Enemy : Entity, ICounterable {
     public EnemyHealth health { get; private set; }
     public EnemyCombat combat { get; private set; }
     public EnemyVFX vfx { get; private set; }
+    public EnemySFX sfx { get; private set; }
 
     public EnemyIdleState idleState;
     public EnemyMoveState moveState;
@@ -56,6 +57,7 @@ public class Enemy : Entity, ICounterable {
         health = GetComponent<EnemyHealth>();
         combat = GetComponent<EnemyCombat>();
         vfx = GetComponent<EnemyVFX>();
+        sfx = GetComponent<EnemySFX>();
     }
 
     protected override void Start() {
@@ -70,7 +72,10 @@ public class Enemy : Entity, ICounterable {
         base.Update();
     }
 
-    public virtual void SpecialAttack() {}
+    public virtual void SpecialAttack()
+    {
+        sfx?.PlaySpecialAttack1();
+    }
 
     public void 
         ApplyPhaseDebuff(float debuffDuration, float damageReduction, float armorReduction) {

@@ -440,6 +440,7 @@ GameObject:
   - component: {fileID: 8336450667698140889}
   - component: {fileID: 5126860446043907237}
   - component: {fileID: 7500076437644406253}
+  - component: {fileID: 2246587846416013981}
   m_Layer: 8
   m_Name: EnemySlimeLarge
   m_TagString: Untagged
@@ -465,6 +466,7 @@ Transform:
   - {fileID: 8654037884539421491}
   - {fileID: 6751919216023979294}
   - {fileID: 2676091939651556882}
+  - {fileID: 4890260908975552140}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4066863012242302385
@@ -492,6 +494,7 @@ MonoBehaviour:
   secondaryWallCheck: {fileID: 1298332150026225067}
   battleMoveSpeed: 2.5
   attackDistance: 1.5
+  preAttackDuration: 0.5
   attackCooldown: 1.5
   battleDuration: 5
   minRetreatDistance: 1
@@ -606,6 +609,7 @@ MonoBehaviour:
   currentHP: 0
   initialMaxHP: 100
   isOnShotKillable: 1
+  damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -633,6 +637,8 @@ MonoBehaviour:
   onHitVFX: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
   onCritHitVFX: {fileID: 1321752846314756928, guid: b9426da7f34ab4e6dac992440f1c4583, type: 3}
   attackAlert: {fileID: 6634861467077487417}
+  preAttackVFXColor: {r: 1, g: 0, b: 0, a: 1}
+  preAttackVFXDuration: 0.3
 --- !u!114 &7500076437644406253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -649,18 +655,173 @@ MonoBehaviour:
   maxHP:
     baseValue: 100
     modifiers: []
+    multipliers: []
   damage:
     baseValue: 10
     modifiers: []
+    multipliers: []
   critPower:
     baseValue: 2
     modifiers: []
+    multipliers: []
   critChance:
     baseValue: 0
     modifiers: []
+    multipliers: []
   armor:
     baseValue: 100
     modifiers: []
+    multipliers: []
+--- !u!114 &2246587846416013981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5641774630035295813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3ac1dd798aa4e8fba61d16e92181c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySFX
+  showDraw: 0
+  attackHit: 
+  attackMiss: 
+  move: 
+  death: 
+  soundDistacne: 15
+  moveSFXInterval: 0.35
+  specialAttack1: 
+  specialAttack2: 
+--- !u!1 &6488270229852087084
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4890260908975552140}
+  - component: {fileID: 2290953939581604014}
+  m_Layer: 8
+  m_Name: SlimeLarge_AudioSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4890260908975552140
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6488270229852087084}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1298332150026225067}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &2290953939581604014
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6488270229852087084}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6634861467077487417
 GameObject:
   m_ObjectHideFlags: 0

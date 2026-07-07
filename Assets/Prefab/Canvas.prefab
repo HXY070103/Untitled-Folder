@@ -2086,7 +2086,6 @@ MonoBehaviour:
   statType: 3
   statName: {fileID: 5088629273011606718}
   statValue: {fileID: 5283219989909092674}
-  playerStats: {fileID: 3690069604150053797, guid: 81a7f60869a3742a6bdcd9f2beeaf2c9, type: 3}
 --- !u!222 &7759283454494009815
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2469,7 +2468,6 @@ MonoBehaviour:
   statType: 2
   statName: {fileID: 800858838996327740}
   statValue: {fileID: 2171605385321232343}
-  playerStats: {fileID: 3690069604150053797, guid: 81a7f60869a3742a6bdcd9f2beeaf2c9, type: 3}
 --- !u!222 &2589360784383346353
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5251,7 +5249,6 @@ MonoBehaviour:
   statType: 4
   statName: {fileID: 6828613963121704845}
   statValue: {fileID: 5012591562098422927}
-  playerStats: {fileID: 3690069604150053797, guid: 81a7f60869a3742a6bdcd9f2beeaf2c9, type: 3}
 --- !u!222 &3689793959226528937
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6296,6 +6293,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameOverManager
   gameOverPanel: {fileID: 1598058492535069801}
   resultText: {fileID: 6917579888665790365}
+  waitSecondsDead: 1
   mainMenuSceneName: Mainscene
 --- !u!1 &3759974956991822356
 GameObject:
@@ -12288,7 +12286,6 @@ MonoBehaviour:
   statType: 6
   statName: {fileID: 8534803212284021931}
   statValue: {fileID: 3204460490931379894}
-  playerStats: {fileID: 3690069604150053797, guid: 81a7f60869a3742a6bdcd9f2beeaf2c9, type: 3}
 --- !u!222 &4108725412246325332
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -14160,7 +14157,6 @@ MonoBehaviour:
   statType: 0
   statName: {fileID: 5171521901594399625}
   statValue: {fileID: 5106372522550914444}
-  playerStats: {fileID: 3690069604150053797, guid: 81a7f60869a3742a6bdcd9f2beeaf2c9, type: 3}
 --- !u!222 &4838090750826313326
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -15331,7 +15327,6 @@ MonoBehaviour:
   statType: 5
   statName: {fileID: 2141767912768424911}
   statValue: {fileID: 6654784082441569718}
-  playerStats: {fileID: 3690069604150053797, guid: 81a7f60869a3742a6bdcd9f2beeaf2c9, type: 3}
 --- !u!222 &3314510181376638391
 CanvasRenderer:
   m_ObjectHideFlags: 0
