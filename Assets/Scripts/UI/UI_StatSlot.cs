@@ -47,19 +47,19 @@ public class UI_StatSlot : MonoBehaviour
                 value = playerStats.GetMaxHP();
                 break;
             case StatType.Damage:
-                value = playerStats.GetFinalDamage(); // Get base damage without crit
+                value = playerStats.damage.GetValue(); // Get base damage without crit
                 break;
             case StatType.CritChance:
-                value = Mathf.Clamp(playerStats.GetCritChance(), 0, 100);
+                value = Mathf.Clamp(playerStats.critChance.GetValue(), 0, 100);
                 break;
             case StatType.CritPower:
-                value = playerStats.GetCritPower() * 100;
+                value = playerStats.critPower.GetValue() * 100;
                 break;
             case StatType.ArmorReduction:
                 value = playerStats.GetArmorMitigation() * 100; // Convert to percentage
                 break;
             case StatType.Armor:
-                value = playerStats.GetArmor();
+                value = playerStats.armor.GetValue();
                 break;
         }
         statValue.text = value.ToString("F1"); // Format to 1 decimal place

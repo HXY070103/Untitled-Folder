@@ -99,7 +99,6 @@ public class EnemyBoss : Enemy {
     }
 
     public override void SpecialAttack() {
-        base.SpecialAttack();
 
         spellCastActions[Random.Range(0, spellCastActions.Count)]();
     }
@@ -109,6 +108,7 @@ public class EnemyBoss : Enemy {
     }
 
     private void StartEnergyWave() {
+        sfx?.PlaySpecialAttack2();
         GameObject energyWave = 
             Instantiate(energyWavePrefab, energyWaveStartPoint.position, Quaternion.identity);
         energyWave.GetComponent<EnemyBossEnergyWave>().SetUpEnergyWave(facingDir * energyWaveSpeed, combat);
@@ -123,7 +123,7 @@ public class EnemyBoss : Enemy {
         if (spellCastCo != null) {
             StopCoroutine(spellCastCo);
         }
-
+        sfx?.PlaySpecialAttack1();
         spellCastCo = StartCoroutine(SpellCastCo());
     }
 

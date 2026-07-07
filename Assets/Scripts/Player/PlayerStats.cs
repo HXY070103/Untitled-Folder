@@ -5,9 +5,6 @@ using UnityEngine;
 public class PlayerStats : EntityStats, ISaveable {
     [Header("Skill")]
     public Stat skillEffect;
-    private float level2Skill = 1f;
-    private float level6Skill = 1f;
-    private float levelFullSkill = 1f;
 
     [Header("Upgrade info")]
 
@@ -23,49 +20,7 @@ public class PlayerStats : EntityStats, ISaveable {
     public List<AttributeUpgrade> ObtainAttributeUpgrades => obtainAttributeUpgrades;
 
     public float GetSkillEffect() {
-        return skillEffect.GetValue() * level2Skill;
-    }
-
-    public override float GetMaxHP()
-    {
-        return maxHP.GetValue() * level6Skill * levelFullSkill;
-    }
-    public float GetFinalDamage()
-    {
-        return damage.GetValue() * level6Skill * levelFullSkill;
-    }
-    public float GetCritPower()
-    {
-        return critPower.GetValue() * level6Skill * levelFullSkill;
-    }
-    public float GetCritChance()
-    {
-        return critChance.GetValue() * level6Skill * levelFullSkill;
-    }
-    public float GetArmor()
-    {
-        return armor.GetValue() * level6Skill * levelFullSkill;
-    }
-    public override Damage GetDamage() {
-        float chance = Mathf.Clamp(GetCritChance(), 0, 100);
-        bool isCrit = Random.Range(0, 100) < chance;
-        float finalDamage = isCrit ? GetFinalDamage() * GetCritPower() : GetFinalDamage();
-
-        if (finalDamage < 5) {
-            finalDamage = 5;
-        }
-
-        return new Damage(finalDamage, isCrit);
-    }
-
-    public override float GetArmorMitigation() {
-        float finalArmor = GetArmor();
-
-        if (finalArmor < 0) {
-            finalArmor = 0;
-        }
-
-        return finalArmor / (finalArmor + 100);
+        return skillEffect.GetValue();
     }
 
     private void Awake() {
@@ -134,16 +89,24 @@ public class PlayerStats : EntityStats, ISaveable {
 
     public void ReachLevel2Skill()
     {
-        level2Skill = 1.2f;
+        skillEffect.AddMultiplier(1.2f, "Level2Skill");
     }
 
     public void ReachLevel6Skill()
     {
-        level6Skill = 1.1f;
+        maxHP.AddMultiplier(1.1f, "Level6Skill");
+        damage.AddMultiplier(1.1f, "Level6Skill");
+        critChance.AddMultiplier(1.1f, "Level6Skill");
+        critPower.AddMultiplier(1.1f, "Level6Skill");
+        armor.AddMultiplier(1.1f, "Level6Skill");
     }
     public void ReachFullLevel()
     {
-        levelFullSkill = 1.2f;
+        maxHP.AddMultiplier(1.2f, "LevelFullSkill");
+        damage.AddMultiplier(1.2f, "LevelFullSkill");
+        critChance.AddMultiplier(1.2f, "LevelFullSkill");
+        critPower.AddMultiplier(1.2f, "LevelFullSkill");
+        armor.AddMultiplier(1.2f, "LevelFullSkill");
     }
 
     public void LoadData(GameData data)

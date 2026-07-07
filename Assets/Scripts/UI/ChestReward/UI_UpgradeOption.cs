@@ -64,6 +64,7 @@ public class UI_UpgradeOption : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     private void OnClick()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (currentOption == null)
             return;
         button.interactable = false;

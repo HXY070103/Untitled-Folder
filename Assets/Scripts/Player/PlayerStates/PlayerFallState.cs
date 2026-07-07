@@ -12,6 +12,7 @@ public class PlayerFallState : PlayerAirState {
         base.Update();
 
         if (player.groundDetected) {
+            player.sfx?.PlayJumpland();
             stateMachine.ChangeState(player.idleState);
         }
 

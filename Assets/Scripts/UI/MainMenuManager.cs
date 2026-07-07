@@ -55,6 +55,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnNewGameButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         GameData data = dataHandler.LoadData();
 
         bool hasUnfinishedGame = data != null && data.isGameInProgess;
@@ -74,11 +75,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnConfirmNewGameButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         StartNewGame();
     }
 
     public void OnCancelNewGameButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (confirmNewGamePanel != null)
         {
             confirmNewGamePanel.SetActive(false);
@@ -116,6 +119,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnContinueGameButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         GameData data = dataHandler.LoadData();
 
         if (data == null)
@@ -151,6 +155,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnTutorialButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (GameManager.instance != null)
         {
             GameManager.instance.LoadScene(tutorialSceneName);
@@ -163,6 +168,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnSettingButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (settingPanel != null)
         {
             settingPanel.SetActive(true);
@@ -171,6 +177,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnCloseSettingButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (settingPanel != null)
         {
             settingPanel.SetActive(false);
@@ -179,6 +186,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnExitButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

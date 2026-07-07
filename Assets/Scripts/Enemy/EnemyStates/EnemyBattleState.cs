@@ -79,6 +79,7 @@ public class EnemyBattleState : EnemyState {
 
             float xVelocity = DirectionToPlayer() * enemy.battleMoveSpeed;
             enemy.Move(xVelocity, rb.linearVelocity.y);
+            enemy.sfx?.TryPlayMove(0.2f);
         }
     }
 

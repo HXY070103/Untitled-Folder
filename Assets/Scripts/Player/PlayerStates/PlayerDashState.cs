@@ -12,6 +12,7 @@ public class PlayerDashState : PlayerState {
 
         player.UpdateDashTimer();
         vfx.DoImageEchoEffect(player.dashDuration);
+        player.sfx?.PlayDash();
 
         stateTimer = player.dashDuration;
         originalGravityScale = rb.gravityScale;

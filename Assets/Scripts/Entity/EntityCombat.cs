@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class EntityCombat : MonoBehaviour {
     private EntityVFX vfx;
+    private EntitySFX sfx;
     private EntityStats stats;
 
     [Header("Target detection info")]
@@ -11,12 +12,19 @@ public class EntityCombat : MonoBehaviour {
 
     private void Awake() {
         vfx = GetComponent<EntityVFX>();
+        sfx = GetComponent<EntitySFX>();
         stats = GetComponent<EntityStats>();
     }
 
     public virtual void PerformAttack() {
+        bool attackHit = false;
         foreach (var target in GetDetectedColliders(whatIsTarget)) {
             PerformAttackOnTarget(target.transform);
+            attackHit = true;
+        }
+        if (!attackHit)
+        {
+            sfx?.PlayAttackMiss();
         }
     } 
 
@@ -30,6 +38,7 @@ public class EntityCombat : MonoBehaviour {
         Damage damage = stats.GetDamage();
         damageable.TakeDamage(damage, transform);
         vfx.CreateOnHitVFX(target.transform, damage.isCrit);
+        sfx?.PlayAttackHit();
     }
 
     protected Collider2D[] GetDetectedColliders(LayerMask whatToDetect) {

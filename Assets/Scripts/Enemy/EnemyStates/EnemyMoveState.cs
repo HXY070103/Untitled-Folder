@@ -17,6 +17,7 @@ public class EnemyMoveState : EnemyGroundedState {
 
         float xVelocity = enemy.facingDir * enemy.moveSpeed;
         enemy.Move(xVelocity, rb.linearVelocity.y);
+        enemy.sfx?.TryPlayMove();
 
         if (!enemy.groundDetected || enemy.wallDetected) {
             stateMachine.ChangeState(enemy.idleState);
