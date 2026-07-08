@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -12,6 +12,12 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioSource sfxSource;
 
     private Transform player;
+    private AudioClip lastMusic = null;
+    private string currentBGMGroupName;
+    private Coroutine currentBGMCo;
+
+    [Space]
+    [SerializeField] private bool shouldPlayBGM;
 
     private void Awake()
     {
@@ -22,6 +28,96 @@ public class AudioManager : MonoBehaviour
         } 
         instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Update()
+    {
+        if (!bgmSource.isPlaying && shouldPlayBGM)
+        {
+            if (!string.IsNullOrEmpty(currentBGMGroupName))
+            {
+                NextBGM(currentBGMGroupName);
+            }
+        }
+
+        if (bgmSource.isPlaying && !shouldPlayBGM)
+        {
+            StopBGM();
+        }
+    }
+
+    public void StartBGM(string musicGroup)
+    {
+        shouldPlayBGM = true;
+        if (currentBGMGroupName == musicGroup)
+        {
+            return;
+        }
+        NextBGM(musicGroup);
+    }
+
+    public void NextBGM(string musicGroup)
+    {
+        shouldPlayBGM = true;
+        currentBGMGroupName = musicGroup;
+        if (currentBGMCo != null)
+        {
+            StopCoroutine(currentBGMCo);
+        }
+        currentBGMCo = StartCoroutine(SwitchMusicCo(musicGroup));
+    }
+
+    public void StopBGM()
+    {
+        shouldPlayBGM = false;
+        StartCoroutine(FadeVolumeCo(bgmSource, 0f, 1f));
+        if (currentBGMCo != null)
+        {
+            StopCoroutine(currentBGMCo);
+        }
+    }
+
+    private IEnumerator SwitchMusicCo(string musicGroup)
+    {
+        AudioClipData data = audioDatabase.GetAudioClipData(musicGroup);
+        if (data == null || data.clips.Count == 0)
+        {
+            Debug.Log("No audio in the group" + musicGroup);
+            yield break;
+        } 
+        AudioClip nextMusic = data.GetRandomClip();
+        if (data.clips.Count > 1)
+        {
+            while (nextMusic == lastMusic)
+            {
+                nextMusic = data.GetRandomClip();
+            }
+        }
+        if (bgmSource.isPlaying)
+        {
+            yield return FadeVolumeCo(bgmSource, 0f, 1f);
+        }
+
+        lastMusic = nextMusic;
+        bgmSource.clip = nextMusic;
+        bgmSource.volume = 0;
+        bgmSource.Play();
+
+        StartCoroutine(FadeVolumeCo(bgmSource, data.maxVolume, 1f));
+    }
+
+    private IEnumerator FadeVolumeCo(AudioSource audioSource, float targetVolume, float duration)
+    {
+        float time = 0f;
+        float startVolume = audioSource.volume;
+
+        while(time < duration)
+        {
+            time += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, targetVolume, time / duration);
+            yield return null;
+        }
+        audioSource.volume = targetVolume;
     }
 
     public void PlaySFX(string soundName, AudioSource sfxSource, float minDistanceToHear)
@@ -47,7 +143,7 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        float maxVolume = data.volume;
+        float maxVolume = data.maxVolume;
         float distance = Vector2.Distance(sfxSource.transform.position, player.position);
         float t = Mathf.Clamp01(1 - distance / minDistanceToHear);
 
@@ -71,7 +167,7 @@ public class AudioManager : MonoBehaviour
         }
         sfxSource.clip = clip;
         sfxSource.pitch = UnityEngine.Random.Range(0.95f, 1.1f);
-        sfxSource.volume = data.volume;
+        sfxSource.volume = data.maxVolume;
         sfxSource.PlayOneShot(clip);
     }
 

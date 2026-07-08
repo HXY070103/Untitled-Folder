@@ -1698,6 +1698,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UI_Options
   healthBarToggle: {fileID: 4009421274324358407}
+  audioMixer: {fileID: 24100000, guid: 5cdfaddeea5ae4026ab21e51d06a6e31, type: 2}
+  mixerMultiplier: 25
+  bgmSlider: {fileID: 7828924787445398124}
+  bgmParameter: BGMmixer
+  sfxSlider: {fileID: 5189825951985670879}
+  sfxParameter: sfxmixer
 --- !u!1 &1258173623835160515
 GameObject:
   m_ObjectHideFlags: 0
@@ -2269,13 +2275,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 755832043995714062}
   m_HandleRect: {fileID: 7442382093177542888}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.001
   m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0.606
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1121670105585118243}
+        m_TargetAssemblyTypeName: UI_Options, Assembly-CSharp
+        m_MethodName: SFXSliderValue
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1658254606731740912
 GameObject:
   m_ObjectHideFlags: 0
@@ -12697,13 +12715,25 @@ MonoBehaviour:
   m_FillRect: {fileID: 4982895595738445339}
   m_HandleRect: {fileID: 9043095777561348246}
   m_Direction: 0
-  m_MinValue: 0
+  m_MinValue: 0.001
   m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0.606
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1121670105585118243}
+        m_TargetAssemblyTypeName: UI_Options, Assembly-CSharp
+        m_MethodName: BGMSliderValue
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7794172898141887095
 GameObject:
   m_ObjectHideFlags: 0

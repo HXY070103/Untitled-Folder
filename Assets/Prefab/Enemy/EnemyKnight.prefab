@@ -222,7 +222,7 @@ AudioSource:
   m_GameObject: {fileID: 3452872677819416400}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 7484521714579760495, guid: 5cdfaddeea5ae4026ab21e51d06a6e31, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -567,6 +567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3ac1dd798aa4e8fba61d16e92181c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySFX
+  showDraw: 0
   attackHit: Knight_Attack
   attackMiss: Knight_Attack
   move: Person_Walk
