@@ -101,6 +101,10 @@ MonoBehaviour:
   increasedSkillDuration: 4
   recoverSpeedDelay: 1
   bonusDuration: 1
+  shockwavePrefab: {fileID: 6733579660901800008, guid: 591a11b8c1d1140baa78a5a3c65a488e, type: 3}
+  shockwaveDamage: 20
+  shockwaveDamageRange: 3
+  shockwaveDestoryDelay: 1
 --- !u!114 &227365949848170611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1132,6 +1136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cce91f91697054a46a1469af6e4d834a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSFX
+  showDraw: 0
   attackHit: Player_AttackHit
   attackMiss: Player_AttackMiss
   move: Player_Move
