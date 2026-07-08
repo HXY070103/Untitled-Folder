@@ -1,17 +1,17 @@
 using UnityEngine;
 
 public class Domain : MonoBehaviour {
-    private SkillTimeControl domainManager;
+    private SkillTimeControl skill;
     private Vector3 targetScale;
     private bool isShrinking;
  
-    public void SetUpDomain(SkillTimeControl domainManager) {
-        this.domainManager = domainManager;
-        targetScale = Vector3.one * domainManager.GetMaxSize();
+    public void SetUpDomain(SkillTimeControl skill) {
+        this.skill = skill;
+        targetScale = Vector3.one * skill.GetMaxSize();
         isShrinking = false;
 
-        if (domainManager.Unlocked("Synchronized Field")) {
-            transform.SetParent(domainManager.transform);
+        if (skill.Unlocked("Synchronized Field")) {
+            transform.SetParent(skill.transform);
         }
     }
     
@@ -29,7 +29,7 @@ public class Domain : MonoBehaviour {
 
         if (sizeDifference > 0.1f) {
             transform.localScale = Vector3.Lerp(
-                transform.localScale, targetScale, domainManager.expandSpeed * Time.deltaTime);
+                transform.localScale, targetScale, skill.expandSpeed * Time.deltaTime);
         }
 
         if (isShrinking && sizeDifference < 0.1f) {
@@ -67,43 +67,43 @@ public class Domain : MonoBehaviour {
 
     private void StartSlowDown(Collider2D collision) {
         ISlowable target = collision.GetComponent<ISlowable>();
-        target?.SlowDown(domainManager.GetSlowDownPercentage());
+        target?.SlowDown(skill.GetSlowDownPercentage());
     }
 
     private void EndSlowDown(Collider2D collision) {
         ISlowable target = collision.GetComponent<ISlowable>();
 
-        if (domainManager.Unlocked("Synchronized Field+")) {
-            target?.RecoverSpeedWithDelay(domainManager.recoverSpeedDelay);
+        if (skill.Unlocked("Synchronized Field+")) {
+            target?.RecoverSpeedWithDelay(skill.recoverSpeedDelay);
         } else {
             target?.RecoverSpeed();
         }
     }
 
     private void StartTemporalCorrosionEffect(EnemySkillEffectReceiver receiver) {
-        if (!domainManager.Unlocked("Temporal Corrosion")) {
+        if (!skill.Unlocked("Temporal Corrosion")) {
             return;
         }
 
         SkillEffectBase effect;
 
-        if (domainManager.Unlocked("Temporal Corrosion+")) {
-            int numOfDamage = (int) (domainManager.GetSkillDuration() / domainManager.damageInterval);
-            float burstDamage = domainManager.damage * numOfDamage;
+        if (skill.Unlocked("Temporal Corrosion+")) {
+            int numOfDamage = (int) (skill.GetSkillDuration() / skill.damageInterval);
+            float burstDamage = skill.damage * numOfDamage;
             effect = new BurstDamage("BurstDamage", burstDamage);
         } else {
-            effect = new Dot("Dot", domainManager.damage, domainManager.damageInterval);
+            effect = new Dot("Dot", skill.damage, skill.damageInterval);
         }
 
         receiver.ApplySkillEffect(effect);
     }
 
     private void EndTemporalCorrosionEffect(EnemySkillEffectReceiver receiver) {
-        if (!domainManager.Unlocked("Temporal Corrosion")) {
+        if (!skill.Unlocked("Temporal Corrosion")) {
             return;
         }
 
-        if (domainManager.Unlocked("Temporal Corrosion+")) {
+        if (skill.Unlocked("Temporal Corrosion+")) {
             receiver.RemoveSkillEffect("BurstDamage");
         } else {
             receiver.RemoveSkillEffect("Dot");
@@ -111,23 +111,23 @@ public class Domain : MonoBehaviour {
     }
 
     private void StartVulnerableFieldEffect(EnemySkillEffectReceiver receiver) {
-        if (domainManager.Unlocked("Vulnerable Field")) {
-            SkillEffectBase effect1 = new Vulnerability("Vulnerability", domainManager.damageMultiplier);    
+        if (skill.Unlocked("Vulnerable Field")) {
+            SkillEffectBase effect1 = new Vulnerability("Vulnerability", skill.damageMultiplier);    
             receiver.ApplySkillEffect(effect1);
         }
 
-        if (domainManager.Unlocked("Vulnerable Field+")) {
+        if (skill.Unlocked("Vulnerable Field+")) {
             SkillEffectBase effect2 = new ArmorBreak("ArmorBreak");    
             receiver.ApplySkillEffect(effect2);
         }
     }
 
     private void EndVulnerableFieldEffect(EnemySkillEffectReceiver receiver) {
-        if (domainManager.Unlocked("Vulnerable Field")) {
+        if (skill.Unlocked("Vulnerable Field")) {
             receiver.RemoveSkillEffect("Vulnerability");
         }
 
-        if (domainManager.Unlocked("Vulnerable Field+")) {   
+        if (skill.Unlocked("Vulnerable Field+")) {   
             receiver.RemoveSkillEffect("ArmorBreak");
         }
     }

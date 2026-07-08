@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SkillTimeControl : SkillBase {
@@ -25,6 +26,10 @@ public class SkillTimeControl : SkillBase {
     
     [Header("Hunting time info")]
     [SerializeField] private float bonusDuration = 1.5f;
+    [SerializeField] private GameObject shockwavePrefab;
+    public float shockwaveDamage = 20;
+    public float shockwaveDamageRange = 3;
+    public float shockwaveDestoryDelay = 1;
 
 
     public float GetMaxSize() {
@@ -56,15 +61,15 @@ public class SkillTimeControl : SkillBase {
 
         CreateDomain();
 
-        if (Unlocked("Hunting Time")) {
-            EnemyHealth.OnEnemyDeath += ExtendSkillDuration;
-        }
+        EnemyHealth.OnEnemyKilled += ApplyHuntingTimeEffect;
     }
 
     protected override void EndSkill() {
         base.EndSkill();
 
         DestroyDomain();
+
+        EnemyHealth.OnEnemyKilled -= ApplyHuntingTimeEffect;
     }
 
     private void CreateDomain() {
@@ -80,7 +85,15 @@ public class SkillTimeControl : SkillBase {
         domain.GetComponent<Domain>().ShrinkDomain();
     }
 
-    private void ExtendSkillDuration() {
-        remainingDuration += bonusDuration;
+    private void ApplyHuntingTimeEffect(Enemy enemy) {
+        if (Unlocked("Hunting Time")) {
+            remainingDuration += bonusDuration;
+        }
+
+        if (Unlocked("Hunting Time+")) {
+            GameObject shockwave = 
+                Instantiate(shockwavePrefab, enemy.transform.position, Quaternion.identity);
+            shockwave.GetComponent<Shockwave>().SetUpShockwave(this);
+        }
     }
 }

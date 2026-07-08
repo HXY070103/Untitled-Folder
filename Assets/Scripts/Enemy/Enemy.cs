@@ -138,21 +138,21 @@ public class Enemy : Entity, ICounterable {
 
     public void TryToEnterBattleState(Transform player) {
         if (stateMachine.currentState == idleState || stateMachine.currentState == moveState) {
-            EnterBattleStateWithDelay(player);
+            this.player = player;
+            EnterBattleStateWithDelay();
         }
     }
 
-    private void EnterBattleStateWithDelay(Transform player) {
+    private void EnterBattleStateWithDelay() {
         if (enterBattleStateWithDelayCo != null) {
             StopCoroutine(enterBattleStateWithDelayCo);
         }
 
-        enterBattleStateWithDelayCo = StartCoroutine(EnterBattleStateWithDelayCo(player));
+        enterBattleStateWithDelayCo = StartCoroutine(EnterBattleStateWithDelayCo());
     }
 
-    private IEnumerator EnterBattleStateWithDelayCo(Transform player) {
+    private IEnumerator EnterBattleStateWithDelayCo() {
         yield return new WaitForEndOfFrame();
-        this.player = player;
         stateMachine.ChangeState(battleState);
     }
 

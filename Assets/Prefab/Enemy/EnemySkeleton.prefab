@@ -631,6 +631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce3ac1dd798aa4e8fba61d16e92181c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySFX
+  showDraw: 0
   attackHit: Skeleton_Attack
   attackMiss: Skeleton_Attack
   move: Person_Walk

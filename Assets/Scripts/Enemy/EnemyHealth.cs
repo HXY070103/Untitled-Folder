@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemyHealth : EntityHealth {
     public static event Action<float> OnDamageTaken;
     public static event Action OnEnemyDeath;
+    public static event Action<Enemy> OnEnemyKilled;
 
     private Enemy enemy;
 
@@ -18,6 +19,7 @@ public class EnemyHealth : EntityHealth {
 
         if (isDead) {
             OnEnemyDeath?.Invoke();
+            OnEnemyKilled?.Invoke(enemy);
         }
 
         float finalDamage = CalculateFinalDamage(damage);

@@ -49,15 +49,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
             ReduceHP(currentHP);
         }
     }
-
-    public void StartDeathPrevention(float reviveHPMultiplier) {
-        canRevival = true;
-        this.reviveHPMultiplier = reviveHPMultiplier;
-    }
-
-    public void StopDeathPrevention() {
-        canRevival = false;
-    }
  
     public virtual void TakeDamage(Damage damage, Transform damageDealer) {
         if (isDead) {
@@ -100,6 +91,10 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     public void Healing(float healingHP) {
+        if (isDead) {
+            return;
+        }
+
         currentHP += healingHP;
 
         if (currentHP > stats.GetMaxHP()) {
@@ -114,6 +109,10 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     public void ReduceHP(float damage) {
+        if (isDead) {
+            return;
+        }
+
         currentHP -= damage * damageTakenMultiplier;
 
         if (currentHP <= 0.5) {
@@ -126,14 +125,27 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     private void Die() {
         if (canRevival) {
-            float reviveHP = stats.GetMaxHP() * reviveHPMultiplier;
-            Healing(reviveHP);
-            canRevival = false;
+            Revival();
             return;
         }
 
         isDead = true;
         entity.EntityDeath();
+    }
+
+    public void StartDeathPrevention(float reviveHPMultiplier) {
+        canRevival = true;
+        this.reviveHPMultiplier = reviveHPMultiplier;
+    }
+
+    public void StopDeathPrevention() {
+        canRevival = false;
+    }
+
+    private void Revival() {
+        currentHP = stats.GetMaxHP() * reviveHPMultiplier;
+        canRevival = false;
+        OnHealthUpdate?.Invoke();
     }
 
     private void UpdateHealthBar() {
