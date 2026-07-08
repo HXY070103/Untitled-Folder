@@ -8,6 +8,10 @@ public class AudioDatabaseSO : ScriptableObject
     public List<AudioClipData> enemies;
     public List<AudioClipData> uiAudio;
 
+    [Header("BGM")]
+    public List<AudioClipData> mainMenu;
+    public List<AudioClipData> level;
+
     private Dictionary<string, AudioClipData> clipCollection;
 
     private void OnEnable()
@@ -17,6 +21,8 @@ public class AudioDatabaseSO : ScriptableObject
         AddToCollection(player);
         AddToCollection(enemies);
         AddToCollection(uiAudio);
+        AddToCollection(mainMenu);
+        AddToCollection(level);
     }
 
     public AudioClipData GetAudioClipData(string groupName)
@@ -43,7 +49,7 @@ public class AudioClipData
     public string audioName;
     public List<AudioClip> clips = new List<AudioClip>();
     [Range(0f, 1f)]
-    public float volume = 1f;
+    public float maxVolume = 1f;
 
     public AudioClip GetRandomClip()
     {

@@ -2,7 +2,6 @@ using Unity.VectorGraphics;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
-using NUnit.Framework;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -28,6 +27,37 @@ public class GameManager : MonoBehaviour
         }
         instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoad;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoad;
+    }
+
+    private void OnSceneLoad(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        string BGMName = GetBGMNameByScene(scene.name);
+        AudioManager.instance.StartBGM(BGMName);
+    }
+
+    private string GetBGMNameByScene(string name)
+    {
+        if (name.Equals("MainScene"))
+        {
+            return "MainMenuBGM";
+        }
+        if (name.Contains("Boss") || name.Contains("Elite"))
+        {
+            return "EliteBGM";
+        } else
+        {
+            return "NormalBGM";
+        }
     }
 
     // change scene for mainmenu, tutorial...

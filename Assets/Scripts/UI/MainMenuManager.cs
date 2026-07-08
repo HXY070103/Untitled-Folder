@@ -13,6 +13,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject confirmNewGamePanel;
     [SerializeField] private GameObject settingPanel;
+    [SerializeField] private UI_Options uI_Options;
 
     [Header("Save")]
     [SerializeField] private string saveFileName = "saveData.json";
@@ -36,6 +37,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
+        uI_Options.LoadUpVolume();
         RefreshContinueButton();
     }
 

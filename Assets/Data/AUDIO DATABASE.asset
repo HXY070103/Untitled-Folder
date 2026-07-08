@@ -18,84 +18,98 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 2a7caa265c86e45ea9d03cde84701d8b, type: 3}
     - {fileID: 8300000, guid: 883f86d7bbcb84a4194aeda5ab7b33aa, type: 3}
     - {fileID: 8300000, guid: 612066553057c4720aacd002c9537b8e, type: 3}
-    volume: 0.4
+    maxVolume: 1
   - audioName: Player_AttackMiss
     clips:
     - {fileID: 8300000, guid: 83e820cdc7ea341e88f8a43966742579, type: 3}
     - {fileID: 8300000, guid: 64cb6cebe89454a7bb3ddd5b883c3352, type: 3}
     - {fileID: 8300000, guid: 65b3947484ed44d379d11265c9b1e223, type: 3}
-    volume: 0.5
+    maxVolume: 1
   - audioName: Player_Move
     clips:
     - {fileID: 8300000, guid: f62030f7f99834ba68b8e2bd257febbf, type: 3}
     - {fileID: 8300000, guid: 23d18991f66fe42128c44c227b6eab6b, type: 3}
     - {fileID: 8300000, guid: c08989e71e5614681b5e02c25bb4e842, type: 3}
-    volume: 0.6
+    maxVolume: 1
   - audioName: Player_Dash
     clips:
     - {fileID: 8300000, guid: 951dd495e2e5c4eaca85783a93296054, type: 3}
     - {fileID: 8300000, guid: 234b1e5cd1aa74741acc8695d34277f9, type: 3}
-    volume: 0.25
+    maxVolume: 1
   - audioName: Player_Jump
     clips:
     - {fileID: 8300000, guid: 2385c603289194b7baef98fad1690cbe, type: 3}
     - {fileID: 8300000, guid: 87a3831d6472345fd915f24ac7d04ce1, type: 3}
     - {fileID: 8300000, guid: 49a78e55c941048d5b790a973135d5a3, type: 3}
-    volume: 0.25
+    maxVolume: 1
   - audioName: Player_JumpLand
     clips:
     - {fileID: 8300000, guid: daef3dcd94fa84d75978fd6b86cf0513, type: 3}
     - {fileID: 8300000, guid: f72d103c0b4ec4c6894a8175851796dc, type: 3}
-    volume: 0.15
+    maxVolume: 1
   - audioName: Player_Death
     clips:
     - {fileID: 8300000, guid: d085cceb1fbd047e0860321089db9895, type: 3}
-    volume: 0.15
+    maxVolume: 1
   enemies:
   - audioName: Skeleton_Attack
     clips:
     - {fileID: 8300000, guid: 90d9a00c3b28d4a21bde5a738c1fff01, type: 3}
-    volume: 0.1
+    maxVolume: 1
   - audioName: Person_Walk
     clips:
     - {fileID: 8300000, guid: 7c3d06abcdbf04e65ba54a7fac2d7de4, type: 3}
     - {fileID: 8300000, guid: f37a46fdbf6be44658b8716b1a043a27, type: 3}
     - {fileID: 8300000, guid: 156fc4c608a6b4cbf8ac6e32f06f19bb, type: 3}
-    volume: 0.5
+    maxVolume: 1
   - audioName: Elite_Death
     clips:
     - {fileID: 8300000, guid: 9c38df697e3f34e93b1fcca11237d578, type: 3}
-    volume: 0.5
+    maxVolume: 1
   - audioName: DarkKnight_Attack
     clips:
     - {fileID: 8300000, guid: 60ac7cb4415d74817907901202422183, type: 3}
-    volume: 0.5
+    maxVolume: 1
   - audioName: ArcherElf_Attack
     clips:
     - {fileID: 8300000, guid: 033cefb4a27a244bf81498063b00de88, type: 3}
-    volume: 0.5
+    maxVolume: 1
   - audioName: Boss_Attack
     clips:
     - {fileID: 8300000, guid: 634a3edcf31ec45b9b68f58044a748a0, type: 3}
     - {fileID: 8300000, guid: f262ecc8e210a488fa793f8bcb1f6ad8, type: 3}
     - {fileID: 8300000, guid: 0e4b49a2503e34e97be89abe269c8671, type: 3}
-    volume: 0.5
+    maxVolume: 1
   - audioName: Special_Attack
     clips:
     - {fileID: 8300000, guid: 425b2cc6e42f445a78ccbfa64d8ab2aa, type: 3}
-    volume: 0.5
+    maxVolume: 1
   - audioName: Knight_Attack
     clips:
     - {fileID: 8300000, guid: 60ac7cb4415d74817907901202422183, type: 3}
-    volume: 0.5
+    maxVolume: 1
   - audioName: Mage_Attack
     clips:
     - {fileID: 8300000, guid: 634a3edcf31ec45b9b68f58044a748a0, type: 3}
     - {fileID: 8300000, guid: f262ecc8e210a488fa793f8bcb1f6ad8, type: 3}
     - {fileID: 8300000, guid: 0e4b49a2503e34e97be89abe269c8671, type: 3}
-    volume: 0.5
+    maxVolume: 1
   uiAudio:
   - audioName: Button_Click
     clips:
     - {fileID: 8300000, guid: 6c07b117d1a7046dfbdb7cf8a1e1402c, type: 3}
-    volume: 0.3
+    maxVolume: 1
+  mainMenu:
+  - audioName: MainMenuBGM
+    clips:
+    - {fileID: 8300000, guid: 3498be3ea7024432e96c3919c734b779, type: 3}
+    maxVolume: 0.7
+  level:
+  - audioName: NormalBGM
+    clips:
+    - {fileID: 8300000, guid: 3498be3ea7024432e96c3919c734b779, type: 3}
+    maxVolume: 0.7
+  - audioName: EliteBGM
+    clips:
+    - {fileID: 8300000, guid: 99e70826162d241228f676596483a38d, type: 3}
+    maxVolume: 0.7

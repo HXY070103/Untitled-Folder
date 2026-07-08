@@ -40,6 +40,7 @@ public class UI_UpgradePanel : MonoBehaviour
 
     public void ShowSkillDetails()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         titleText.text = "Skill Details";
         descriptionText.text = "Current skill and its Evolutions:";
 
@@ -60,6 +61,7 @@ public class UI_UpgradePanel : MonoBehaviour
 
     public void ShowSkillUpgrades()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         titleText.text = "Skill Upgrades";
         descriptionText.text = "Current skill upgrades:";
 
@@ -121,6 +123,7 @@ public class UI_UpgradePanel : MonoBehaviour
 
     public void ShowAttributeUpgrades()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         titleText.text = "Attribute Upgrades";
         descriptionText.text = "Current attribute upgrades:";
 
