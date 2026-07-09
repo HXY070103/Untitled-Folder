@@ -118,7 +118,7 @@ public class Player : Entity {
         transform.position = position;
     }
 
-    public void IncreaseAttackSpeed(float attackAnimSpeedMultiplier) {
+    public void SetAttackSpeed(float attackAnimSpeedMultiplier) {
         this.attackAnimSpeedMultiplier = attackAnimSpeedMultiplier;
     }
 

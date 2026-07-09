@@ -5,12 +5,11 @@ using UnityEngine;
 public class SkillTimeControl : SkillBase {
     [Header("Skill info")]
     [SerializeField] private GameObject domainPrefab;
-    private GameObject domain;
-
-    [Header("Domain info")]
     [SerializeField] private float maxSize = 20;
     [SerializeField] private float slowDownPercentage = 0.6f;
     public float expandSpeed = 2;
+
+    private GameObject domain;
 
     [Header("Temporal corrosion info")]
     public float damage = 5;
@@ -30,7 +29,6 @@ public class SkillTimeControl : SkillBase {
     public float shockwaveDamage = 20;
     public float shockwaveDamageRange = 3;
     public float shockwaveDestoryDelay = 1;
-
 
     public float GetMaxSize() {
         if (Unlocked("Synchronized Field")) {
