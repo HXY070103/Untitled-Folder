@@ -20,18 +20,17 @@ public class EnemyHealth : EntityHealth {
         if (isDead) {
             OnEnemyDeath?.Invoke();
             OnEnemyKilled?.Invoke(enemy);
+            return;
         }
-
-        float finalDamage = CalculateFinalDamage(damage);
-        OnDamageTaken?.Invoke(finalDamage);
 
         if (damageDealer.GetComponent<Player>() != null) {
             enemy.TryToEnterBattleState(damageDealer);
         }
     }
 
-    private float CalculateFinalDamage(Damage damage) {
-        float mitigation = stats.GetArmorMitigation();
-        return damage.value * (1 - mitigation);
+    protected override float CalculateReducedHP(Damage damage) {
+        float reducedHP = base.CalculateReducedHP(damage);
+        OnDamageTaken?.Invoke(reducedHP);
+        return reducedHP;
     }
 }
