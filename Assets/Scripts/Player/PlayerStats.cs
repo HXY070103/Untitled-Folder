@@ -109,6 +109,27 @@ public class PlayerStats : EntityStats, ISaveable {
         attackSpeed.AddMultiplier(levelFullSkill, "LevelFullSkill");
     }
 
+    public void RestoreSkillPhaseBonuses(bool level2Unlocked, bool level6Unlocked, bool fullUnlocked)
+    {
+        skillEffect.RemoveModifier("Level2Skill");
+
+        maxHP.RemoveModifier("Level6Skill");
+        damage.RemoveModifier("Level6Skill");
+        critChance.RemoveModifier("Level6Skill");
+        critPower.RemoveModifier("Level6Skill");
+        armor.RemoveModifier("Level6Skill");
+
+        maxHP.RemoveModifier("LevelFullSkill");
+        damage.RemoveModifier("LevelFullSkill");
+        critChance.RemoveModifier("LevelFullSkill");
+        critPower.RemoveModifier("LevelFullSkill");
+        armor.RemoveModifier("LevelFullSkill");
+
+        if (level2Unlocked) ReachLevel2Skill();
+        if (level6Unlocked) ReachLevel6Skill();
+        if (fullUnlocked) ReachFullLevel();
+    }
+
     public void LoadData(GameData data)
     {
         if (upgrades == null)
