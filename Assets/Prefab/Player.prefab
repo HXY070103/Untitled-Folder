@@ -84,6 +84,19 @@ MonoBehaviour:
   - upgradeName: Stasis Field
     description: Enemies inside the field stop moving and acting.
     unlocked: 0
+  skillPhaseUpgrades:
+  - upgradeName: 2 Upgrades
+    description: Increase 20% of skill effect
+    unlocked: 0
+  - upgradeName: 4 Upgrades
+    description: Using 2 times of skill will only increase 1 skill decay
+    unlocked: 0
+  - upgradeName: 6 Upgrades
+    description: All major attribute (except skill effect) increase 10%
+    unlocked: 0
+  - upgradeName: Full Upgrades
+    description: All major attribute (except skill effect) increase 20%
+    unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 6596648338181236841}
@@ -154,6 +167,19 @@ MonoBehaviour:
     description: If the player takes fatal damage while the skill is active, they
       immediately recover to 20% max health, but lose the ability to recover health
       after the skill ends.
+    unlocked: 0
+  skillPhaseUpgrades:
+  - upgradeName: 2 Upgrades
+    description: Increase 20% of skill effect
+    unlocked: 0
+  - upgradeName: 4 Upgrades
+    description: Using 2 times of skill will only increase 1 skill decay
+    unlocked: 0
+  - upgradeName: 6 Upgrades
+    description: All major attribute (except skill effect) increase 10%
+    unlocked: 0
+  - upgradeName: Full Upgrades
+    description: All major attribute (except skill effect) increase 20%
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
@@ -230,6 +256,19 @@ MonoBehaviour:
   - upgradeName: Chain Phantasm
     description: Killing an enemy with a heavy strike makes the player enter a short
       phase again.
+    unlocked: 0
+  skillPhaseUpgrades:
+  - upgradeName: 2 Upgrades
+    description: Increase 20% of skill effect
+    unlocked: 0
+  - upgradeName: 4 Upgrades
+    description: Using 2 times of skill will only increase 1 skill decay
+    unlocked: 0
+  - upgradeName: 6 Upgrades
+    description: All major attribute (except skill effect) increase 10%
+    unlocked: 0
+  - upgradeName: Full Upgrades
+    description: All major attribute (except skill effect) increase 20%
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0

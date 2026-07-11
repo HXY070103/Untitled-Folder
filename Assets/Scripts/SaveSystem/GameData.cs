@@ -30,6 +30,7 @@ public class GameData
    public float remainSkillColldown;
    public List<string> unlockedSkillUpgrades = new List<string>();
    public List<string> unlockedBetterUpgrades = new List<string>();
+   public List<string> unlockedSkillPhaseUpgrades = new List<string>();
 
    //attribute upgrades
    public List<AttributeUpgradeSaveData> attributeUpgrades = new List<AttributeUpgradeSaveData>();

@@ -14,6 +14,7 @@ public class SkillBase : MonoBehaviour{
     [Header("Skill Upgrades")]
     [SerializeField] protected List<SkillUpgradeDisplayData> upgrades = new List<SkillUpgradeDisplayData>();
     [SerializeField] protected List<SkillUpgradeDisplayData> betterUpgrades = new List<SkillUpgradeDisplayData>();
+    [SerializeField] protected List<SkillUpgradeDisplayData> skillPhaseUpgrades = new List<SkillUpgradeDisplayData>();
     [SerializeField] protected float[] decreaseRate;
     [SerializeField] protected int decreaseIndex;
     [SerializeField] protected PlayerSkillManager playerSkillManager;
@@ -25,6 +26,7 @@ public class SkillBase : MonoBehaviour{
     public string Description => description;
     public List<SkillUpgradeDisplayData> Upgrades => upgrades;
     public List<SkillUpgradeDisplayData> BetterUpgrades => betterUpgrades;
+    public List<SkillUpgradeDisplayData> SkillPhaseUpgrades => skillPhaseUpgrades;
 
     [Header("Basic skill info")]
     [SerializeField] private float cooldown = 3;
@@ -115,6 +117,12 @@ public class SkillBase : MonoBehaviour{
             }
         }
 
+        foreach (var upgrade in skillPhaseUpgrades) {
+            if (upgrade.upgradeName.Equals(upgradeName)) {
+                return upgrade.unlocked;
+            }
+        }
+
         return false;
     }
 
@@ -195,23 +203,39 @@ public class SkillBase : MonoBehaviour{
         Debug.Log("there is no upgrade");
     }
 
+    private void UnlockedSkillPhaseUpgrade(string upgradeName)
+    {
+        foreach (var upgrade in skillPhaseUpgrades)
+        {
+            if (upgrade.upgradeName.Equals(upgradeName))
+            {
+                upgrade.unlocked = true;
+                return;
+            }
+        }
+    }
+
     private void CheckIfNextPhase()
     {
         if (numOfUpgradesGet == 2)
         {
             stats.ReachLevel2Skill();
+            UnlockedSkillPhaseUpgrade("2 Upgrades");
         }
         if (numOfUpgradesGet == 4)
         {
             level4Skill = true;
+            UnlockedSkillPhaseUpgrade("4 Upgrades");
         }
         if (numOfUpgradesGet == 6)
         {
             stats.ReachLevel6Skill();
+            UnlockedSkillPhaseUpgrade("6 Upgrades");
         }
         if (numOfUpgradesGet == upgrades.Count + betterUpgrades.Count)
         {
             stats.ReachFullLevel();
+            UnlockedSkillPhaseUpgrade("Full Upgrades");
         }
     }
 
@@ -234,6 +258,19 @@ public class SkillBase : MonoBehaviour{
         List<string> result = new List<string>();
 
         foreach (var upgrade in betterUpgrades)
+        {
+            if (upgrade != null && upgrade.unlocked)
+            {
+                result.Add(upgrade.upgradeName);
+            }
+        }
+        return result;
+    }
+
+    public List<string> GetUnlockedSkillPhaseUpgrades()
+    {
+        List<string> result = new List<string>();
+        foreach (var upgrade in skillPhaseUpgrades)
         {
             if (upgrade != null && upgrade.unlocked)
             {
@@ -269,6 +306,61 @@ public class SkillBase : MonoBehaviour{
                 upgrade.unlocked = false;
             }
         }
+    }
+
+    public void LoadUnlockedSkillPhaseUpgrades(List<string> unlocked)
+    {
+        numOfUpgradesGet = 0;
+        foreach (var upgrade in upgrades)
+        {
+            if (upgrade != null && upgrade.unlocked)
+            {
+                numOfUpgradesGet++;
+            }
+        }
+        foreach (var upgrade in betterUpgrades)
+        {
+            if (upgrade != null && upgrade.unlocked)
+            {
+                numOfUpgradesGet++;
+            }
+        }
+
+        // Rebuild phase data for save files created before phase upgrades were saved.
+        if (unlocked == null || unlocked.Count == 0)
+        {
+            unlocked = new List<string>();
+            if (numOfUpgradesGet >= 2)
+            {
+                unlocked.Add("2 Upgrades");
+            }
+            if (numOfUpgradesGet >= 4)
+            {
+                unlocked.Add("4 Upgrades");
+            }
+            if (numOfUpgradesGet >= 6)
+            {
+                unlocked.Add("6 Upgrades");
+            }
+            if (numOfUpgradesGet == upgrades.Count + betterUpgrades.Count)
+            {
+                unlocked.Add("Full Upgrades");
+            }
+        }
+
+        foreach (var upgrade in skillPhaseUpgrades)
+        {
+            if (upgrade != null)
+            {
+                upgrade.unlocked = unlocked.Contains(upgrade.upgradeName);
+            }
+        }
+
+        level4Skill = Unlocked("4 Upgrades");
+        stats.RestoreSkillPhaseBonuses(
+            Unlocked("2 Upgrades"),
+            Unlocked("6 Upgrades"),
+            Unlocked("Full Upgrades"));
     }
 
     public void SetDecayLevel(int level)

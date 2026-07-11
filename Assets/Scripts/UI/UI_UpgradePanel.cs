@@ -81,6 +81,17 @@ public class UI_UpgradePanel : MonoBehaviour
         }
         bool hasUnlockedUpgrade = false;
 
+        foreach (var upgrade in currentSkill.skillPhaseUpgrades)
+        {
+            if (upgrade.upgradeName.Equals("4 Upgrades") && upgrade.unlocked)
+            {
+                hasUnlockedUpgrade = true;
+                sb.AppendLine($"[{upgrade.upgradeName}]");
+                sb.AppendLine(upgrade.description);
+                sb.AppendLine();
+            }
+        }
+
         foreach (var upgrade in currentSkill.betterUpgrades)
         {
             if (upgrade.unlocked)
@@ -128,6 +139,23 @@ public class UI_UpgradePanel : MonoBehaviour
         descriptionText.text = "Current attribute upgrades:";
 
         StringBuilder sb = new StringBuilder();
+
+        if (currentSkill == null)
+        {
+            sb.AppendLine("No skill selected.");
+            contentText.text = sb.ToString();
+            return;
+        }
+
+        foreach (var upgrade in currentSkill.skillPhaseUpgrades)
+        {
+            if (!upgrade.upgradeName.Equals("4 Upgrades") && upgrade.unlocked)
+            {
+                sb.AppendLine($"[{upgrade.upgradeName}]");
+                sb.AppendLine(upgrade.description);
+                sb.AppendLine();
+            }
+        }
 
         if (attributeUpgrades == null || attributeUpgrades.Count == 0)
         {
@@ -194,6 +222,10 @@ public class UI_UpgradePanel : MonoBehaviour
 
             betterUpgrades = skill.BetterUpgrades != null
                 ? new List<SkillUpgradeDisplayData>(skill.BetterUpgrades)
+                : new List<SkillUpgradeDisplayData>(),
+
+            skillPhaseUpgrades = skill.SkillPhaseUpgrades != null
+                ? new List<SkillUpgradeDisplayData>(skill.SkillPhaseUpgrades)
                 : new List<SkillUpgradeDisplayData>()
         };
         
