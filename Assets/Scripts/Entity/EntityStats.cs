@@ -1,8 +1,6 @@
 using UnityEngine;
 
 public class EntityStats : MonoBehaviour {
-    public StatSetupSO defaultStatSetup;
-
     [Header("Resource")]
     public Stat maxHP;
 
@@ -10,7 +8,6 @@ public class EntityStats : MonoBehaviour {
     public Stat damage;
     public Stat critPower;
     public Stat critChance;
-
 
     [Header("Defense")]
     public Stat armor;
@@ -39,21 +36,5 @@ public class EntityStats : MonoBehaviour {
         }
 
         return finalArmor / (finalArmor + 100);
-    }
-
-    [ContextMenu("Update Default Stat Setup")]
-    public void ApplyDefualtStatSetup() {
-        if (defaultStatSetup == null) {
-            Debug.Log("No default stat setup assigned!");
-            return;
-        }
-
-        maxHP.SetBaseValue(defaultStatSetup.maxHP);
-        
-        damage.SetBaseValue(defaultStatSetup.damage);
-        critPower.SetBaseValue(defaultStatSetup.critPower);
-        critChance.SetBaseValue(defaultStatSetup.critChance);
-
-        armor.SetBaseValue(defaultStatSetup.armor);
     }
 }

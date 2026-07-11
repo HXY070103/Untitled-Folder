@@ -1,9 +1,7 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SkillLifeSteal : SkillBase {
     private PlayerHealth health;
-    private Player player;
 
     [Header("Skill info")]
     [SerializeField] private float conversionRate = 0.3f;
@@ -29,14 +27,13 @@ public class SkillLifeSteal : SkillBase {
     [SerializeField] private float bonusMaxHP = 10;
     [SerializeField] private float bonusArmor = 30;
     [SerializeField] private float bonusDamage = 15;
+
+    [Header("Overflowing aegis info")]
+    public float damageMultiplier = 2;
+    public float attackSpeedMultiplier = 1.5f;
     
     [Header("Unshakable resolve info")]
     [SerializeField] private float reviveHPMultiplier = 0.2f;
-
-    [Header("Overflowing aegis info")]
-    [SerializeField] private float damageTakenMultiplier = 2;
-    [SerializeField] private float damageApplyMultiplier = 2;
-    [SerializeField] private float attackAnimSpeedMultiplier = 1.5f;
 
     [SerializeField] private float amountOfBloodBack;
 
@@ -56,7 +53,6 @@ public class SkillLifeSteal : SkillBase {
         base.Awake();
 
         health = GetComponentInParent<PlayerHealth>();
-        player = GetComponent<Player>();
     }
 
     protected override void StartSkill() {
@@ -66,7 +62,7 @@ public class SkillLifeSteal : SkillBase {
         CreatFireVFX();
 
         if (Unlocked("Stable Gain+")) {
-            health.GenerateTemporaryShield(temporaryShield);
+            health.ShieldManager.AddTemporaryShield(temporaryShield);
         }
 
         if (Unlocked("Unshakable Resolve")) {
@@ -79,16 +75,13 @@ public class SkillLifeSteal : SkillBase {
 
         EndAccumulateDamage();
         DestroyFireVFX();
+        CreateFireball();
 
         if (Unlocked("Stable Gain+")) {
-            health.CancelTemporaryShield();
+            health.ShieldManager.RemoveTemporaryShield();
         }
 
         ApplyBloodGrowthReward();
-
-        if (!Unlocked("Unshakable Resolve") && !Unlocked("Stable Gain")) {
-            CreateFireball();
-        }
 
         if (Unlocked("Unshakable Resolve")) {
             health.StopDeathPrevention();
@@ -113,8 +106,8 @@ public class SkillLifeSteal : SkillBase {
     private void Healing(float healingHP) {
         float overflowingHP = health.Healing(healingHP);
         
-        if (Unlocked("Overflowing Aegis")) {
-            health.GeneratePermanentShield(overflowingHP);
+        if (Unlocked("Overflowing Aegis") && overflowingHP > 0) {
+            health.ShieldManager.AddPermanentShield(overflowingHP);
         }
     }
 
@@ -124,26 +117,26 @@ public class SkillLifeSteal : SkillBase {
     }
 
     private void CreateFireball() {
+        if (Unlocked("Unshakable Resolve") || Unlocked("Stable Gain")) {
+            return;
+        }
+
         for (int i = 0; i < fireballAmount; i += 1) {
-            Vector2 direction = CalculateDirection(i);
-            Vector3 randomPosition = GenerateRandomPosition(direction);
+            Vector3 randomPosition = GenerateRandomPosition(i);
             GameObject fireball = 
                 Instantiate(fireballPrefab, randomPosition, Quaternion.identity);
             fireball.GetComponent<FireballController>().SetUpFireball(this);
         }
     }
 
-    private Vector2 CalculateDirection(int i) {
+    private Vector3 GenerateRandomPosition(int i) {
         float angle = i * 360f / fireballAmount;
         float rad = angle * Mathf.Deg2Rad;
+        Vector2 dir =  new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
 
-        return new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-    }
-
-    private Vector3 GenerateRandomPosition(Vector2 direction) {
         float randomDistance = 
             Random.Range(minFireballGenerationRadius, maxFireballGenerationRadius);
-        Vector3 randomOffset = direction * randomDistance;
+        Vector3 randomOffset = dir * randomDistance;
 
         return transform.position + randomOffset;
     }
