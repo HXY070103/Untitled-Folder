@@ -7,7 +7,7 @@ public class Entity : MonoBehaviour {
 
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
-    public TimeController tc;
+    public TimeController tc {get; private set; }
     protected StateMachine stateMachine;
 
     private bool facingRight = true;

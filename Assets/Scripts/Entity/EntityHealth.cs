@@ -1,7 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
 using System;
-using System.Collections;
 
 public class EntityHealth : MonoBehaviour, IDamageable {
     public event Action OnHealthUpdate;
@@ -96,11 +95,17 @@ public class EntityHealth : MonoBehaviour, IDamageable {
             return 0;
         }
 
-        float previousHP = currentHP;
-        currentHP = Mathf.Min(previousHP + healingHP, stats.GetMaxHP());
+        float overflowingHP = 0;
+        currentHP += healingHP;
+
+        if (currentHP > stats.GetMaxHP()) {
+            overflowingHP = currentHP - stats.GetMaxHP();
+            currentHP = stats.GetMaxHP();
+        }
+    
         OnHealthUpdate?.Invoke();
 
-        return currentHP - previousHP;
+        return overflowingHP;
     }
 
     public void ReduceHP(float reducedHP) {
