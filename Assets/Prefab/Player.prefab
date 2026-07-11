@@ -101,6 +101,10 @@ MonoBehaviour:
   increasedSkillDuration: 4
   recoverSpeedDelay: 1
   bonusDuration: 1
+  shockwavePrefab: {fileID: 6733579660901800008, guid: 591a11b8c1d1140baa78a5a3c65a488e, type: 3}
+  shockwaveDamage: 20
+  shockwaveDamageRange: 3
+  shockwaveDestoryDelay: 1
 --- !u!114 &227365949848170611
 MonoBehaviour:
   m_ObjectHideFlags: 0
