@@ -103,6 +103,19 @@ public class Player : Entity {
         return Time.time < lastTimeDashed + dashCooldown;
     }
 
+    private float GetCurrentCooldown() {
+        if (Time.time < lastTimeDashed)
+        {
+            return dashCooldown;
+        }
+        return Mathf.Max(0, dashCooldown - (Time.time - lastTimeDashed));
+    }
+
+    public float GetReaminCooldown()
+    {
+        return GetCurrentCooldown();
+    }
+
     public override void EntityDeath() {
         base.EntityDeath();
 

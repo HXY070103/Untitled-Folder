@@ -90,6 +90,14 @@ MonoBehaviour:
     m_Bits: 128
   playerCheck: {fileID: 6346743711559511979}
   specialAttackCooldown: 5
+  arenaController: {fileID: 0}
+  phaseTwoThreshold: 0.7
+  phaseThreeThreshold: 0.4
+  floorAttackCooldown: 8
+  phaseTwoBrokenZones: 1
+  phaseThreeBrokenZones: 2
+  phaseTwoComboHits: 2
+  phaseThreeComboHits: 3
   dashSpeed: 20
   minDashDistance: 12
   energyWavePrefab: {fileID: 2101764571864566292, guid: 9f86f74ccdbfa4139bd0b97d24033a6b, type: 3}
@@ -104,6 +112,15 @@ MonoBehaviour:
   summonStartPoint: {fileID: 2361454819513897388}
   amountOfSkeletonToSummon: 3
   summonCooldown: 0.5
+  phaseTwoSummonPrefabs:
+  - {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
+  - {fileID: 4438716662346398900, guid: d6716d6548edd45148efaeb9b6b73ebd, type: 3}
+  phaseThreeSummonPrefabs:
+  - {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
+  - {fileID: 4438716662346398900, guid: d6716d6548edd45148efaeb9b6b73ebd, type: 3}
+  - {fileID: 1307503079930646942, guid: 57313f2e3276347dbb78314c1e769049, type: 3}
+  - {fileID: 8462388656820771433, guid: 06f7ad6a198ce4ef5a21530422e66884, type: 3}
+  maxActiveSummons: 6
   teleportDelay: 1.2
   teleportBehindOffset: 5
   teleportAwayOffset: 20
@@ -205,6 +222,7 @@ MonoBehaviour:
   initialMaxHP: 100
   isOnShotKillable: 1
   damageTakenMultiplier: 1
+  isInvulnerable: 0
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3

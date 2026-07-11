@@ -77,6 +77,7 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         currentSkill.SetRemainCooldown(0);
         currentSkill.LoadUnlockedUpgrades(new List<string>());
         currentSkill.LoadUnlockedBetterUpgrades(new List<string>());
+        currentSkill.LoadUnlockedSkillPhaseUpgrades(new List<string>());
 
         UpdateSkillDecay(0);
     }
@@ -101,6 +102,7 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         currentSKill.SetRemainCooldown(data.remainSkillColldown);
         currentSKill.LoadUnlockedUpgrades(data.unlockedSkillUpgrades);
         currentSKill.LoadUnlockedBetterUpgrades(data.unlockedBetterUpgrades);
+        currentSKill.LoadUnlockedSkillPhaseUpgrades(data.unlockedSkillPhaseUpgrades);
         UpdateSkillDecay(data.skillDecay);
     }
 
@@ -123,5 +125,6 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         data.remainSkillColldown = currentSkill.GetReaminCooldown();
         data.unlockedSkillUpgrades = currentSkill.GetUnlockedUpgrades();
         data.unlockedBetterUpgrades = currentSkill.GetUnlockedBetterUpgrades();
+        data.unlockedSkillPhaseUpgrades = currentSkill.GetUnlockedSkillPhaseUpgrades();
     }
 }

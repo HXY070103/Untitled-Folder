@@ -13,17 +13,25 @@ public class EnemyDarkKnightSwordWave : MonoBehaviour, ICounterable, ISlowable {
     [SerializeField] private GameObject destroyVFXPrefab;
 
     private float swordWaveSpeed;
+    private Vector2 swordWaveVelocity;
 
     public void SetUpSwordWave(float swordWaveSpeed, EntityCombat combat) {
+        SetUpSwordWave(new Vector2(swordWaveSpeed, 0), combat);
+    }
+
+    public void SetUpSwordWave(Vector2 velocity, EntityCombat combat) {
         col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
         this.combat = combat;
 
-        this.swordWaveSpeed = swordWaveSpeed;
-        rb.linearVelocity = new Vector2(swordWaveSpeed, 0);
+        swordWaveVelocity = velocity;
+        swordWaveSpeed = velocity.magnitude;
+        rb.linearVelocity = velocity;
 
-        if (rb.linearVelocity.x < 0) {
+        if (Mathf.Abs(velocity.y) > Mathf.Abs(velocity.x)) {
+            transform.Rotate(0, 0, velocity.y < 0 ? -90 : 90);
+        } else if (rb.linearVelocity.x < 0) {
             transform.Rotate(0, 180, 0);
         }
     }
@@ -59,13 +67,12 @@ public class EnemyDarkKnightSwordWave : MonoBehaviour, ICounterable, ISlowable {
     public void SlowDown(float slowDownPercentage) {
         CancelInvoke(nameof(RecoverSpeed));
         anim.speed = 1 - slowDownPercentage;
-        float xVelocity = swordWaveSpeed * (1 - slowDownPercentage);
-        rb.linearVelocity = new Vector2(xVelocity, 0);
+        rb.linearVelocity = swordWaveVelocity.normalized * swordWaveSpeed * (1 - slowDownPercentage);
     }
 
     public void RecoverSpeed() {
         anim.speed = 1;
-        rb.linearVelocity = new Vector2(swordWaveSpeed, 0);
+        rb.linearVelocity = swordWaveVelocity.normalized * swordWaveSpeed;
     }
 
     public void RecoverSpeedWithDelay(float delay) {

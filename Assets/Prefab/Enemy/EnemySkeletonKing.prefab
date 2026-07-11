@@ -287,9 +287,17 @@ MonoBehaviour:
   summonStartPoint: {fileID: 5222858994496647657}
   amountOfSkeletonToSummon: 3
   summonCooldown: 0.5
+  maxActiveSkeletons: 6
   healthThresholdForSummon: 0.5
   summonAttackCooldown: 5
   summonAttackDistance: 10
+  horizontalSweepPrefab: {fileID: 2101764571864566292, guid: 9f86f74ccdbfa4139bd0b97d24033a6b, type: 3}
+  sweepWarningDuration: 0.8
+  sweepCooldown: 6
+  lowHealthSweepCooldown: 4
+  sweepSpeed: 11
+  arenaHalfWidth: 16
+  sweepHeightOffset: 0.35
 --- !u!50 &7361001632944665758
 Rigidbody2D:
   serializedVersion: 5
@@ -388,6 +396,7 @@ MonoBehaviour:
   initialMaxHP: 100
   isOnShotKillable: 1
   damageTakenMultiplier: 1
+  isInvulnerable: 0
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3

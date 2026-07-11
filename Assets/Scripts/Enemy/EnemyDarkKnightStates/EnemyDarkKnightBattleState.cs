@@ -37,6 +37,11 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
     }
 
     protected override void HandleBattle() {
+        if (enemyDarkKnight.ArenaAttackInProgress) {
+            enemyDarkKnight.Move(0, rb.linearVelocity.y);
+            return;
+        }
+
         if (WithInAttackRange() && enemyDarkKnight.PlayerDetected() && CanAttack()) {
             if (isBasicAttack) {
                 ApplyBasicAttack();

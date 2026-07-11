@@ -20,6 +20,10 @@ public class EnemyNecromancerBattleState : EnemyBattleState {
     }
 
     public override void Update() {
+        if (enemyNecromancer.ForcedPhaseActive) {
+            enemyNecromancer.Move(0, 0);
+            return;
+        }
         base.Update();
     }
 

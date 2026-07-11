@@ -14,6 +14,21 @@ public class EnemyBoss : Enemy {
     public List<EnemyState> specialAttackStates;
     public List<System.Action> spellCastActions;
 
+    [Header("Arena phases")]
+    [SerializeField] private BossArenaController arenaController;
+    [SerializeField] private float phaseTwoThreshold = 0.7f;
+    [SerializeField] private float phaseThreeThreshold = 0.4f;
+    [SerializeField] private float floorAttackCooldown = 8f;
+    [SerializeField] private int phaseTwoBrokenZones = 1;
+    [SerializeField] private int phaseThreeBrokenZones = 2;
+    [SerializeField] private int phaseTwoComboHits = 2;
+    [SerializeField] private int phaseThreeComboHits = 3;
+
+    private float lastFloorAttack = float.NegativeInfinity;
+    private bool arenaAttackActive;
+    private int comboHitsRemaining;
+    public bool ArenaAttackActive => arenaAttackActive;
+
     [Header("Dash info")]
     public float dashSpeed = 12;
     public float minDashDistance = 12;
@@ -39,6 +54,11 @@ public class EnemyBoss : Enemy {
     [SerializeField] private Transform summonStartPoint;
     [SerializeField] private int amountOfSkeletonToSummon = 3;
     [SerializeField] private float summonCooldown = 0.5f;
+    [SerializeField] private GameObject[] phaseTwoSummonPrefabs;
+    [SerializeField] private GameObject[] phaseThreeSummonPrefabs;
+    [SerializeField] private int maxActiveSummons = 6;
+
+    private readonly List<Enemy> activeSummons = new List<Enemy>();
 
     private Coroutine summonCo;
     private bool summonPerformed;
@@ -90,6 +110,7 @@ public class EnemyBoss : Enemy {
 
         leftMoveBound = transform.position.x - playerCheckDistance;
         rightMoveBound = transform.position.x + playerCheckDistance;
+        if (arenaController == null) arenaController = FindFirstObjectByType<BossArenaController>();
 
         stateMachine.Initialize(idleState);
     }
@@ -152,11 +173,21 @@ public class EnemyBoss : Enemy {
     }
 
     private IEnumerator SummonCo() {
-        for (int i = 0; i < amountOfSkeletonToSummon; i += 1) {
-            GameObject skeleton = 
-                Instantiate(skeletonPrefab, summonStartPoint.position, Quaternion.identity);
-            skeleton.GetComponent<EnemySkeleton>().HandleFlip(facingDir);
-            skeleton.GetComponent<EnemySkeleton>().TryToEnterBattleState(player);
+        CleanupSummons();
+        int amount = Mathf.Min(amountOfSkeletonToSummon, maxActiveSummons - activeSummons.Count);
+        LevelClearManager.instance?.AddPendingEnemies(amount);
+        for (int i = 0; i < amount; i += 1) {
+            GameObject prefab = GetSummonPrefab(i);
+            if (prefab == null) continue;
+            Transform[] points = arenaController != null ? arenaController.SummonPoints : null;
+            Vector3 position = points != null && points.Length > 0 && points[i % points.Length] != null
+                ? points[i % points.Length].position : summonStartPoint.position;
+            GameObject summonedObject = Instantiate(prefab, position, Quaternion.identity);
+            Enemy summonedEnemy = summonedObject.GetComponent<Enemy>();
+            if (summonedEnemy == null) continue;
+            activeSummons.Add(summonedEnemy);
+            summonedEnemy.HandleFlip(facingDir);
+            summonedEnemy.TryToEnterBattleState(player);
 
             Color color = Color.red;
             vfx.GenerateParticleEffect(color);
@@ -165,6 +196,57 @@ public class EnemyBoss : Enemy {
         }
 
         SetSummonPerformed(true);
+    }
+
+    private GameObject GetSummonPrefab(int index) {
+        GameObject[] pool = GetPhase() >= 2 ? phaseThreeSummonPrefabs
+            : GetPhase() >= 1 ? phaseTwoSummonPrefabs : null;
+        if (pool == null || pool.Length == 0) return skeletonPrefab;
+        return pool[index % pool.Length] != null ? pool[index % pool.Length] : skeletonPrefab;
+    }
+
+    private void CleanupSummons() {
+        activeSummons.RemoveAll(enemy => enemy == null || enemy.health.GetCurrentHP() <= 0);
+    }
+
+    public int GetPhase() {
+        float hp = health.GetHPPercentage();
+        if (hp <= phaseThreeThreshold) return 2;
+        if (hp <= phaseTwoThreshold) return 1;
+        return 0;
+    }
+
+    public bool TryStartFloorAttack() {
+        if (GetPhase() == 0 || arenaAttackActive || arenaController == null ||
+            Time.time < lastFloorAttack + floorAttackCooldown) return false;
+        int zoneCount = GetPhase() >= 2 ? phaseThreeBrokenZones : phaseTwoBrokenZones;
+        if (!arenaController.TryStartFloorAttack(this, zoneCount)) return false;
+        lastFloorAttack = Time.time;
+        StartCoroutine(ArenaFloorAttackCo());
+        return true;
+    }
+
+    private IEnumerator ArenaFloorAttackCo() {
+        arenaAttackActive = true;
+        Move(0, 0);
+        RigidbodyConstraints2D previousConstraints = rb.constraints;
+        rb.constraints |= RigidbodyConstraints2D.FreezePositionY;
+        yield return null;
+        while (arenaController != null && arenaController.HazardActive) yield return null;
+        rb.constraints = previousConstraints;
+        arenaAttackActive = false;
+    }
+
+    public void PrepareCombo() {
+        if (comboHitsRemaining > 0) return;
+        int phase = GetPhase();
+        comboHitsRemaining = phase >= 2 ? phaseThreeComboHits : phase >= 1 ? phaseTwoComboHits : 1;
+    }
+
+    public bool TryConsumeComboHit() {
+        if (comboHitsRemaining <= 0) return false;
+        comboHitsRemaining--;
+        return true;
     }
 
     public void Teleport() {

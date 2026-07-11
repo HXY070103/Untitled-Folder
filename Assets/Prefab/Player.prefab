@@ -84,6 +84,19 @@ MonoBehaviour:
   - upgradeName: Stasis Field
     description: Enemies inside the field stop moving and acting.
     unlocked: 0
+  skillPhaseUpgrades:
+  - upgradeName: 2 Upgrades
+    description: Increase 20% skill effects
+    unlocked: 0
+  - upgradeName: 4 Upgrades
+    description: 'Using 2 times of skill will only increase 1 skill decay '
+    unlocked: 0
+  - upgradeName: 6 Upgrades
+    description: All major attributes (except skill effect) increase 10%
+    unlocked: 0
+  - upgradeName: Full Upgrades
+    description: All major attributes (except skill effect) increase 20%
+    unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 6596648338181236841}
@@ -159,22 +172,40 @@ MonoBehaviour:
       immediately recover to 20% max health, but lose the ability to recover health
       after the skill ends.
     unlocked: 0
+  skillPhaseUpgrades:
+  - upgradeName: 2 Upgrades
+    description: Increase 20% skill effects
+    unlocked: 0
+  - upgradeName: 4 Upgrades
+    description: 'Using 2 times of skill will only increase 1 skill decay '
+    unlocked: 0
+  - upgradeName: 6 Upgrades
+    description: All major attributes (except skill effect) increase 10%
+    unlocked: 0
+  - upgradeName: Full Upgrades
+    description: All major attributes (except skill effect) increase 20%
+    unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 6596648338181236841}
   numOfUpgradesGet: 0
   cooldown: 3
   skillDuration: 3
+  conversionRate: 0.3
   fireVFXPrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
   fireballPrefab: {fileID: 3718646501417209727, guid: 6b278988086d54af5bd66d7117ea45ea, type: 3}
-  conversionRate: 0.3
   minFireballGenerationRadius: 1.5
   maxFireballGenerationRadius: 2
   fireballAmount: 5
-  reviveHPMultiplier: 0.2
+  temporaryShield: 50
   maxConversionRate: 2
+  maxDamageMultiplier: 2
+  maxAttackSpeed: 2
   healingHPThreshold: 0.2
   bonusMaxHP: 10
+  bonusArmor: 30
+  bonusDamage: 15
+  reviveHPMultiplier: 0.2
   damageTakenMultiplier: 2
   damageApplyMultiplier: 2
   attackAnimSpeedMultiplier: 1.5
@@ -234,6 +265,19 @@ MonoBehaviour:
   - upgradeName: Chain Phantasm
     description: Killing an enemy with a heavy strike makes the player enter a short
       phase again.
+    unlocked: 0
+  skillPhaseUpgrades:
+  - upgradeName: 2 Upgrades
+    description: Increase 20% skill effects
+    unlocked: 0
+  - upgradeName: 4 Upgrades
+    description: 'Using 2 times of skill will only increase 1 skill decay '
+    unlocked: 0
+  - upgradeName: 6 Upgrades
+    description: All major attributes (except skill effect) increase 10%
+    unlocked: 0
+  - upgradeName: Full Upgrades
+    description: All major attributes (except skill effect) increase 20%
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
@@ -972,13 +1016,17 @@ MonoBehaviour:
   initialMaxHP: 100
   isOnShotKillable: 1
   damageTakenMultiplier: 1
+  isInvulnerable: 0
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
   onHeavyDamageKnockback: {x: 7, y: 7}
   heavyKnockbackDuration: 0.5
   miniHealthBarActive: 0
-  isAttacked: 0
+  temporaryShield: 0
+  permanentShield: 0
+  hasTemporaryShield: 0
+  hasPermanentShield: 0
 --- !u!114 &3170532416984032037
 MonoBehaviour:
   m_ObjectHideFlags: 0

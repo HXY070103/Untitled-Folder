@@ -17,6 +17,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] private float initialMaxHP = 100f;
     [SerializeField] private bool isOnShotKillable = false;
     [SerializeField] private float damageTakenMultiplier = 1;
+    [SerializeField] private bool isInvulnerable = false;
 
     [Header("On damage knockback info")]
     [SerializeField] private Vector2 onDamageKnockback = new Vector2(1.5f, 2.5f);
@@ -51,7 +52,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
  
     public virtual void TakeDamage(Damage damage, Transform damageDealer) {
-        if (isDead) {
+        if (isDead || isInvulnerable) {
             return;
         }
 
@@ -67,6 +68,14 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public void SetDamageTakenMultiplier(float damageTakenMultiplier) {
         this.damageTakenMultiplier = damageTakenMultiplier;
+    }
+
+    public void SetInvulnerable(bool invulnerable) {
+        isInvulnerable = invulnerable;
+    }
+
+    public bool IsInvulnerable() {
+        return isInvulnerable;
     }
 
     protected virtual float CalculateReducedHP(Damage damage) {

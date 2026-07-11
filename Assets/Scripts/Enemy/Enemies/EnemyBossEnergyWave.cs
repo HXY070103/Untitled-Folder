@@ -28,6 +28,11 @@ public class EnemyBossEnergyWave : MonoBehaviour, ICounterable, ISlowable {
         }
     }
 
+    public void SetUpEnergyWave(float energyWaveSpeed, EntityCombat combat, float travelDistance) {
+        maxDistance = Mathf.Max(1, travelDistance);
+        SetUpEnergyWave(energyWaveSpeed, combat);
+    }
+
     private void Update() {
         if (ReachedMaxDistance()) {
             Destroy(gameObject);

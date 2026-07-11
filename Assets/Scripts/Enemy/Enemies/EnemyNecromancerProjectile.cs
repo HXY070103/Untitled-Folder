@@ -11,6 +11,8 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
     private float speedMultiplier;
     private float chaseSpeed;
     private bool canChase;
+    private bool useFixedDirection;
+    private Vector2 fixedDirection;
 
     [SerializeField] private LayerMask whatIsTarget;
     [SerializeField] private LayerMask whatCanCollideWith;
@@ -30,9 +32,25 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
         this.chaseSpeed = chaseSpeed;
 
         canChase = false;
+        useFixedDirection = false;
         Invoke(nameof(StartChasing), waitingTime);
 
         anim.enabled = false;
+    }
+
+    public void SetUpProjectileDirection(float speed, Vector2 direction, EnemyCombat combat) {
+        col = GetComponent<Collider2D>();
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponentInChildren<Animator>();
+        this.combat = combat;
+        chaseSpeed = speed;
+        speedMultiplier = 1;
+        fixedDirection = direction.normalized;
+        useFixedDirection = true;
+        canChase = true;
+        if (anim != null) {
+            anim.enabled = false;
+        }
     }
 
     private void Update() {
@@ -60,6 +78,14 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
     }
 
     private void HandleChasing() {
+        if (useFixedDirection) {
+            rb.linearVelocity = fixedDirection * chaseSpeed * speedMultiplier;
+            return;
+        }
+
+        if (target == null) {
+            return;
+        }
         Vector2 dir =(target.transform.position - transform.position).normalized;
         rb.linearVelocity = dir * chaseSpeed * speedMultiplier;
     }

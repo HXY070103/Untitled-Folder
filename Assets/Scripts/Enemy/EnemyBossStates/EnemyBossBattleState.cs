@@ -15,8 +15,16 @@ public class EnemyBossBattleState : EnemyBattleState {
 
         enemyBoss.HandleFlip(DirectionToPlayer());
 
+        if (enemyBoss.TryConsumeComboHit()) {
+            stateMachine.ChangeState(enemyBoss.attackState);
+            return;
+        }
+
         if (CanUseSpecialAttack()) {
             UpdateSpecialAttackTimer();
+            if (enemyBoss.TryStartFloorAttack()) {
+                return;
+            }
             EnemyState nextSpecialAttackState = 
                 enemyBoss.specialAttackStates[Random.Range(0, enemyBoss.specialAttackStates.Count)];
             stateMachine.ChangeState(nextSpecialAttackState);
@@ -32,8 +40,15 @@ public class EnemyBossBattleState : EnemyBattleState {
     }
 
     protected override void HandleBattle() {
+        if (enemyBoss.ArenaAttackActive) {
+            enemyBoss.Move(0, 0);
+            return;
+        }
+
         if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
             UpdateAttackTimer();
+            enemyBoss.PrepareCombo();
+            enemyBoss.TryConsumeComboHit();
             stateMachine.ChangeState(enemyBoss.preAttackState); 
         } else {
             if (!enemy.PlayerDetected()) {

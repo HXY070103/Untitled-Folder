@@ -983,6 +983,8 @@ MonoBehaviour:
   playerCheck: {fileID: 8881684689771987365}
   firePrefab: {fileID: 5474144167573307440, guid: 8e8e6df714e9c44938ef0daab5237abc, type: 3}
   fireStartPoint: {fileID: 7969811584880714702}
+  fallingFireHeight: 7
+  fallingFireSpeed: 9
   spellPrefab: {fileID: 5897940193099943609, guid: 6fcfa09a789f74b8baba3f9878545017, type: 3}
   spellStartPoint: {fileID: 6829784812205296368}
   spellGenerationRadius: 0.5
@@ -990,6 +992,18 @@ MonoBehaviour:
   spellCastInterval: 0.3
   spellChaseSpeed: 10
   spellCastCooldown: 0.3
+  arenaController: {fileID: 0}
+  skeletonPrefab: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
+  flightHeight: 3.5
+  verticalFlightSpeed: 3
+  flightAnchorInterval: 3
+  forcedPhaseThreshold: 0.5
+  forcedPhaseMinDuration: 6
+  forcedSummonCount: 3
+  barrageWaves: 4
+  barrageProjectileCount: 12
+  barrageProjectileSpeed: 7
+  barrageWaveInterval: 0.8
 --- !u!50 &2507083146646626435
 Rigidbody2D:
   serializedVersion: 5
@@ -1088,6 +1102,7 @@ MonoBehaviour:
   initialMaxHP: 100
   isOnShotKillable: 1
   damageTakenMultiplier: 1
+  isInvulnerable: 0
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3

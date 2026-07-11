@@ -77,10 +77,13 @@ public class Waypoint : MonoBehaviour
     {
         if (transferToScene == "EliteLevel_Repeat")
         {
-            transferToScene += RandomChoose(1,4);
+            int repeatIndex = Random.Range(1, 5);
+            if (repeatIndex == 2) repeatIndex = 1;
+            transferToScene += "_" + repeatIndex;
         } else if (transferToScene == "EliteLevel_1")
         {
-            transferToScene = "EliteLevel" + RandomChoose(1,2);
+            // EliteLevel_2 is reserved for the future fourth elite.
+            transferToScene = "EliteLevel_1";
         } else if (transferToScene == "EliteLevel_2")
         {
             transferToScene = "EliteLevel" + RandomChoose(3,4);
