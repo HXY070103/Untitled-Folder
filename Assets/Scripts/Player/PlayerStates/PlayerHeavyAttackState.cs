@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHeavyAttackState : PlayerState {
     private SkillPhase phase;
-    private float attackMovementTimer;
+
+    private float originalGravityScale;
     private int attackDir;
+    private HashSet<Transform> targets = new HashSet<Transform>();
 
     public PlayerHeavyAttackState(Player player, StateMachine stateMachine, string animBoolName) : 
         base(player, stateMachine, animBoolName) {
@@ -13,18 +16,23 @@ public class PlayerHeavyAttackState : PlayerState {
     public override void Enter() {
         base.Enter();
 
+        vfx.DoImageEchoEffect(float.PositiveInfinity);
         phase.InterruptSkill();
-        IncreaseDamage();
-        HandleInstantKill();
-        StartHandleBonusPhase();
+        StartHeavyAttack();
+        StartChainPhantasmReward();
 
+        originalGravityScale = rb.gravityScale;
+        rb.gravityScale = 0;
         attackDir = player.moveInput.x != 0 ? (int) player.moveInput.x : player.facingDir;
     }
 
     public override void Update() {
         base.Update();
 
-        HandleAttackMovement();
+        float xVelocity = attackDir * phase.heavyAttackSpeed;
+        player.Move(xVelocity, 0);
+
+        AddTarget();
 
         if (triggerCalled) {
             stateMachine.ChangeState(player.idleState);
@@ -34,50 +42,56 @@ public class PlayerHeavyAttackState : PlayerState {
     public override void Exit() {
         base.Exit();
 
-        ResetDamage();
+        rb.gravityScale = originalGravityScale;
+        player.Move(0, 0);
+
+        vfx.StopImageEchoEffect();
         player.UpdateHeavyAttack();
-        EndHandleBonusPhase();
+        EndHeavyAttack();
+        EndChainPhantasmReward();
     }
 
-    private void StartHandleBonusPhase() {
-        if (phase.Unlocked("Shadow Execution")) {
+    private void AddTarget() {
+        Collider2D[] colliders = player.combat.GetDetectedColliders(player.combat.whatIsTarget);
+
+        foreach (Collider2D collider in colliders) {
+            Transform target = collider.transform;
+            targets.Add(target);
+        }
+    }
+
+    private void StartHeavyAttack() {
+        if (phase.Unlocked("Shadow Assassination")) {
+            player.combat.SetNextAttackToInstantKill();
+            return;
+        }
+
+        player.stats.damage.AddMultiplier(phase.GetDamageMultiplier(), "HeavyAttack");
+    }
+
+    private void EndHeavyAttack() {
+        PerformAttack();
+        player.stats.damage.RemoveMultiplier("HeavyAttack");
+    }
+
+    private void PerformAttack() {
+        foreach (Transform target in targets) {
+            player.combat.PerformAttackOnTarget(target);
+        }
+
+        targets.Clear();
+    }
+
+    private void StartChainPhantasmReward() {
+        if (phase.Unlocked("Chain Phantasm")) {
             phase.EnableBonusPhase();
         }
     }
 
-    private void EndHandleBonusPhase() {
-        if (phase.Unlocked("Shadow Execution")) {
+    private void EndChainPhantasmReward() {
+        if (phase.Unlocked("Chain Phantasm")) {
             phase.DisableBonusPhase();
             phase.TryToEnterBonusPhase();
-        }
-    }
-
-    private void HandleInstantKill() {
-        if (phase.Unlocked("Shadow Assassination")) {
-            player.combat.SetNextAttackToInstantKill();
-        }
-    }
-
-    private void IncreaseDamage() {
-        float baseDamage = player.stats.damage.GetValue();
-        float bonusDamage = baseDamage * (phase.GetDamageMultiplier() - 1);
-        player.stats.damage.AddModifier(bonusDamage, "HeavyAttack");
-    }
-
-    private void ResetDamage() {
-        player.stats.damage.RemoveModifier("HeavyAttack");
-    }
-
-    public void ApplyAttackMovement() {
-        attackMovementTimer = player.attackMovementDuration;
-        player.Move(attackDir * player.heavyAttackSpeed.x, player.heavyAttackSpeed.y);
-    }
-
-    private void HandleAttackMovement() {
-        attackMovementTimer -= Time.deltaTime;
-
-        if (attackMovementTimer < 0) {
-            player.Move(0, rb.linearVelocity.y);
         }
     }
 }

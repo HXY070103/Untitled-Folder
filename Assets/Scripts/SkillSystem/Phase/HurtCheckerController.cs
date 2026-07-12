@@ -1,13 +1,13 @@
 using UnityEngine;
 
 public class HurtCheckerController : MonoBehaviour {
-    private SkillPhase hurtCheckerManager;
+    private SkillPhase skill;
 
-    public void SetUpHurtChecker(SkillPhase hurtCheckerManager) {
-        this.hurtCheckerManager = hurtCheckerManager;
+    public void SetUpHurtChecker(SkillPhase skill) {
+        this.skill = skill;
     }
 
     public void GetHurt() {
-        hurtCheckerManager.PerfectPhaseTriggered();
+        skill.PerfectPhaseTriggered();
     }
 }

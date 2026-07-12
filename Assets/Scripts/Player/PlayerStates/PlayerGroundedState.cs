@@ -19,7 +19,7 @@ public class PlayerGroundedState : PlayerState {
             stateMachine.ChangeState(player.jumpState);
         }
 
-        if (player.CanAttack && input.Player.Attack.WasPressedThisFrame()) {
+        if (player.canAttack && input.Player.Attack.WasPressedThisFrame()) {
             HandleAttack();
         }
 
@@ -33,7 +33,7 @@ public class PlayerGroundedState : PlayerState {
     }
 
     private void HandleAttack() {
-        if (player.IsHeavyAttack) {
+        if (player.isHeavyAttack) {
             stateMachine.ChangeState(player.heavyAttackState);
         } else {
             stateMachine.ChangeState(player.basicAttackState);

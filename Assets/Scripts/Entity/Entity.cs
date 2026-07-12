@@ -75,7 +75,7 @@ public class Entity : MonoBehaviour {
             return;
         }
 
-        rb.linearVelocity = new Vector2(xVelocity, yVelocity) * tc.localTimeScale;
+        rb.linearVelocity = new Vector2(xVelocity * tc.localTimeScale, yVelocity);
     }
 
     public void HandleFlip(float xVelocity) {

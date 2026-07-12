@@ -13,34 +13,43 @@ public class SkillPhase : SkillBase {
     [SerializeField] private float perfectPhaseWindow = 0.2f;
     [SerializeField] private float lockAttackDuration = 0.1f;
     [SerializeField] private float heavyAttackExpiryTime = 10;
+    public float heavyAttackSpeed = 10;
 
     private Coroutine handleHeavyAttackCo;
-    private GameObject hurtChecker;
     private bool isPerfectPhase;
 
-    [Header("Weakness marking info")]
-    [SerializeField] private GameObject phaseTrackerPrefab;
-    private GameObject phaseTracker;
-
-    [Header("Shadow execution info")]
-    [SerializeField] private float bonusPhaseDuration = 1;
-    private bool isBonusPhase = false;
+    [Header("Perfect echo info")]
+    [SerializeField] private float bonusHP = 15;
 
     [Header("Chain strikes info")]
     [SerializeField] private int bonusNumOfHeavyAttack = 3;
 
-    [Header("Perfect echo info")]
-    [SerializeField] private float bonusHP = 10;
+    [Header("Weakness marking info")]
+    [SerializeField] private GameObject phaseTrackerPrefab;
+    public float damageReduction = 10;
+    public float armorReduction = 50;
+    public float damage = 15;
+
+    private GameObject phaseTracker;
+
+    [Header("Chain phantasm info")]
+    [SerializeField] private float bonusPhaseDuration = 1.5f;
+
+    private bool hasBonusPhase = false;
+
+    public override float GetSkillDuration() {
+        if (hasBonusPhase) {
+            return bonusPhaseDuration;
+        }
+
+        return base.GetSkillDuration();
+    }
 
     public float GetSpeedUpPercentage() {
-        return speedUpPercentage * stats.GetSkillEffect();
+        return speedUpPercentage * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
     public float GetDamageMultiplier() {
-        if (Unlocked("Fixed Attack"))
-        {
-            return damageMultiplier * stats.GetSkillEffect();
-        }
         return damageMultiplier * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
@@ -60,15 +69,11 @@ public class SkillPhase : SkillBase {
         isPerfectPhase = false;
         SetPerfectPhaseWindow();
 
-
         HandleHeavyAttack();
-
         player.SpeedUp(GetSpeedUpPercentage());
         vfx.DoFadeEffect();
 
-        if (Unlocked("Weakness Marking")) {
-            CreatePhaseTracker();
-        }
+        CreatePhaseTracker();
     }
 
     protected override void EndSkill() {
@@ -79,20 +84,73 @@ public class SkillPhase : SkillBase {
         player.RecoverSpeed();
         vfx.ResetTransparency();
 
-        isBonusPhase = false;
+        ApplyPerfectEchoReward();
+        DestroyPhaseTracker();
 
-        if (Unlocked("Weakness Marking")) {
-            DestroyPhaseTracker();
+        hasBonusPhase = false;
+    }
+
+    private int GetNumOfHeavyAttack() {
+        if ((Unlocked("Chain Strikes") && isPerfectPhase) || Unlocked("Chain Strikes+")) {
+            return bonusNumOfHeavyAttack;
         }
 
-        if (Unlocked("Perfect Echo") && isPerfectPhase) {
+        return 1;
+    }
+
+    private void ApplyPerfectEchoReward() {
+        if ((Unlocked("Perfect Echo") && isPerfectPhase) || Unlocked("Perfect Echo+")) {
             health.Healing(bonusHP);
         }
+    }
 
-        if (Unlocked("Perfect Timing"))
-        {
-            DecreaseDecay(1);
+    private void CreatePhaseTracker() {
+        if (!Unlocked("Weakness Marking")) {
+            return;
         }
+
+        phaseTracker = Instantiate(phaseTrackerPrefab, transform.position, Quaternion.identity);
+        phaseTracker.GetComponent<PhaseTrackerController>().SetUpPhaseTracker(this);
+        phaseTracker.transform.SetParent(transform);
+    }
+
+    private void DestroyPhaseTracker() {
+        if (!Unlocked("Weakness Marking")) {
+            return;
+        }
+
+        Destroy(phaseTracker);
+    }
+
+    public void EnableBonusPhase() {
+        EnemyHealth.OnEnemyDeath += EnterBonusPhase;
+    }
+
+    public void DisableBonusPhase() {
+        EnemyHealth.OnEnemyDeath -= EnterBonusPhase;
+    }
+
+    private void EnterBonusPhase() {
+        hasBonusPhase = true;
+    }
+
+    public void TryToEnterBonusPhase() {
+        if (hasBonusPhase) {
+            ApplySkill();
+        }
+    }
+
+    private void SetPerfectPhaseWindow() {
+        GameObject hurtChecker = 
+            Instantiate(hurtCheckerPrefab, transform.position, Quaternion.identity);
+        hurtChecker.transform.SetParent(transform);
+        hurtChecker.GetComponent<HurtCheckerController>().SetUpHurtChecker(this);
+        Destroy(hurtChecker, perfectPhaseWindow);
+    }
+
+    public void PerfectPhaseTriggered() {
+        isPerfectPhase = true;
+        Debug.Log("perfect phase");
     }
 
     private void HandleHeavyAttack() {
@@ -108,65 +166,5 @@ public class SkillPhase : SkillBase {
         yield return new WaitForSeconds(lockAttackDuration);
         player.UnLockAttack();
         player.SetHeavyAttack(heavyAttackExpiryTime, GetNumOfHeavyAttack());
-    }
-
-    private int GetNumOfHeavyAttack() {
-        if (Unlocked("Chain Strikes") && isPerfectPhase) {
-            return bonusNumOfHeavyAttack;
-        }
-
-        return 1;
-    }
-
-    public override float GetSkillDuration() {
-        if (isBonusPhase) {
-            return bonusPhaseDuration;
-        }
-
-        return base.GetSkillDuration();
-    }
-
-    public void EnableBonusPhase() {
-        EnemyHealth.OnEnemyDeath += EnterBonusPhase;
-    }
-
-    public void DisableBonusPhase() {
-        EnemyHealth.OnEnemyDeath -= EnterBonusPhase;
-    }
-
-    public void TryToEnterBonusPhase() {
-        if (isBonusPhase) {
-            ApplySkill();
-        }
-    }
-
-    private void EnterBonusPhase() {
-        isBonusPhase = true;
-    }
-
-    private void CreatePhaseTracker() {
-        phaseTracker = Instantiate(phaseTrackerPrefab, transform.position, Quaternion.identity);
-        phaseTracker.transform.SetParent(transform);
-    }
-
-    private void DestroyPhaseTracker() {
-        Destroy(phaseTracker);
-    }
-
-    private void SetPerfectPhaseWindow() {
-        GameObject hurtChecker = 
-            Instantiate(hurtCheckerPrefab, transform.position, Quaternion.identity);
-        hurtChecker.transform.SetParent(transform);
-        hurtChecker.GetComponent<HurtCheckerController>().SetUpHurtChecker(this);
-        Destroy(hurtChecker, GetPerfectPhaseWindow());
-    }
-
-    public void PerfectPhaseTriggered() {
-        isPerfectPhase = true;
-        Debug.Log("perfect phase");
-    }
-
-    public float GetPerfectPhaseWindow() {
-        return perfectPhaseWindow * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 }

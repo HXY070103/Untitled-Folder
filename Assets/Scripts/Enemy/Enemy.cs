@@ -45,9 +45,6 @@ public class Enemy : Entity, ICounterable {
     private bool inAttackWindow = false;
     public bool InAttackWindow => inAttackWindow;
 
-    private bool onPhaseDebuff = false;
-    private Coroutine phaseDebuffCo;
-
     private Coroutine enterBattleStateWithDelayCo;
 
     protected override void Awake() {
@@ -72,42 +69,8 @@ public class Enemy : Entity, ICounterable {
         base.Update();
     }
 
-    public virtual void SpecialAttack()
-    {
+    public virtual void SpecialAttack() {
         sfx?.PlaySpecialAttack1();
-    }
-
-    public void 
-        ApplyPhaseDebuff(float debuffDuration, float damageReduction, float armorReduction) {
-        if (onPhaseDebuff) {
-            return;
-        }
-
-        if (phaseDebuffCo != null) {
-            StopCoroutine(phaseDebuffCo);
-        }
-
-        phaseDebuffCo = 
-            StartCoroutine(PhaseDebuffCo(debuffDuration, damageReduction, armorReduction));
-    }
-
-    private IEnumerator 
-        PhaseDebuffCo(float debuffDuration, float damageReduction, float armorReduction) {
-        StartPhaseDebuff(damageReduction, armorReduction);
-        yield return new WaitForSeconds(debuffDuration);
-        EndPhaseDebuff();
-    }
-
-    private void StartPhaseDebuff(float damageReduction, float armorReduction) {
-        onPhaseDebuff = true;
-        stats.damage.AddModifier(-damageReduction, "WeaknessMarking");
-        stats.armor.AddModifier(-armorReduction, "WeaknessMarking");
-    }
-
-    private void EndPhaseDebuff() {
-        onPhaseDebuff = false;
-        stats.damage.RemoveModifier("WeaknessMarking");
-        stats.armor.RemoveModifier("WeaknessMarking");
     }
 
     public bool CanBeCountered() {
