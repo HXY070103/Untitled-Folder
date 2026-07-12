@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemyHealth : EntityHealth {
     public static event Action<float> OnDamageTaken;
     public static event Action OnEnemyDeath;
+    public static event Action<Enemy> OnEnemyKilled;
 
     private Enemy enemy;
 
@@ -18,18 +19,18 @@ public class EnemyHealth : EntityHealth {
 
         if (isDead) {
             OnEnemyDeath?.Invoke();
+            OnEnemyKilled?.Invoke(enemy);
+            return;
         }
-
-        float finalDamage = CalculateFinalDamage(damage);
-        OnDamageTaken?.Invoke(finalDamage);
 
         if (damageDealer.GetComponent<Player>() != null) {
             enemy.TryToEnterBattleState(damageDealer);
         }
     }
 
-    private float CalculateFinalDamage(Damage damage) {
-        float mitigation = stats.GetArmorMitigation();
-        return damage.value * (1 - mitigation);
+    protected override float CalculateReducedHP(Damage damage) {
+        float reducedHP = base.CalculateReducedHP(damage);
+        OnDamageTaken?.Invoke(reducedHP);
+        return reducedHP;
     }
 }

@@ -114,6 +114,10 @@ MonoBehaviour:
   increasedSkillDuration: 4
   recoverSpeedDelay: 1
   bonusDuration: 1
+  shockwavePrefab: {fileID: 6733579660901800008, guid: 591a11b8c1d1140baa78a5a3c65a488e, type: 3}
+  shockwaveDamage: 20
+  shockwaveDamageRange: 3
+  shockwaveDestoryDelay: 1
 --- !u!114 &227365949848170611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,16 +191,21 @@ MonoBehaviour:
   numOfUpgradesGet: 0
   cooldown: 3
   skillDuration: 3
+  conversionRate: 0.3
   fireVFXPrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
   fireballPrefab: {fileID: 3718646501417209727, guid: 6b278988086d54af5bd66d7117ea45ea, type: 3}
-  conversionRate: 0.3
   minFireballGenerationRadius: 1.5
   maxFireballGenerationRadius: 2
   fireballAmount: 5
-  reviveHPMultiplier: 0.2
+  temporaryShield: 50
   maxConversionRate: 2
+  maxDamageMultiplier: 2
+  maxAttackSpeed: 2
   healingHPThreshold: 0.2
   bonusMaxHP: 10
+  bonusArmor: 30
+  bonusDamage: 15
+  reviveHPMultiplier: 0.2
   damageTakenMultiplier: 2
   damageApplyMultiplier: 2
   attackAnimSpeedMultiplier: 1.5
@@ -959,7 +968,6 @@ MonoBehaviour:
   - {x: 4, y: 5}
   attackMovementDuration: 0.1
   comboResetTime: 0.5
-  attackAnimSpeedMultiplier: 1
   moveSpeed: 8
   jumpSpeed: 12
   wallJumpDuration: 0.2
@@ -1013,7 +1021,10 @@ MonoBehaviour:
   onHeavyDamageKnockback: {x: 7, y: 7}
   heavyKnockbackDuration: 0.5
   miniHealthBarActive: 0
-  isAttacked: 0
+  temporaryShield: 0
+  permanentShield: 0
+  hasTemporaryShield: 0
+  hasPermanentShield: 0
 --- !u!114 &3170532416984032037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1049,7 +1060,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c689b46d32aa4fef876888f6c08311f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  defaultStatSetup: {fileID: 11400000, guid: b970993ca290b4cf4a0ece4687e71472, type: 2}
   maxHP:
     baseValue: 100
     modifiers: []
@@ -1074,12 +1084,19 @@ MonoBehaviour:
     baseValue: 1
     modifiers: []
     multipliers: []
+  attackSpeed:
+    baseValue: 1
+    modifiers: []
+    multipliers: []
   bonusMaxHP: 20
   bonusDamage: 30
   bonusCritPower: 0.5
   bonusCritChance: 10
   bonusArmor: 40
   bonusSkillEffect: 0.4
+  level2Skill: 1.2
+  level6Skill: 1.1
+  levelFullSkill: 1.2
 --- !u!114 &6596648338181236841
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,7 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
 using System;
-using System.Collections;
 
 public class EntityHealth : MonoBehaviour, IDamageable {
     public event Action OnHealthUpdate;
@@ -49,72 +48,72 @@ public class EntityHealth : MonoBehaviour, IDamageable {
             ReduceHP(currentHP);
         }
     }
-
-    public void StartDeathPrevention(float reviveHPMultiplier) {
-        canRevival = true;
-        this.reviveHPMultiplier = reviveHPMultiplier;
-    }
-
-    public void StopDeathPrevention() {
-        canRevival = false;
-    }
  
     public virtual void TakeDamage(Damage damage, Transform damageDealer) {
         if (isDead) {
             return;
         }
 
-        float finalDamage = CalculateFinalDamage(damage);
-        ReduceHP(finalDamage);
+        float reducedHP = CalculateReducedHP(damage);
+        ReduceHP(reducedHP);
 
-        Vector2 knockback = CalculateKnockback(finalDamage, damageDealer);
-        float duration = CalculateDuration(finalDamage);
+        Vector2 knockback = CalculateKnockback(reducedHP, damageDealer);
+        float duration = CalculateDuration(reducedHP);
         entity.ReceiveKnockback(knockback, duration);
 
         vfx.PlayOnDamageVFX();
-    }
-
-    private float CalculateFinalDamage(Damage damage) {
-        float mitigation = stats.GetArmorMitigation();
-        return damage.value * (1 - mitigation);
-    }
-
-    public void IncreaseMaxHP(float bonusMaxHP, string source) {
-        stats.maxHP.AddModifier(bonusMaxHP, source);
-        currentHP += bonusMaxHP;
-        if (currentHP > stats.GetMaxHP()) {
-            currentHP = stats.GetMaxHP();
-        }
-        OnHealthUpdate?.Invoke();
-    }
-
-    public void DecreaseMaxHP(float reduceMaxHP, string source) {
-        stats.maxHP.AddModifier(-reduceMaxHP, source);
-        if (currentHP > stats.GetMaxHP()) {
-            currentHP = stats.GetMaxHP();
-        }
-        if (currentHP <= 0) {
-            currentHP = 0;
-        }
-        OnHealthUpdate?.Invoke();
-    }
-
-    public void Healing(float healingHP) {
-        currentHP += healingHP;
-
-        if (currentHP > stats.GetMaxHP()) {
-            currentHP = stats.GetMaxHP();
-        }
-
-        OnHealthUpdate?.Invoke();
     }
 
     public void SetDamageTakenMultiplier(float damageTakenMultiplier) {
         this.damageTakenMultiplier = damageTakenMultiplier;
     }
 
-    public void ReduceHP(float damage) {
-        currentHP -= damage * damageTakenMultiplier;
+    protected virtual float CalculateReducedHP(Damage damage) {
+        float mitigation = stats.GetArmorMitigation();
+        float finalDamage = damage.value * (1 - mitigation);
+        return finalDamage * damageTakenMultiplier;
+    }
+
+    private Vector2 CalculateKnockback(float reducedHP, Transform damageDealer) {
+        int knockbackDir = transform.position.x > damageDealer.position.x ? 1 : -1;
+        Vector2 knockback = IsHeavyDamage(reducedHP) ? onHeavyDamageKnockback : onDamageKnockback;
+
+        return new Vector2(knockbackDir * knockback.x, knockback.y);
+    }
+
+    private float CalculateDuration(float reducedHP) {
+        return IsHeavyDamage(reducedHP) ? heavyKnockbackDuration : knockbackDuration;
+    }
+
+    private bool IsHeavyDamage(float reducedHP) {
+        float healthPercentageTaken = reducedHP / stats.GetMaxHP();
+        return healthPercentageTaken > heavyDamageThreshold;
+    }
+
+    public float Healing(float healingHP) {
+        if (isDead) {
+            return 0;
+        }
+
+        float overflowingHP = 0;
+        currentHP += healingHP;
+
+        if (currentHP > stats.GetMaxHP()) {
+            overflowingHP = currentHP - stats.GetMaxHP();
+            currentHP = stats.GetMaxHP();
+        }
+    
+        OnHealthUpdate?.Invoke();
+
+        return overflowingHP;
+    }
+
+    public void ReduceHP(float reducedHP) {
+        if (isDead) {
+            return;
+        }
+
+        currentHP -= reducedHP;
 
         if (currentHP <= 0.5) {
             currentHP = 0;
@@ -126,14 +125,47 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     private void Die() {
         if (canRevival) {
-            float reviveHP = stats.GetMaxHP() * reviveHPMultiplier;
-            Healing(reviveHP);
-            canRevival = false;
+            Revival();
             return;
         }
 
         isDead = true;
         entity.EntityDeath();
+    }
+
+    public void StartDeathPrevention(float reviveHPMultiplier) {
+        canRevival = true;
+        this.reviveHPMultiplier = reviveHPMultiplier;
+    }
+
+    public void StopDeathPrevention() {
+        canRevival = false;
+    }
+
+    private void Revival() {
+        currentHP = stats.GetMaxHP() * reviveHPMultiplier;
+        canRevival = false;
+        OnHealthUpdate?.Invoke();
+    }
+
+    public void IncreaseMaxHP(float bonusMaxHP, string source) {
+        stats.maxHP.AddModifier(bonusMaxHP, source);
+        currentHP += bonusMaxHP;
+        if (currentHP > stats.GetMaxHP()) {
+            currentHP = stats.GetMaxHP();
+        }
+        OnHealthUpdate?.Invoke();
+    }
+
+    public void DecreaseMaxHP(float reducedMaxHP, string source) {
+        stats.maxHP.AddModifier(-reducedMaxHP, source);
+        if (currentHP > stats.GetMaxHP()) {
+            currentHP = stats.GetMaxHP();
+        }
+        if (currentHP <= 0) {
+            currentHP = 0;
+        }
+        OnHealthUpdate?.Invoke();
     }
 
     private void UpdateHealthBar() {
@@ -146,22 +178,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public void EnableHealthBar(bool enable) {
         healthBar?.gameObject.SetActive(enable);
-    }
-
-    private Vector2 CalculateKnockback(float damage, Transform damageDealer) {
-        int knockbackDir = transform.position.x > damageDealer.position.x ? 1 : -1;
-        Vector2 knockback = IsHeavyDamage(damage) ? onHeavyDamageKnockback : onDamageKnockback;
-
-        return new Vector2(knockbackDir * knockback.x, knockback.y);
-    }
-
-    private float CalculateDuration(float damage) {
-        return IsHeavyDamage(damage) ? heavyKnockbackDuration : knockbackDuration;
-    }
-
-    private bool IsHeavyDamage(float damage) {
-        float healthPercentageTaken = damage / stats.GetMaxHP();
-        return healthPercentageTaken > heavyDamageThreshold;
     }
 
     public float GetCurrentHP() {

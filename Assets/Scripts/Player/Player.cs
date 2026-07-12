@@ -33,7 +33,6 @@ public class Player : Entity {
     public Vector2[] attackSpeed;
     public float attackMovementDuration = 0.1f;
     public float comboResetTime = 0.5f;
-    public float attackAnimSpeedMultiplier = 1;
     
     private Coroutine queueAttackCo;
     private Coroutine setHeavyAttackCo;
@@ -44,7 +43,6 @@ public class Player : Entity {
     public bool IsHeavyAttack => isHeavyAttack;
     public int NumOfHeavyAttack => numOfHeavyAttack;
     public bool CanAttack => canAttack;
-
 
     [Header("Movement info")]
     public float moveSpeed = 8;
@@ -126,17 +124,8 @@ public class Player : Entity {
         stateMachine.ChangeState(deadState);
     }
 
-    public void TeleportPlayer(Vector3 position)
-    {
+    public void TeleportPlayer(Vector3 position) {
         transform.position = position;
-    }
-
-    public void IncreaseAttackSpeed(float attackAnimSpeedMultiplier) {
-        this.attackAnimSpeedMultiplier = attackAnimSpeedMultiplier;
-    }
-
-    public void ResetAttackSpeed() {
-        attackAnimSpeedMultiplier = 1;
     }
 
     public void SpeedUp(float speedUpPercentage) {

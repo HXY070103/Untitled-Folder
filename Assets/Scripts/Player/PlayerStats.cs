@@ -3,11 +3,11 @@ using System.Linq;
 using UnityEngine;
 
 public class PlayerStats : EntityStats, ISaveable {
-    [Header("Skill")]
+    [Header("Player specific ")]
     public Stat skillEffect;
+    public Stat attackSpeed;
 
     [Header("Upgrade info")]
-
     public float bonusMaxHP = 20;
     public float bonusDamage = 30;
     public float bonusCritPower = 0.5f;
@@ -15,12 +15,21 @@ public class PlayerStats : EntityStats, ISaveable {
     public float bonusArmor = 40;
     public float bonusSkillEffect = 0.4f;
 
+    [Header("Level upgrade info")]
+    [SerializeField] private float level2Skill = 1.2f;
+    [SerializeField] private float level6Skill = 1.1f;
+    [SerializeField] private float levelFullSkill = 1.2f;
+
     private AttributeUpgrade[] upgrades;
     private List<AttributeUpgrade> obtainAttributeUpgrades = new List<AttributeUpgrade>();
     public List<AttributeUpgrade> ObtainAttributeUpgrades => obtainAttributeUpgrades;
 
     public float GetSkillEffect() {
         return skillEffect.GetValue();
+    }
+
+    public float GetAttackSpeed() {
+        return attackSpeed.GetValue();
     }
 
     private void Awake() {
@@ -59,6 +68,7 @@ public class PlayerStats : EntityStats, ISaveable {
             critChance.RemoveModifier(source);
             armor.RemoveModifier(source);
             skillEffect.RemoveModifier(source);
+            attackSpeed.RemoveModifier(source);
         }
     }
 
@@ -72,41 +82,52 @@ public class PlayerStats : EntityStats, ISaveable {
         upgrade.ApplyUpgrade();
         obtainAttributeUpgrades.Add(upgrade);
     }
-
-    [ContextMenu("Update Skill Default Stat Setup")]
-    public void ApplySkillDefualtStatSetup() {
-        if (defaultStatSetup == null) {
-            Debug.Log("No default stat setup assigned!");
-            return;
-        }
-
-        skillEffect.SetBaseValue(defaultStatSetup.skillEffect);
-    }
     
     public AttributeUpgrade[] GetAttributeUpgrades() {
         return upgrades;
     }
 
-    public void ReachLevel2Skill()
-    {
-        skillEffect.AddMultiplier(1.2f, "Level2Skill");
+    public void ReachLevel2Skill() {
+        skillEffect.AddMultiplier(level2Skill, "Level2Skill");
     }
 
-    public void ReachLevel6Skill()
-    {
-        maxHP.AddMultiplier(1.1f, "Level6Skill");
-        damage.AddMultiplier(1.1f, "Level6Skill");
-        critChance.AddMultiplier(1.1f, "Level6Skill");
-        critPower.AddMultiplier(1.1f, "Level6Skill");
-        armor.AddMultiplier(1.1f, "Level6Skill");
+    public void ReachLevel6Skill() {
+        maxHP.AddMultiplier(level6Skill, "Level6Skill");
+        damage.AddMultiplier(level6Skill, "Level6Skill");
+        critChance.AddMultiplier(level6Skill, "Level6Skill");
+        critPower.AddMultiplier(level6Skill, "Level6Skill");
+        armor.AddMultiplier(level6Skill, "Level6Skill");
+        attackSpeed.AddMultiplier(level6Skill, "Level6Skill");
     }
-    public void ReachFullLevel()
+
+    public void ReachFullLevel() {
+        maxHP.AddMultiplier(levelFullSkill, "LevelFullSkill");
+        damage.AddMultiplier(levelFullSkill, "LevelFullSkill");
+        critChance.AddMultiplier(levelFullSkill, "LevelFullSkill");
+        critPower.AddMultiplier(levelFullSkill, "LevelFullSkill");
+        armor.AddMultiplier(levelFullSkill, "LevelFullSkill");
+        attackSpeed.AddMultiplier(levelFullSkill, "LevelFullSkill");
+    }
+
+    public void RestoreSkillPhaseBonuses(bool level2Unlocked, bool level6Unlocked, bool fullUnlocked)
     {
-        maxHP.AddMultiplier(1.2f, "LevelFullSkill");
-        damage.AddMultiplier(1.2f, "LevelFullSkill");
-        critChance.AddMultiplier(1.2f, "LevelFullSkill");
-        critPower.AddMultiplier(1.2f, "LevelFullSkill");
-        armor.AddMultiplier(1.2f, "LevelFullSkill");
+        skillEffect.RemoveModifier("Level2Skill");
+
+        maxHP.RemoveModifier("Level6Skill");
+        damage.RemoveModifier("Level6Skill");
+        critChance.RemoveModifier("Level6Skill");
+        critPower.RemoveModifier("Level6Skill");
+        armor.RemoveModifier("Level6Skill");
+
+        maxHP.RemoveModifier("LevelFullSkill");
+        damage.RemoveModifier("LevelFullSkill");
+        critChance.RemoveModifier("LevelFullSkill");
+        critPower.RemoveModifier("LevelFullSkill");
+        armor.RemoveModifier("LevelFullSkill");
+
+        if (level2Unlocked) ReachLevel2Skill();
+        if (level6Unlocked) ReachLevel6Skill();
+        if (fullUnlocked) ReachFullLevel();
     }
 
     public void RestoreSkillPhaseBonuses(bool level2Unlocked, bool level6Unlocked, bool fullUnlocked)

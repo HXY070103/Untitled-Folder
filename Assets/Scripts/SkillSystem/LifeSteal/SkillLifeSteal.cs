@@ -2,48 +2,50 @@ using UnityEngine;
 
 public class SkillLifeSteal : SkillBase {
     private PlayerHealth health;
-    private Player player;
 
     [Header("Skill info")]
+    [SerializeField] private float conversionRate = 0.3f;
     [SerializeField] private GameObject fireVFXPrefab;
     [SerializeField] private GameObject fireballPrefab;
-    [SerializeField] private float conversionRate = 0.3f;
-    [Space]
     [SerializeField] private float minFireballGenerationRadius = 1.5f;
     [SerializeField] private float maxFireballGenerationRadius = 2;
     [SerializeField] private int fireballAmount = 5;
-    
-    [Header("Unshakable resolve info")]
-    [SerializeField] private float reviveHPMultiplier = 0.2f;
-
-    [Header("Desperate gambit info")]
-    [SerializeField] private float maxConversionRate = 2;
-
-    [Header("Blood growth info")]
-    [SerializeField] private float healingHPThreshold = 0.2f;
-    [SerializeField] private float bonusMaxHP = 10;
-
-    [Header("Blood frenzy info")]
-    [SerializeField] private float damageTakenMultiplier = 2;
-    [SerializeField] private float damageApplyMultiplier = 2;
-    [SerializeField] private float attackAnimSpeedMultiplier = 1.5f;
-
-    [SerializeField] private float amountOfBloodBack;
 
     private float totalHealingHP;
     private GameObject fireVFX;
 
+    [Header("Stable gain info")]
+    [SerializeField] private float temporaryShield = 50;
+
+    [Header("Desperate gambit info")]
+    [SerializeField] private float maxConversionRate = 2;
+    [SerializeField] private float maxDamageMultiplier = 2;
+    [SerializeField] private float maxAttackSpeed = 2;
+
+    [Header("Blood growth info")]
+    [SerializeField] private float healingHPThreshold = 0.5f;
+    [SerializeField] private float bonusMaxHP = 10;
+    [SerializeField] private float bonusArmor = 30;
+    [SerializeField] private float bonusDamage = 15;
+
+    [Header("Overflowing aegis info")]
+    public float damageMultiplier = 2;
+    public float attackSpeedMultiplier = 1.5f;
+    
+    [Header("Unshakable resolve info")]
+    [SerializeField] private float reviveHPMultiplier = 0.2f;
+
+    [SerializeField] private float amountOfBloodBack;
+
     public float GetConversionRate() {
         float bonusConversionRate;
+
         if (Unlocked("Desperate Gambit")) {
             bonusConversionRate = (maxConversionRate - conversionRate) * (1 - health.GetHPPercentage());
         } else {
             bonusConversionRate = 0;
         }
-        if (Unlocked("Fixed Blood"))
-        {
-            return (conversionRate + bonusConversionRate) * stats.GetSkillEffect();
-        }
+        
         return (conversionRate + bonusConversionRate) * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
@@ -51,7 +53,6 @@ public class SkillLifeSteal : SkillBase {
         base.Awake();
 
         health = GetComponentInParent<PlayerHealth>();
-        player = GetComponentInParent<Player>();
     }
 
     protected override void StartSkill() {
@@ -59,6 +60,10 @@ public class SkillLifeSteal : SkillBase {
 
         StartAccumulateDamage();
         CreatFireVFX();
+
+        if (Unlocked("Stable Gain+")) {
+            health.ShieldManager.AddTemporaryShield(temporaryShield);
+        }
 
         if (Unlocked("Unshakable Resolve")) {
             health.StartDeathPrevention(reviveHPMultiplier);
@@ -70,75 +75,68 @@ public class SkillLifeSteal : SkillBase {
 
         EndAccumulateDamage();
         DestroyFireVFX();
+        CreateFireball();
 
-        if (Unlocked("Blood Back"))
-        {
-            HandleBloodBack();
+        if (Unlocked("Stable Gain+")) {
+            health.ShieldManager.RemoveTemporaryShield();
         }
 
-        if (!Unlocked("Unshakable Resolve") && !Unlocked("Stable Gain")) {
-            CreateFireball();
-        }
+        ApplyBloodGrowthReward();
 
         if (Unlocked("Unshakable Resolve")) {
             health.StopDeathPrevention();
         }
+    }
+
+    private void ApplyBloodGrowthReward() {
+        if (totalHealingHP < stats.GetMaxHP() * healingHPThreshold) {
+            return;
+        }
 
         if (Unlocked("Blood Growth")) {
-            HandleMaxHPIncrease();
+            health.IncreaseMaxHP(bonusMaxHP, "BloodGrowth");
+        }
+
+        if (Unlocked("Blood Growth+")) {
+            stats.armor.AddModifier(bonusArmor, "BloodGrowth");
+            stats.damage.AddModifier(bonusDamage, "BloodGrowth");
         }
     }
 
-    private void HandleBloodBack()
-    {
-        if (totalHealingHP >= amountOfBloodBack)
-        {
-            DecreaseDecay(1);
+    private void Healing(float healingHP) {
+        float overflowingHP = health.Healing(healingHP);
+        
+        if (Unlocked("Overflowing Aegis") && overflowingHP > 0) {
+            health.ShieldManager.AddPermanentShield(overflowingHP);
         }
     }
 
     public void HealingAtEnd() {
         float healingHP = totalHealingHP / fireballAmount;
-        health.Healing(healingHP);
-    }
-
-    private void IncreaseDamage() {
-        float baseDamage = stats.damage.GetValue();
-        float bonusDamage = baseDamage * (damageApplyMultiplier - 1);
-        stats.damage.AddModifier(bonusDamage, "BloodFrenzy");
-    }
-
-    private void ResetDamage() {
-        stats.damage.RemoveModifier("BloodFrenzy");
-    }
-
-    private void HandleMaxHPIncrease() {
-        if (totalHealingHP > stats.GetMaxHP() * healingHPThreshold) {
-            health.IncreaseMaxHP(bonusMaxHP, "BloodGrowth");
-        }
+        Healing(healingHP);
     }
 
     private void CreateFireball() {
+        if (Unlocked("Unshakable Resolve") || Unlocked("Stable Gain")) {
+            return;
+        }
+
         for (int i = 0; i < fireballAmount; i += 1) {
-            Vector2 direction = CalculateDirection(i);
-            Vector3 randomPosition = GenerateRandomPosition(direction);
+            Vector3 randomPosition = GenerateRandomPosition(i);
             GameObject fireball = 
                 Instantiate(fireballPrefab, randomPosition, Quaternion.identity);
             fireball.GetComponent<FireballController>().SetUpFireball(this);
         }
     }
 
-    private Vector2 CalculateDirection(int i) {
+    private Vector3 GenerateRandomPosition(int i) {
         float angle = i * 360f / fireballAmount;
         float rad = angle * Mathf.Deg2Rad;
+        Vector2 dir =  new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
 
-        return new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-    }
-
-    private Vector3 GenerateRandomPosition(Vector2 direction) {
         float randomDistance = 
             Random.Range(minFireballGenerationRadius, maxFireballGenerationRadius);
-        Vector3 randomOffset = direction * randomDistance;
+        Vector3 randomOffset = dir * randomDistance;
 
         return transform.position + randomOffset;
     }
@@ -166,7 +164,7 @@ public class SkillLifeSteal : SkillBase {
         totalHealingHP += healingHP;
 
         if (Unlocked("Stable Gain")) {
-            health.Healing(healingHP);
+            Healing(healingHP);
         }
     }
 }

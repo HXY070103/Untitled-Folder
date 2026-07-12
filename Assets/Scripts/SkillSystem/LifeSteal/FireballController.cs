@@ -6,11 +6,11 @@ public class FireballController : MonoBehaviour {
     [SerializeField] private float minWaitingTime = 0.5f;
     [SerializeField] private float maxWaitingTime = 1;
 
-    private SkillLifeSteal fireballManager;
+    private SkillLifeSteal skill;
     private bool canChase;
 
     public void SetUpFireball(SkillLifeSteal fireballManager) {
-        this.fireballManager = fireballManager;
+        this.skill = fireballManager;
         canChase = false;
 
         float waitingTime = Random.Range(minWaitingTime, maxWaitingTime);
@@ -24,14 +24,14 @@ public class FireballController : MonoBehaviour {
     }
 
     private void HandleChasing() {
-        Vector3 targetPosition = fireballManager.transform.position;
+        Vector3 targetPosition = skill.transform.position;
         float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
         
         if (distanceToTarget > 0.5f) {
             transform.position = 
                 Vector3.Lerp(transform.position, targetPosition, chaseSpeed * Time.deltaTime);
         } else {
-            fireballManager.HealingAtEnd();
+            skill.HealingAtEnd();
             Destroy(gameObject);
         }
     }
