@@ -3,7 +3,7 @@ using UnityEngine;
 public class BurstDamage : SkillEffectBase {
     private float damage;
 
-    public BurstDamage(string name, float damage) : base(name) {
+    public BurstDamage(string name, float damage) : base(name, false) {
         this.damage = damage;
     }
 

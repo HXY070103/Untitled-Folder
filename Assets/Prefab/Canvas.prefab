@@ -2906,6 +2906,7 @@ MonoBehaviour:
     description: 
     upgrades: []
     betterUpgrades: []
+    skillPhaseUpgrades: []
   playerStats: {fileID: 0}
   skillManager: {fileID: 0}
 --- !u!1 &2121889135872919616

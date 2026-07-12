@@ -28,7 +28,6 @@ public class Player : Entity {
     public PlayerHeavyAttackState heavyAttackState { get; private set; }
 
     [Header("Attack info")]
-    public Vector2 heavyAttackSpeed = new Vector2(5, 1.5f);
     public Vector2 jumpAttackSpeed = new Vector2(5, -6);
     public Vector2[] attackSpeed;
     public float attackMovementDuration = 0.1f;
@@ -36,13 +35,10 @@ public class Player : Entity {
     
     private Coroutine queueAttackCo;
     private Coroutine setHeavyAttackCo;
-    private bool isHeavyAttack = false;
-    private int numOfHeavyAttack = 0;
-    private bool canAttack = true;
 
-    public bool IsHeavyAttack => isHeavyAttack;
-    public int NumOfHeavyAttack => numOfHeavyAttack;
-    public bool CanAttack => canAttack;
+    public bool isHeavyAttack { get; private set; } = false;
+    public bool canAttack {get; private set; } = true;
+    private int numOfHeavyAttack = 0;
 
     [Header("Movement info")]
     public float moveSpeed = 8;
