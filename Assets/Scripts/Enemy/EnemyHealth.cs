@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 public class EnemyHealth : EntityHealth {
-    public static event Action<float> OnDamageTaken;
+    public static event Action<float, Transform> OnDamageTaken;
     public static event Action OnEnemyDeath;
     public static event Action<Enemy> OnEnemyKilled;
 
@@ -28,9 +28,9 @@ public class EnemyHealth : EntityHealth {
         }
     }
 
-    protected override float CalculateReducedHP(Damage damage) {
-        float reducedHP = base.CalculateReducedHP(damage);
-        OnDamageTaken?.Invoke(reducedHP);
+    protected override float CalculateReducedHP(Damage damage, Transform damageDealer) {
+        float reducedHP = base.CalculateReducedHP(damage, damageDealer);
+        OnDamageTaken?.Invoke(reducedHP, damageDealer);
         return reducedHP;
     }
 }

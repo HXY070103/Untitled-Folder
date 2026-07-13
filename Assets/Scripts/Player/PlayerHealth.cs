@@ -13,8 +13,8 @@ public class PlayerHealth : EntityHealth, ISaveable {
         shieldManager.Initialize(stats, lifeSteal);
     }
 
-    protected override float CalculateReducedHP(Damage damage) {
-        float remain = base.CalculateReducedHP(damage);
+    protected override float CalculateReducedHP(Damage damage, Transform damageDealer) {
+        float remain = base.CalculateReducedHP(damage, damageDealer);
         remain = shieldManager.ConsumeShield(remain);
         return remain;
     }
