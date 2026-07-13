@@ -29,13 +29,15 @@ public class PlayerHeavyAttackState : PlayerState {
     public override void Update() {
         base.Update();
 
+        CancelAttackIfNeeded();
+
         float xVelocity = attackDir * phase.heavyAttackSpeed;
         player.Move(xVelocity, 0);
 
         AddTarget();
 
         if (triggerCalled) {
-            stateMachine.ChangeState(player.idleState);
+            HandleStateExit();
         }
     }
 
@@ -46,9 +48,26 @@ public class PlayerHeavyAttackState : PlayerState {
         player.Move(0, 0);
 
         vfx.StopImageEchoEffect();
-        player.UpdateHeavyAttack();
         EndHeavyAttack();
         EndChainPhantasmReward();
+    }
+
+    private void HandleStateExit() {
+        if (player.groundDetected) {
+            stateMachine.ChangeState(player.idleState);
+        } else {
+            stateMachine.ChangeState(player.fallState);
+        }
+    }
+
+    private void CancelAttackIfNeeded() {
+        if (player.wallDetected) {
+            if (player.groundDetected) {
+                stateMachine.ChangeState(player.idleState);
+            } else {
+                stateMachine.ChangeState(player.wallSlideState);
+            }
+        }
     }
 
     private void AddTarget() {
@@ -62,8 +81,7 @@ public class PlayerHeavyAttackState : PlayerState {
 
     private void StartHeavyAttack() {
         if (phase.Unlocked("Shadow Assassination")) {
-            player.combat.SetNextAttackToInstantKill();
-            return;
+            player.combat.SetCanExecute(true);
         }
 
         player.stats.damage.AddMultiplier(phase.GetDamageMultiplier(), "HeavyAttack");
@@ -71,7 +89,14 @@ public class PlayerHeavyAttackState : PlayerState {
 
     private void EndHeavyAttack() {
         PerformAttack();
+        vfx.DoGlobalPause();
+
+        if (phase.Unlocked("Shadow Assassination")) {
+            player.combat.SetCanExecute(false);
+        }
+
         player.stats.damage.RemoveMultiplier("HeavyAttack");
+        player.UpdateHeavyAttack();
     }
 
     private void PerformAttack() {

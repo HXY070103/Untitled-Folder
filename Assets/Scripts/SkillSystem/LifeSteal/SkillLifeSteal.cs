@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class SkillLifeSteal : SkillBase {
     private PlayerHealth health;
+    private Player player;
 
     [Header("Skill info")]
     [SerializeField] private float conversionRate = 0.3f;
@@ -53,6 +54,7 @@ public class SkillLifeSteal : SkillBase {
         base.Awake();
 
         health = GetComponentInParent<PlayerHealth>();
+        player = GetComponentInParent<Player>();
     }
 
     protected override void StartSkill() {
@@ -159,7 +161,11 @@ public class SkillLifeSteal : SkillBase {
         EnemyHealth.OnDamageTaken -= AccumulateDamage;
     }
 
-    private void AccumulateDamage(float damage) {
+    private void AccumulateDamage(float damage, Transform damageDealer) {
+        if (damageDealer != player.transform) {
+            return;
+        }
+
         float healingHP = damage * GetConversionRate();
         totalHealingHP += healingHP;
 

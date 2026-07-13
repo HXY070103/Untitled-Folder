@@ -32,6 +32,12 @@ public class SkillPhase : SkillBase {
 
     private GameObject phaseTracker;
 
+    [Header("Shadow assassination info")]
+    [SerializeField] private float HPThreshold = 0.5f;
+    [SerializeField] private float bonusDamage = 50;
+    [SerializeField] private float betterHPThreshold = 0.75f;
+    [SerializeField] private float betterBonusDamage = 75;
+
     [Header("Chain phantasm info")]
     [SerializeField] private float bonusPhaseDuration = 1.5f;
 
@@ -51,6 +57,22 @@ public class SkillPhase : SkillBase {
 
     public float GetDamageMultiplier() {
         return damageMultiplier * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
+    }
+
+    public float GetHPThreshold() {
+        if (Unlocked("Shadow Assassination+")) {
+            return betterHPThreshold;
+        }
+
+        return HPThreshold;
+    }
+
+    public float GetBonusDamage() {
+        if (Unlocked("Shadow Assassination+")) {
+            return betterBonusDamage;
+        }
+
+        return bonusDamage;
     }
 
     protected override void Awake() {

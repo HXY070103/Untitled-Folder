@@ -1,34 +1,37 @@
 using UnityEngine;
 
 public class PlayerCombat : EntityCombat {
+    private SkillPhase phase;
+    private bool canExecute = false;
+
     [Header("Conuter attack info")]
     [SerializeField] private float counterRecoveryDuration = 0.25f;
     [SerializeField] private LayerMask whatIsCounterable;
 
-    private bool canApplyInstantKill = false;
+    protected override void Awake() {
+        base.Awake();
 
-    public override void PerformAttack() {
-        base.PerformAttack();
+        phase = GetComponentInChildren<SkillPhase>();
+    }
 
-        canApplyInstantKill = false;
+    public void SetCanExecute(bool canExecute) {
+        this.canExecute = canExecute;
     }
 
     public override void PerformAttackOnTarget(Transform target) {
         base.PerformAttackOnTarget(target);
 
-        IDamageable damageable = target.GetComponent<IDamageable>();
+        if (!canExecute) {
+            return;
+        }
 
+        IDamageable damageable = target.GetComponent<IDamageable>();
+            
         if (damageable == null) {
             return;
         }
 
-        if (canApplyInstantKill) {
-            damageable.TryApplyInstantKill();
-        }
-    }
-
-    public void SetNextAttackToInstantKill() {
-        canApplyInstantKill = true;
+        damageable.TryToExecute(phase.GetHPThreshold(), phase.GetBonusDamage());
     }
 
     public bool CounterAttackPerformed() {

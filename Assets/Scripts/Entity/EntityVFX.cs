@@ -91,7 +91,7 @@ public class EntityVFX : MonoBehaviour {
         }
     }
 
-    public void PlayOnDamageVFX() {
+    public virtual void PlayOnDamageVFX() {
         if (onDamageVFXCo != null) {
             StopCoroutine(onDamageVFXCo);
         }

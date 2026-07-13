@@ -965,11 +965,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19e037d9e7ef34f05bcffa128fbb8199, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyCombat
+  targetCheck: {fileID: 2740391117665969766}
   targetCheckRadius: 0.5
   whatIsTarget:
     serializedVersion: 2
     m_Bits: 2176
-  targetCheck: {fileID: 2740391117665969766}
 --- !u!114 &1565789700995743765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -985,7 +985,7 @@ MonoBehaviour:
   isDead: 0
   currentHP: 0
   initialMaxHP: 100
-  isOnShotKillable: 1
+  isExecutable: 1
   damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
@@ -1028,7 +1028,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 290bd3954f3844d168f3032ef9ebeca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityStats
-  defaultStatSetup: {fileID: 11400000, guid: b970993ca290b4cf4a0ece4687e71472, type: 2}
   maxHP:
     baseValue: 70
     modifiers: []

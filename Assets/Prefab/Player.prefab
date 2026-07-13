@@ -290,6 +290,7 @@ MonoBehaviour:
   perfectPhaseWindow: 0.2
   lockAttackDuration: 0.5
   heavyAttackExpiryTime: 10
+  heavyAttackSpeed: 15
   bonusHP: 15
   bonusNumOfHeavyAttack: 3
   phaseTrackerPrefab: {fileID: 6660558275766549021, guid: 91ac758a1168f48fbbc4f2bdde2f770c, type: 3}
@@ -969,7 +970,6 @@ MonoBehaviour:
   - {x: 4, y: 5}
   attackMovementDuration: 0.1
   comboResetTime: 0.5
-  heavyAttackSpeed: 5
   moveSpeed: 8
   jumpSpeed: 12
   wallJumpDuration: 0.2
@@ -991,11 +991,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6397b8be5204d4ebedd89e2829aa4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
+  targetCheck: {fileID: 8405379681717362425}
   targetCheckRadius: 1.39
   whatIsTarget:
     serializedVersion: 2
     m_Bits: 256
-  targetCheck: {fileID: 8405379681717362425}
   counterRecoveryDuration: 0.25
   whatIsCounterable:
     serializedVersion: 2
@@ -1051,6 +1051,8 @@ MonoBehaviour:
   targetAlpha: 0.2
   fadeSpeed: 2
   fadeInterval: 0.05
+  globalPauseScale: 0.1
+  globalPauseDuration: 0.5
 --- !u!114 &3690069604150053797
 MonoBehaviour:
   m_ObjectHideFlags: 0
