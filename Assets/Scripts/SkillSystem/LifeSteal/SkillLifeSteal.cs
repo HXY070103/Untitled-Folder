@@ -20,8 +20,8 @@ public class SkillLifeSteal : SkillBase {
 
     [Header("Desperate gambit info")]
     [SerializeField] private float maxConversionRate = 2;
-    [SerializeField] private float maxDamageMultiplier = 2;
-    [SerializeField] private float maxAttackSpeed = 2;
+    public float maxDamageMultiplier = 2;
+    public float maxAttackSpeedMultiplier = 2;
 
     [Header("Blood growth info")]
     [SerializeField] private float healingHPThreshold = 0.5f;
@@ -42,12 +42,21 @@ public class SkillLifeSteal : SkillBase {
         float bonusConversionRate;
 
         if (Unlocked("Desperate Gambit")) {
-            bonusConversionRate = (maxConversionRate - conversionRate) * (1 - health.GetHPPercentage());
+            bonusConversionRate = 
+                Mathf.Lerp(maxConversionRate - conversionRate, 0, health.GetHPPercentage());
         } else {
             bonusConversionRate = 0;
         }
         
         return (conversionRate + bonusConversionRate) * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
+    }
+
+    public float GetDamageMultiplier() {
+        return Mathf.Lerp(maxDamageMultiplier, 1, health.GetHPPercentage());
+    }
+
+    public float GetAttackSpeedMultiplier() {
+        return Mathf.Lerp(maxAttackSpeedMultiplier, 1, health.GetHPPercentage());
     }
 
     protected override void Awake() {
@@ -67,6 +76,8 @@ public class SkillLifeSteal : SkillBase {
             health.ShieldManager.AddTemporaryShield(temporaryShield);
         }
 
+        StartDesperateGambitBuff(health.GetCurrentHP());
+
         if (Unlocked("Unshakable Resolve")) {
             health.StartDeathPrevention(reviveHPMultiplier);
         }
@@ -83,11 +94,34 @@ public class SkillLifeSteal : SkillBase {
             health.ShieldManager.RemoveTemporaryShield();
         }
 
+        EndDesperateGambitBuff();
         ApplyBloodGrowthReward();
 
         if (Unlocked("Unshakable Resolve")) {
             health.StopDeathPrevention();
         }
+    }
+
+    private void StartDesperateGambitBuff(float reducedHP) {
+        if (!Unlocked("Desperate Gambit+")) {
+            return;
+        }
+
+        health.SetCanApplyBuff(true);
+
+        stats.damage.AddMultiplier(GetDamageMultiplier(), "DesperateGambit");
+        stats.attackSpeed.AddMultiplier(GetAttackSpeedMultiplier(), "DesperateGambit");
+    }
+
+    private void EndDesperateGambitBuff() {
+        if (!Unlocked("Desperate Gambit+")) {
+            return;
+        }
+
+        health.SetCanApplyBuff(false);
+
+        stats.damage.RemoveMultiplier("DesperateGambit");
+        stats.attackSpeed.RemoveMultiplier("DesperateGambit");
     }
 
     private void ApplyBloodGrowthReward() {

@@ -113,7 +113,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         return overflowingHP;
     }
 
-    public void ReduceHP(float reducedHP) {
+    public virtual void ReduceHP(float reducedHP) {
         if (isDead) {
             return;
         }

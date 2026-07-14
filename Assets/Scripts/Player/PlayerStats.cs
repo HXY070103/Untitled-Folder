@@ -35,7 +35,7 @@ public class PlayerStats : EntityStats, ISaveable {
     private void Awake() {
         InitializeAttributeUpgrades();
     }
-    
+
     private void InitializeAttributeUpgrades()
     {
         upgrades = new AttributeUpgrade[4];
