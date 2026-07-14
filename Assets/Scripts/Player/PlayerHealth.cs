@@ -2,21 +2,48 @@ using UnityEngine;
 using System.Collections;
 
 public class PlayerHealth : EntityHealth, ISaveable {
+    private PlayerStats playerStats;
+    private SkillLifeSteal lifeSteal;
+
     [SerializeField] private ShieldManager shieldManager = new ShieldManager();
     public ShieldManager ShieldManager => shieldManager;
+
+    private bool canApplyBuff = false;
 
     protected override void Awake() {
         base.Awake();
 
-        PlayerStats stats = GetComponent<PlayerStats>();
-        SkillLifeSteal lifeSteal = GetComponentInChildren<SkillLifeSteal>();
-        shieldManager.Initialize(stats, lifeSteal);
+        playerStats = stats as PlayerStats;
+        lifeSteal = GetComponentInChildren<SkillLifeSteal>();
+        shieldManager.Initialize(playerStats, lifeSteal);
     }
 
     protected override float CalculateReducedHP(Damage damage, Transform damageDealer) {
         float remain = base.CalculateReducedHP(damage, damageDealer);
         remain = shieldManager.ConsumeShield(remain);
         return remain;
+    }
+
+    public override void ReduceHP(float reducedHP) {
+        base.ReduceHP(reducedHP);
+
+        ApplyBuff();
+    }
+
+    public void SetCanApplyBuff(bool canApplyBuff) {
+        this.canApplyBuff = canApplyBuff;
+    }
+
+    private void ApplyBuff() {
+        if (!canApplyBuff) {
+            return;
+        }
+        
+        playerStats.damage.RemoveMultiplier("DesperateGambit");
+        playerStats.attackSpeed.RemoveMultiplier("DesperateGambit");
+
+        playerStats.damage.AddMultiplier(lifeSteal.GetDamageMultiplier(), "DesperateGambit");
+        playerStats.attackSpeed.AddMultiplier(lifeSteal.GetAttackSpeedMultiplier(), "DesperateGambit");
     }
 
     public void LoadData(GameData data) {
