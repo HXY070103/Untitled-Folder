@@ -121,6 +121,16 @@ public class UI_ChestReward : MonoBehaviour
         purificationPanel.SetActive(true);
 
         vfx.GenerateParticleEffect(Color.blue);
+        if (skillManager == null)
+        {
+            return;
+        }
+        SkillBase skill = skillManager.GetCurrentSkill();
+        if (skill == null)
+        {
+            return;
+        }
+        int decayBefore = skill.GetDecayLevel();
         if (isBetter)
         {
             skillManager.GetCurrentSkill().DecreaseDecay(3);
@@ -128,7 +138,8 @@ public class UI_ChestReward : MonoBehaviour
         {
             skillManager.GetCurrentSkill().DecreaseDecay(2);
         }
-
+        int actualDecay = Mathf.Max(decayBefore - skill.GetDecayLevel(), 0);
+        RecordPurficationHistory(actualDecay);
         if (currentChest != null)
         {
             currentChest.ClaimReward();
@@ -147,6 +158,7 @@ public class UI_ChestReward : MonoBehaviour
     public void SelectUpgrade(ChestUpgradeOption option)
     {
         option.Apply();
+        RecordUpgradeHistory(option);
         if (currentChest != null)
         {
             currentChest.ClaimReward();
@@ -314,5 +326,51 @@ public class UI_ChestReward : MonoBehaviour
         string name = upgrade.upgradeName.Substring(0, upgrade.upgradeName.Length - 1);
         name = name.TrimEnd();
         return !skill.Unlocked(name);
+    }
+
+    private void RecordUpgradeHistory(ChestUpgradeOption option)
+    {
+        if (option == null)
+        {
+            return;
+        }
+        if (HistoryManager.instance == null)
+        {
+            return;
+        }
+        if (!HistoryManager.instance.HasActiveRun())
+        {
+            return;
+        }
+        HistoryUpgradeType type;
+        if (option.optionType == ChestUpgradeOptionType.Skill)
+        {
+            type = HistoryUpgradeType.Skill;
+        } else
+        {
+            type = HistoryUpgradeType.Attribute;
+        }
+        bool isSucceed = HistoryManager.instance.RecordUpgrade(option.GetTitle(), option.GetDescription(), type);
+        if (!isSucceed)
+        {
+            Debug.LogWarning("Cannot record upgrade in history");
+        }
+    }
+
+    private void RecordPurficationHistory(int actualDecay)
+    {
+        if (HistoryManager.instance == null)
+        {
+            return;
+        }
+        if (!HistoryManager.instance.HasActiveRun())
+        {
+            return;
+        }
+        bool isSucceed =  HistoryManager.instance.RecordPurification(actualDecay);
+        if (!isSucceed)
+        {
+            Debug.LogWarning("Cannot record purfication in history");
+        }
     }
 }

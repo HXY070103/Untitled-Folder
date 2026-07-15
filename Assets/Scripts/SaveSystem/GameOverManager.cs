@@ -55,6 +55,10 @@ public class GameOverManager : MonoBehaviour
 
     public void ShowWin()
     {
+        if(HistoryManager.instance != null)
+        {
+            HistoryManager.instance.FinalizeHistoryWin();
+        }
         ShowGameOver("You Win", true);
     }
 

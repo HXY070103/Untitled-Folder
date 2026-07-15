@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 080fcc12750934d098094573f9de1eb1, type: 3}
+  m_Name: HISTORY ROOM DATABASE
+  m_EditorClassIdentifier: Assembly-CSharp::HistoryRoomDatabaseSO
+  rooms:
+  - sceneName: NormalLevel_1
+    displayName: NormalLevel_1
+    roomType: 0
+    encounterName: 
+  - sceneName: NormalLevel_2
+    displayName: NormalLevel_2
+    roomType: 0
+    encounterName: 
+  - sceneName: NormalLevel_3
+    displayName: NormalLevel_3
+    roomType: 0
+    encounterName: 
+  - sceneName: NormalLevel_4
+    displayName: NormalLevel_4
+    roomType: 0
+    encounterName: 
+  - sceneName: NormalLevel_Repeat_1
+    displayName: NormalLevel_1
+    roomType: 0
+    encounterName: 
+  - sceneName: NormalLevel_Repeat_2
+    displayName: NormalLevel_2
+    roomType: 0
+    encounterName: 
+  - sceneName: NormalLevel_Repeat_3
+    displayName: NormalLevel_3
+    roomType: 0
+    encounterName: 
+  - sceneName: NormalLevel_Repeat_4
+    displayName: NormalLevel_4
+    roomType: 0
+    encounterName: 
+  - sceneName: EliteLevel_1
+    displayName: EliteLevel_1
+    roomType: 1
+    encounterName: Skeleton King
+  - sceneName: EliteLevel_2
+    displayName: EliteLevel_2
+    roomType: 1
+    encounterName: Skeleton King
+  - sceneName: EliteLevel_3
+    displayName: EliteLevel_3
+    roomType: 1
+    encounterName: Dark Knight
+  - sceneName: EliteLevel_4
+    displayName: EliteLevel_4
+    roomType: 1
+    encounterName: Necromancer
+  - sceneName: EliteLevel_Repeat_1
+    displayName: EliteLevel_1
+    roomType: 1
+    encounterName: Skeleton King
+  - sceneName: EliteLevel_Repeat_2
+    displayName: EliteLevel_2
+    roomType: 1
+    encounterName: Skeleton King
+  - sceneName: EliteLevel_Repeat_3
+    displayName: EliteLevel_3
+    roomType: 1
+    encounterName: Dark Knight
+  - sceneName: EliteLevel_Repeat_4
+    displayName: EliteLevel_4
+    roomType: 1
+    encounterName: Necromancer
+  - sceneName: BossLevel
+    displayName: BossLevel
+    roomType: 2
+    encounterName: Final Boss

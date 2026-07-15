@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb984b9659922422289d138524dd1324, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillTimeControl
-  skillName: TimeControl
+  skillName: Time Control
   skillType: 0
   description: Creates a domain that slows down enemies and enemy projectiles within
     its area.
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9a7963389fc4c7d93ef5f322651f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillLifeSteal
-  skillName: life steal
+  skillName: Life steal
   skillType: 1
   description: heal yourself after the skill end. The more damage you make, the higher
     healing amount you have.

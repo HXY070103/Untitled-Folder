@@ -76,6 +76,10 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
+        if (HistoryManager.instance != null)
+        {
+            HistoryManager.instance.PrepareForSavedSceneLoad(sceneName);
+        }
         StartCoroutine(LoadSceneCo(sceneName, true));
     } 
 

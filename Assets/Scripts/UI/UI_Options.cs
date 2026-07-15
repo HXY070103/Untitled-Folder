@@ -72,6 +72,10 @@ public class UI_Options : MonoBehaviour
         }
 
         Time.timeScale = 1f;
+        if (HistoryManager.instance != null)
+        {
+            HistoryManager.instance.RecordCurrentStatsBeforeExit();
+        }
 
         if (GamePauseManager.Instance != null)
         {

@@ -90,6 +90,7 @@ public class LevelClearManager : MonoBehaviour, ISaveable
 
     public void SetLevelClear(bool clear, bool saveAfterClear)
     {
+        bool justBecameClear = clear && !isLevelClear;
         isLevelClear = clear;
 
         if (isLevelClear)
@@ -97,6 +98,12 @@ public class LevelClearManager : MonoBehaviour, ISaveable
             if (barrier != null)
             {
                 barrier.OpenBarrier();
+            }
+
+            // Record history only when the room changes from uncleared to cleared.
+            if (justBecameClear)
+            {
+                NotifyHistoryRoomCleared();
             }
 
             if (saveAfterClear && SaveManager.instance != null)
@@ -161,6 +168,24 @@ public class LevelClearManager : MonoBehaviour, ISaveable
             return;
         }
         pendingEnemies += count;
+    }
+
+    private void NotifyHistoryRoomCleared()
+    {
+        if (HistoryManager.instance == null)
+        {
+            return;
+        }
+        if (!HistoryManager.instance.HasActiveRun())
+        {
+            return;
+        }
+        string sceneName = SceneManager.GetActiveScene().name;
+        bool isSucceed = HistoryManager.instance.RecordRoomCleared(sceneName);
+        if (!isSucceed)
+        {
+            Debug.LogWarning("cannot save room clear in history");
+        }
     }
 
     public void LoadData(GameData data)
