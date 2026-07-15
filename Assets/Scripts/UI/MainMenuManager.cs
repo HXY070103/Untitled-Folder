@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +18,10 @@ public class MainMenuManager : MonoBehaviour
 
     [Header("Save")]
     [SerializeField] private string saveFileName = "saveData.json";
+
+    [Header("History")]
+    [SerializeField] private GameObject historyPanel;
+    [SerializeField] private UI_HistoryPanel uI_HistoryPanel;   
 
     private FileDataHandler dataHandler;
 
@@ -53,6 +58,23 @@ public class MainMenuManager : MonoBehaviour
         bool canContinue = data != null && data.isGameInProgess && !string.IsNullOrEmpty(data.currentSceneName);
 
         continueButton.interactable = canContinue;
+    }
+
+    public void OpenHistoryPanel()
+    {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
+        if (historyPanel == null)
+        {
+            Debug.LogWarning("Not assign history panel");
+            return;
+        }
+        historyPanel.SetActive(true);
+        if (uI_HistoryPanel == null)
+        {
+            Debug.LogWarning("Not assign history UI panel");
+            return;
+        }
+        uI_HistoryPanel.Open();
     }
 
     public void OnNewGameButton()
@@ -92,6 +114,8 @@ public class MainMenuManager : MonoBehaviour
 
     private void StartNewGame()
     {
+        PrepareHistoryForNewGame();
+
         if (SaveManager.instance != null)
         {
             SaveManager.instance.CreateNewGame(newGameSceneName);
@@ -116,6 +140,28 @@ public class MainMenuManager : MonoBehaviour
         else
         {
             Debug.LogError("GameManager not found");
+        }
+    }
+
+    private void PrepareHistoryForNewGame()
+    {
+        if (HistoryManager.instance == null)
+        {
+            Debug.LogWarning("No History Manager");
+            return;
+        }
+        if (HistoryManager.instance.HasActiveRun())
+        {
+            bool finizeSucceed = HistoryManager.instance.FinalizeLose(null);
+            if (!finizeSucceed)
+            {
+                Debug.LogWarning("Fail to finalize the previous history run");
+            }
+        }
+        bool startSucceed = HistoryManager.instance.StartNewRun();
+        if (!startSucceed)
+        {
+            Debug.LogWarning("Fail to creat a new history run");
         }
     }
 
