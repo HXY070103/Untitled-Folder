@@ -98,18 +98,20 @@ public class SkillPhase : SkillBase {
         CreatePhaseTracker();
     }
 
-    protected override void EndSkill() {
-        base.EndSkill();
+    protected override void EndSkill(bool endNormally) {
+        base.EndSkill(endNormally);
 
         player.gameObject.layer = LayerMask.NameToLayer("Player");
         
         player.RecoverSpeed();
         vfx.ResetTransparency();
-
-        ApplyPerfectEchoReward();
         DestroyPhaseTracker();
 
         hasBonusPhase = false;
+
+        if (endNormally) {
+            ApplyPerfectEchoReward();
+        }
     }
 
     private int GetNumOfHeavyAttack() {
