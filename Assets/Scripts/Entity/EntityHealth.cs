@@ -14,7 +14,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] protected bool isDead = false;
     [SerializeField] private float currentHP;
     [SerializeField] private float initialMaxHP = 100f;
-    [SerializeField] private bool isOnShotKillable = false;
+    [SerializeField] private bool isExecutable = false;
     [SerializeField] private float damageTakenMultiplier = 1;
 
     [Header("On damage knockback info")]
@@ -43,8 +43,13 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         UpdateHealthBar();
     }
 
-    public void TryApplyInstantKill() {
-        if (isOnShotKillable) {
+    public void TryToExecute(float HPThreshold, float bonusDamage) {
+        if (!isExecutable) {
+            ReduceHP(bonusDamage);
+            return;
+        }
+
+        if (GetHPPercentage() <= HPThreshold) {
             ReduceHP(currentHP);
         }
     }
@@ -54,7 +59,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
             return;
         }
 
-        float reducedHP = CalculateReducedHP(damage);
+        float reducedHP = CalculateReducedHP(damage, damageDealer);
         ReduceHP(reducedHP);
 
         Vector2 knockback = CalculateKnockback(reducedHP, damageDealer);
@@ -68,7 +73,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         this.damageTakenMultiplier = damageTakenMultiplier;
     }
 
-    protected virtual float CalculateReducedHP(Damage damage) {
+    protected virtual float CalculateReducedHP(Damage damage, Transform damageDealer) {
         float mitigation = stats.GetArmorMitigation();
         float finalDamage = damage.value * (1 - mitigation);
         return finalDamage * damageTakenMultiplier;
@@ -108,7 +113,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         return overflowingHP;
     }
 
-    public void ReduceHP(float reducedHP) {
+    public virtual void ReduceHP(float reducedHP) {
         if (isDead) {
             return;
         }
@@ -124,6 +129,8 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     private void Die() {
+        Debug.Log("Die");
+
         if (canRevival) {
             Revival();
             return;
@@ -192,8 +199,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         return initialMaxHP;
     }
 
-    public void SetCurrentHP(float HP)
-    {
+    public void SetCurrentHP(float HP) {
         currentHP = Mathf.Clamp(HP, 0, stats.GetMaxHP());
         isDead = currentHP <= 0;
         OnHealthUpdate?.Invoke();

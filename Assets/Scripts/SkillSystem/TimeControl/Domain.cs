@@ -54,8 +54,7 @@ public class Domain : MonoBehaviour {
     private void OnTriggerExit2D(Collider2D collision) {
         EndSlowDown(collision);
 
-        EnemySkillEffectReceiver receiver
-            = collision.GetComponent<EnemySkillEffectReceiver>();
+        EnemySkillEffectReceiver receiver = collision.GetComponent<EnemySkillEffectReceiver>();
         
         if (receiver == null) {
             return;

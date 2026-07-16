@@ -66,6 +66,10 @@ public class Entity : MonoBehaviour {
     }
 
     public void Move(float xVelocity, float yVelocity) {
+        if (isKnocked) {
+            return;
+        }
+
         MoveRaw(xVelocity, yVelocity);
         HandleFlip(xVelocity);
     }
@@ -75,7 +79,7 @@ public class Entity : MonoBehaviour {
             return;
         }
 
-        rb.linearVelocity = new Vector2(xVelocity, yVelocity) * tc.localTimeScale;
+        rb.linearVelocity = new Vector2(xVelocity * tc.localTimeScale, yVelocity);
     }
 
     public void HandleFlip(float xVelocity) {

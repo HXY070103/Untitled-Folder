@@ -48,8 +48,8 @@ public class UI_SkillSlot : MonoBehaviour
             Parameter1Name.text = "Heavy Attack Rate";
             SkillPhase phaseSkill = currentSkill as SkillPhase;
             Parameter1Value.text = $"{phaseSkill.GetDamageMultiplier() * 100:F1}%";
-            Parameter2Name.text = "Perfect Phase Window";
-            Parameter2Value.text = $"{phaseSkill.GetPerfectPhaseWindow():F1}s";
+            Parameter2Name.text = "Speed Up Rate";
+            Parameter2Value.text = $"{phaseSkill.GetSpeedUpPercentage() * 100:F1}%";
         }
     }
 

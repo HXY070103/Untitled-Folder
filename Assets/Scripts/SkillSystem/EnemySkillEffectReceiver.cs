@@ -4,6 +4,7 @@ using UnityEngine;
 public class EnemySkillEffectReceiver : MonoBehaviour, ISlowable {
     private Enemy enemy;
     private List<SkillEffectBase> effects = new List<SkillEffectBase>();
+    private HashSet<string> permanentEffects = new HashSet<string>();
     private bool isActive = true;
     
     private void Awake() {
@@ -22,6 +23,16 @@ public class EnemySkillEffectReceiver : MonoBehaviour, ISlowable {
 
     public void ApplySkillEffect(SkillEffectBase effect) {
         if (!isActive) {
+            return;
+        }
+
+        if (effect.isPermanent) {
+            if (permanentEffects.Contains(effect.name)) {
+                return;
+            }
+
+            effect.Apply(enemy);
+            permanentEffects.Add(effect.name);
             return;
         }
 

@@ -285,15 +285,19 @@ MonoBehaviour:
   cooldown: 3
   skillDuration: 3
   hurtCheckerPrefab: {fileID: 5438744945553926496, guid: 2ecd1dda1b74f4093bb4e3002ce09fa7, type: 3}
-  damageMultiplier: 3
+  damageMultiplier: 2
   speedUpPercentage: 1.5
   perfectPhaseWindow: 0.2
   lockAttackDuration: 0.5
   heavyAttackExpiryTime: 10
-  phaseTrackerPrefab: {fileID: 6660558275766549021, guid: 91ac758a1168f48fbbc4f2bdde2f770c, type: 3}
-  bonusPhaseDuration: 1
+  heavyAttackSpeed: 15
+  bonusHP: 15
   bonusNumOfHeavyAttack: 3
-  bonusHP: 10
+  phaseTrackerPrefab: {fileID: 6660558275766549021, guid: 91ac758a1168f48fbbc4f2bdde2f770c, type: 3}
+  damageReduction: 10
+  armorReduction: 50
+  damage: 15
+  bonusPhaseDuration: 1.5
 --- !u!1 &1778650543145547617
 GameObject:
   m_ObjectHideFlags: 0
@@ -959,7 +963,6 @@ MonoBehaviour:
   groundCheck: {fileID: 992911486667862172}
   primaryWallCheck: {fileID: 2669218348541001370}
   secondaryWallCheck: {fileID: 2602347302397761122}
-  heavyAttackSpeed: {x: 10, y: 1.5}
   jumpAttackSpeed: {x: 5, y: -6}
   attackSpeed:
   - {x: 3, y: 1.5}
@@ -988,11 +991,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6397b8be5204d4ebedd89e2829aa4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
+  targetCheck: {fileID: 8405379681717362425}
   targetCheckRadius: 1.39
   whatIsTarget:
     serializedVersion: 2
     m_Bits: 256
-  targetCheck: {fileID: 8405379681717362425}
   counterRecoveryDuration: 0.25
   whatIsCounterable:
     serializedVersion: 2
@@ -1048,6 +1051,8 @@ MonoBehaviour:
   targetAlpha: 0.2
   fadeSpeed: 2
   fadeInterval: 0.05
+  globalPauseScale: 0.1
+  globalPauseDuration: 0.5
 --- !u!114 &3690069604150053797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1061,7 +1066,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
   maxHP:
-    baseValue: 100
+    baseValue: 10000
     modifiers: []
     multipliers: []
   damage:

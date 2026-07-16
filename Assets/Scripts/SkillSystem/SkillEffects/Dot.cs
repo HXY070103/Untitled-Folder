@@ -5,7 +5,7 @@ public class Dot : SkillEffectBase {
     private float damageInterval;
     private float timer;
 
-    public Dot(string name, float damage, float damageInterval) : base(name) {
+    public Dot(string name, float damage, float damageInterval) : base(name, false) {
         this.damage = damage;
         this.damageInterval = damageInterval;
     }

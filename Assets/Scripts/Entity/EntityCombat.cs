@@ -6,11 +6,11 @@ public class EntityCombat : MonoBehaviour {
     private EntityStats stats;
 
     [Header("Target detection info")]
-    [SerializeField] private float targetCheckRadius = 1;
-    [SerializeField] protected LayerMask whatIsTarget;
     [SerializeField] private Transform targetCheck;
+    [SerializeField] private float targetCheckRadius = 1;
+    public LayerMask whatIsTarget;
 
-    private void Awake() {
+    protected virtual void Awake() {
         vfx = GetComponent<EntityVFX>();
         sfx = GetComponent<EntitySFX>();
         stats = GetComponent<EntityStats>();
@@ -22,9 +22,9 @@ public class EntityCombat : MonoBehaviour {
             PerformAttackOnTarget(target.transform);
             attackHit = true;
         }
-        if (!attackHit)
-        {
-            sfx?.PlayAttackMiss();
+
+        if (!attackHit) {
+            sfx.PlayAttackMiss();
         }
     } 
 
@@ -38,10 +38,10 @@ public class EntityCombat : MonoBehaviour {
         Damage damage = stats.GetDamage();
         damageable.TakeDamage(damage, transform);
         vfx.CreateOnHitVFX(target.transform, damage.isCrit);
-        sfx?.PlayAttackHit();
+        sfx.PlayAttackHit();
     }
 
-    protected Collider2D[] GetDetectedColliders(LayerMask whatToDetect) {
+    public Collider2D[] GetDetectedColliders(LayerMask whatToDetect) {
         return 
             Physics2D.OverlapCircleAll(targetCheck.position, targetCheckRadius, whatToDetect);
     }
