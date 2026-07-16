@@ -184,6 +184,10 @@ public class SkillBase : MonoBehaviour{
         {
             if (upgrade.upgradeName == upgradeName)
             {
+                if (upgrade.unlocked)
+                {
+                    return;
+                }
                 upgrade.unlocked = true;
                 numOfUpgradesGet++;
                 CheckIfNextPhase();
@@ -194,6 +198,10 @@ public class SkillBase : MonoBehaviour{
         {
             if (upgrade.upgradeName == upgradeName)
             {
+                if (upgrade.unlocked)
+                {
+                    return;
+                }
                 upgrade.unlocked = true;
                 numOfUpgradesGet++;
                 CheckIfNextPhase();
@@ -282,6 +290,7 @@ public class SkillBase : MonoBehaviour{
 
     public void LoadUnlockedUpgrades(List<string> unlocked)
     {
+        unlocked ??= new List<string>();
         foreach (var upgrade in upgrades)
         {
             if (upgrade != null && unlocked.Contains(upgrade.upgradeName))
@@ -296,9 +305,10 @@ public class SkillBase : MonoBehaviour{
 
     public void LoadUnlockedBetterUpgrades(List<string> unlocked)
     {
+        unlocked ??= new List<string>();
         foreach (var upgrade in betterUpgrades)
         {
-            if (upgrade != null && unlocked.Contains(upgrade.upgradeName))
+            if (upgrade != null && IsSavedUpgradeUnlocked(unlocked, upgrade.upgradeName))
             {
                 upgrade.unlocked = true;
             } else
@@ -306,6 +316,26 @@ public class SkillBase : MonoBehaviour{
                 upgrade.unlocked = false;
             }
         }
+    }
+
+    private bool IsSavedUpgradeUnlocked(List<string> unlocked, string upgradeName)
+    {
+        if (unlocked.Contains(upgradeName))
+        {
+            return true;
+        }
+
+        // Preserve compatibility with saves created before these upgrades were renamed.
+        if (upgradeName == "Stasis Field")
+        {
+            return unlocked.Contains("Temporal Freeze");
+        }
+        if (upgradeName == "Deathbound Bargain")
+        {
+            return unlocked.Contains("Unshakable Resolve");
+        }
+
+        return false;
     }
 
     public void LoadUnlockedSkillPhaseUpgrades(List<string> unlocked)

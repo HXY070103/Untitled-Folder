@@ -1,6 +1,7 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class SkillLifeSteal : SkillBase {
+public class SkillLifeSteal : SkillBase, ISaveable {
     private PlayerHealth health;
     private Player player;
 
@@ -21,6 +22,7 @@ public class SkillLifeSteal : SkillBase {
     [Header("Desperate gambit info")]
     [SerializeField] private float maxConversionRate = 2;
     public float maxDamageMultiplier = 2;
+    [FormerlySerializedAs("maxAttackSpeed")]
     public float maxAttackSpeedMultiplier = 2;
 
     [Header("Blood growth info")]
@@ -28,6 +30,8 @@ public class SkillLifeSteal : SkillBase {
     [SerializeField] private float bonusMaxHP = 10;
     [SerializeField] private float bonusArmor = 30;
     [SerializeField] private float bonusDamage = 15;
+    private int bloodGrowthMaxHPStacks;
+    private int bloodGrowthAdvancedStacks;
 
     [Header("Overflowing aegis info")]
     public float damageMultiplier = 2;
@@ -78,7 +82,7 @@ public class SkillLifeSteal : SkillBase {
 
         StartDesperateGambitBuff(health.GetCurrentHP());
 
-        if (Unlocked("Unshakable Resolve")) {
+        if (Unlocked("Deathbound Bargain")) {
             health.StartDeathPrevention(reviveHPMultiplier);
         }
     }
@@ -97,7 +101,7 @@ public class SkillLifeSteal : SkillBase {
         EndDesperateGambitBuff();
         ApplyBloodGrowthReward();
 
-        if (Unlocked("Unshakable Resolve")) {
+        if (Unlocked("Deathbound Bargain")) {
             health.StopDeathPrevention();
         }
     }
@@ -131,11 +135,13 @@ public class SkillLifeSteal : SkillBase {
 
         if (Unlocked("Blood Growth")) {
             health.IncreaseMaxHP(bonusMaxHP, "BloodGrowth");
+            bloodGrowthMaxHPStacks++;
         }
 
         if (Unlocked("Blood Growth+")) {
             stats.armor.AddModifier(bonusArmor, "BloodGrowth");
             stats.damage.AddModifier(bonusDamage, "BloodGrowth");
+            bloodGrowthAdvancedStacks++;
         }
     }
 
@@ -153,7 +159,7 @@ public class SkillLifeSteal : SkillBase {
     }
 
     private void CreateFireball() {
-        if (Unlocked("Unshakable Resolve") || Unlocked("Stable Gain")) {
+        if (Unlocked("Deathbound Bargain") || Unlocked("Stable Gain")) {
             return;
         }
 
@@ -206,5 +212,33 @@ public class SkillLifeSteal : SkillBase {
         if (Unlocked("Stable Gain")) {
             Healing(healingHP);
         }
+    }
+
+    public void OnUpgradeUnlocked(string upgradeName) {
+        if (upgradeName == "Overflowing Aegis+") {
+            health.ShieldManager.RefreshBuff();
+        }
+    }
+
+    public void LoadData(GameData data) {
+        stats.maxHP.RemoveModifier("BloodGrowth");
+        stats.armor.RemoveModifier("BloodGrowth");
+        stats.damage.RemoveModifier("BloodGrowth");
+
+        bloodGrowthMaxHPStacks = Mathf.Max(data.bloodGrowthMaxHPStacks, 0);
+        bloodGrowthAdvancedStacks = Mathf.Max(data.bloodGrowthAdvancedStacks, 0);
+
+        for (int i = 0; i < bloodGrowthMaxHPStacks; i++) {
+            stats.maxHP.AddModifier(bonusMaxHP, "BloodGrowth");
+        }
+        for (int i = 0; i < bloodGrowthAdvancedStacks; i++) {
+            stats.armor.AddModifier(bonusArmor, "BloodGrowth");
+            stats.damage.AddModifier(bonusDamage, "BloodGrowth");
+        }
+    }
+
+    public void SaveData(ref GameData data) {
+        data.bloodGrowthMaxHPStacks = bloodGrowthMaxHPStacks;
+        data.bloodGrowthAdvancedStacks = bloodGrowthAdvancedStacks;
     }
 }

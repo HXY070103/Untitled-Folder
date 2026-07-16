@@ -19,7 +19,6 @@ public class PlayerHeavyAttackState : PlayerState {
         vfx.DoImageEchoEffect(float.PositiveInfinity);
         phase.InterruptSkill();
         StartHeavyAttack();
-        StartChainPhantasmReward();
 
         originalGravityScale = rb.gravityScale;
         rb.gravityScale = 0;
@@ -49,7 +48,6 @@ public class PlayerHeavyAttackState : PlayerState {
 
         vfx.StopImageEchoEffect();
         EndHeavyAttack();
-        EndChainPhantasmReward();
     }
 
     private void HandleStateExit() {
@@ -100,23 +98,20 @@ public class PlayerHeavyAttackState : PlayerState {
     }
 
     private void PerformAttack() {
+        bool chainPhantasmUnlocked = phase.Unlocked("Chain Phantasm");
+        if (chainPhantasmUnlocked) {
+            phase.EnableBonusPhase();
+        }
+
         foreach (Transform target in targets) {
             player.combat.PerformAttackOnTarget(target);
         }
 
-        targets.Clear();
-    }
-
-    private void StartChainPhantasmReward() {
-        if (phase.Unlocked("Chain Phantasm")) {
-            phase.EnableBonusPhase();
-        }
-    }
-
-    private void EndChainPhantasmReward() {
-        if (phase.Unlocked("Chain Phantasm")) {
+        if (chainPhantasmUnlocked) {
             phase.DisableBonusPhase();
             phase.TryToEnterBonusPhase();
         }
+
+        targets.Clear();
     }
 }

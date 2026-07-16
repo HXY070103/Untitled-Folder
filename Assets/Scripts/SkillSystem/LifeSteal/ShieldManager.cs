@@ -40,10 +40,10 @@ public class ShieldManager {
             return 0;
         }
 
-        float remain = Math.Abs(temporaryShield);
+        float remain = Mathf.Max(-temporaryShield, 0);
         RemoveTemporaryShield();
 
-        return hasPermanentShield ? remain : 0;
+        return remain;
     }
 
     private float ConsumePermanentShield(float damage) {
@@ -57,9 +57,10 @@ public class ShieldManager {
             return 0;
         }
 
+        float remain = Mathf.Max(-permanentShield, 0);
         RemovePermanentShield();
 
-        return 0;
+        return remain;
     }
 
     public void AddTemporaryShield(float shield) {
@@ -114,5 +115,14 @@ public class ShieldManager {
 
         stats.damage.RemoveMultiplier("Shield");
         stats.attackSpeed.RemoveMultiplier("Shield");
+    }
+
+    public void RefreshBuff() {
+        stats.damage.RemoveMultiplier("Shield");
+        stats.attackSpeed.RemoveMultiplier("Shield");
+
+        if (HasShield) {
+            AddShieldBuff();
+        }
     }
 }

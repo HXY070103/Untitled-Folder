@@ -31,6 +31,8 @@ public class GameData
    public List<string> unlockedSkillUpgrades = new List<string>();
    public List<string> unlockedBetterUpgrades = new List<string>();
    public List<string> unlockedSkillPhaseUpgrades = new List<string>();
+   public int bloodGrowthMaxHPStacks;
+   public int bloodGrowthAdvancedStacks;
 
    //attribute upgrades
    public List<AttributeUpgradeSaveData> attributeUpgrades = new List<AttributeUpgradeSaveData>();
