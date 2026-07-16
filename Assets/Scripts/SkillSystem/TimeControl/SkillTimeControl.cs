@@ -62,8 +62,8 @@ public class SkillTimeControl : SkillBase {
         EnemyHealth.OnEnemyKilled += ApplyHuntingTimeEffect;
     }
 
-    protected override void EndSkill() {
-        base.EndSkill();
+    protected override void EndSkill(bool endNormally) {
+        base.EndSkill(endNormally);
 
         DestroyDomain();
 
