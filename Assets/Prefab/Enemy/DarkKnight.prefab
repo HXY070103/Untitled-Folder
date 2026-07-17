@@ -706,8 +706,8 @@ MonoBehaviour:
   primaryWallCheck: {fileID: 8366896281239408500}
   secondaryWallCheck: {fileID: 8366896281239408500}
   battleMoveSpeed: 4
-  attackDistance: 14
-  preAttackDuration: 0.5
+  attackDistance: 2.8
+  attackWindup: 0.5
   attackCooldown: 1
   battleDuration: 7
   minRetreatDistance: 1.2
@@ -722,11 +722,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   playerCheck: {fileID: 8366896281239408500}
+  numOfComboAttack: 2
   swordWavePrefab: {fileID: 363669544949241483, guid: f91f2d081262f48bfaabd4a96bdcbbdb, type: 3}
   swordWaveStartPoint: {fileID: 7408160521430063564}
   swordWaveSpeed: 15
-  numOfBasicAttack: 2
-  numOfDashAttack: 1
+  swordwaveWindup: 0.8
+  swordwaveCooldown: 2
+  dashAttackWindup: 0.5
   dashAttackCooldown: 2
   dashAttackMaxDistance: 12
   dashSpeed: 15

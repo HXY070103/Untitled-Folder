@@ -54,7 +54,7 @@ public class EnemyBattleState : EnemyState {
     }
 
     protected bool CanAttack() {
-        return tc.time > lastTimeAttack + enemy.attackCooldown;
+        return tc.time > lastTimeAttack + enemy.currentCooldown;
     }
 
     protected void QuickRetreat() {
@@ -66,8 +66,8 @@ public class EnemyBattleState : EnemyState {
 
     protected virtual void HandleBattle() {
         if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
+            ApplyBasicAttack();
             UpdateAttackTimer();
-            stateMachine.ChangeState(enemy.preAttackState); 
         } else {
             if (!enemy.PlayerDetected()) {
                 enemy.HandleFlip(DirectionToPlayer());
@@ -83,7 +83,12 @@ public class EnemyBattleState : EnemyState {
         }
     }
 
-    protected bool WithInAttackRange() {
+    protected void ApplyBasicAttack() {
+        enemy.SetAttack(enemy.attackWindup, enemy.attackCooldown, enemy.attackState);
+        stateMachine.ChangeState(enemy.preAttackState); 
+    }
+
+    protected virtual bool WithInAttackRange() {
         return DistanceToPlayer() < enemy.attackDistance;
     }
 

@@ -1,0 +1,399 @@
+fileFormatVersion: 2
+guid: 1cd2cfd91b401449290e1513bc236580
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1283141581029783567
+    second: WechatIMG11697_0
+  - first:
+      213: -8587861115964382922
+    second: WechatIMG11697_1
+  - first:
+      213: -7799999420072087262
+    second: WechatIMG11697_2
+  - first:
+      213: 6086845336361598200
+    second: WechatIMG11697_3
+  - first:
+      213: 6779234186952805411
+    second: WechatIMG11697_4
+  - first:
+      213: 712688941726705590
+    second: WechatIMG11697_5
+  - first:
+      213: -6951831534062651970
+    second: WechatIMG11697_6
+  - first:
+      213: 5224925782796072932
+    second: WechatIMG11697_7
+  - first:
+      213: -7919103876983922112
+    second: WechatIMG11697_8
+  - first:
+      213: -2961481407084716219
+    second: WechatIMG11697_9
+  - first:
+      213: 4548089228609822818
+    second: WechatIMG11697_10
+  - first:
+      213: 402411027916033793
+    second: WechatIMG11697_11
+  - first:
+      213: -3377692248641717044
+    second: WechatIMG11697_12
+  - first:
+      213: -8126056380150890016
+    second: WechatIMG11697_13
+  - first:
+      213: 5180979504606643953
+    second: WechatIMG11697_14
+  - first:
+      213: 3634902307505037428
+    second: WechatIMG11697_15
+  - first:
+      213: 1426432983554511525
+    second: WechatIMG11697_16
+  - first:
+      213: -8259602302361804672
+    second: WechatIMG11697_17
+  - first:
+      213: 3471230748749315915
+    second: WechatIMG11697_18
+  - first:
+      213: -9130694819551881966
+    second: WechatIMG11697_19
+  - first:
+      213: -1534700675653125595
+    second: WechatIMG11697_20
+  - first:
+      213: 5722080124126648124
+    second: WechatIMG11697_21
+  - first:
+      213: -2260665579865295703
+    second: WechatIMG11697_22
+  - first:
+      213: -4571141924610316581
+    second: WechatIMG11697_23
+  - first:
+      213: -1758033801849111523
+    second: WechatIMG11697_24
+  - first:
+      213: 2675619699089912875
+    second: WechatIMG11697_25
+  - first:
+      213: 3586582278810084780
+    second: WechatIMG11697_26
+  - first:
+      213: -7058363047401395276
+    second: WechatIMG11697_27
+  - first:
+      213: -780995937961843249
+    second: WechatIMG11697_28
+  - first:
+      213: -4911524410217268461
+    second: WechatIMG11697_29
+  - first:
+      213: -1669115742749405639
+    second: WechatIMG11697_30
+  - first:
+      213: -9096789971597538687
+    second: WechatIMG11697_31
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 32
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SkeletonKingShockwave_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 512
+        width: 384
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 04ddaa4983fb8445fb751e5a6d4d70c5
+      internalID: -1683213267
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkeletonKingShockwave_1
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 512
+        width: 384
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a433d1bad73b94f9eb174c07bd393265
+      internalID: 717314674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkeletonKingShockwave_2
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 512
+        width: 384
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 265d2b14238674fb8985f5275b7a7198
+      internalID: 1908965701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkeletonKingShockwave_3
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 512
+        width: 384
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eb3559ef72fc1484e936c625bb4ff774
+      internalID: 864547916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkeletonKingShockwave_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 384
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 43fbf9c02a41a4d63a366fbb258026c1
+      internalID: -1522052389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkeletonKingShockwave_5
+      rect:
+        serializedVersion: 2
+        x: 384
+        y: 0
+        width: 384
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ded01f8000b7c4a9e82291342c3c61d4
+      internalID: -1117754883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkeletonKingShockwave_6
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 0
+        width: 384
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c83ea8075cf9b4531809d0cbf6eb818a
+      internalID: -1396866213
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SkeletonKingShockwave_7
+      rect:
+        serializedVersion: 2
+        x: 1152
+        y: 0
+        width: 384
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: acbaf731850194685a0afc99427bdd9a
+      internalID: 1113876527
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: ccdaf6afbe6b14a79a48627532e219ea
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":384.0,"y":512.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      SkeletonKingShockwave_0: -1683213267
+      SkeletonKingShockwave_1: 717314674
+      SkeletonKingShockwave_2: 1908965701
+      SkeletonKingShockwave_3: 864547916
+      SkeletonKingShockwave_4: -1522052389
+      SkeletonKingShockwave_5: -1117754883
+      SkeletonKingShockwave_6: -1396866213
+      SkeletonKingShockwave_7: 1113876527
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
