@@ -39,7 +39,7 @@ public class SkillTimeControl : SkillBase {
     }
 
     public float GetSlowDownPercentage() {
-        if (Unlocked("Temporal Freeze")) {
+        if (Unlocked("Stasis Field")) {
             return 1;
         }
 

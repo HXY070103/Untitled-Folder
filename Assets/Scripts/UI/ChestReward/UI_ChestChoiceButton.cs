@@ -40,17 +40,18 @@ public class UI_ChestChoiceButton : MonoBehaviour
     {
         AudioManager.instance.PlayGlobalSFX("Button_Click");
         button.interactable = false;
+        System.Action selectedAction = onSelected;
 
         if (backgroundImage != null)
             backgroundImage.color = selectedColor;
 
-        StartCoroutine(InvokeAfterDelay());
+        StartCoroutine(InvokeAfterDelay(selectedAction));
     }
 
-    private IEnumerator InvokeAfterDelay()
+    private IEnumerator InvokeAfterDelay(System.Action selectedAction)
     {
         yield return new WaitForSecondsRealtime(delay);
 
-        onSelected?.Invoke();
+        selectedAction?.Invoke();
     }
 }

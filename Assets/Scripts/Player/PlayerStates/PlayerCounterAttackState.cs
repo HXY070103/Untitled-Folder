@@ -13,6 +13,10 @@ public class PlayerCounterAttackState : PlayerState {
         base.Enter();
 
         hasPerformedCounter = combat.CounterAttackPerformed();
+        if (hasPerformedCounter)
+        {
+            player.sfx?.PlayConterAttack();
+        }
         anim.SetBool("CounterAttackPerformed", hasPerformedCounter);
         stateTimer = combat.GetCounterRecoveryDuration();
     }

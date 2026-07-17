@@ -8,6 +8,7 @@ public class PlayerSFX : EntitySFX
     [SerializeField] private string dash;
     [SerializeField] private string jump;
     [SerializeField] private string jumpland;
+    [SerializeField] private string conterAttack;
 
     public void PlayDash()
     {
@@ -22,5 +23,10 @@ public class PlayerSFX : EntitySFX
     public void PlayJumpland()
     {
         AudioManager.instance.PlaySFX(jumpland, audioSource, soundDistacne);
+    }
+
+    public void PlayConterAttack()
+    {
+        AudioManager.instance.PlaySFX(conterAttack, audioSource, soundDistacne);
     }
 }

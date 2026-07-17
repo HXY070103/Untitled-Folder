@@ -111,19 +111,21 @@ public class PlayerStats : EntityStats, ISaveable {
 
     public void RestoreSkillPhaseBonuses(bool level2Unlocked, bool level6Unlocked, bool fullUnlocked)
     {
-        skillEffect.RemoveModifier("Level2Skill");
+        skillEffect.RemoveMultiplier("Level2Skill");
 
-        maxHP.RemoveModifier("Level6Skill");
-        damage.RemoveModifier("Level6Skill");
-        critChance.RemoveModifier("Level6Skill");
-        critPower.RemoveModifier("Level6Skill");
-        armor.RemoveModifier("Level6Skill");
+        maxHP.RemoveMultiplier("Level6Skill");
+        damage.RemoveMultiplier("Level6Skill");
+        critChance.RemoveMultiplier("Level6Skill");
+        critPower.RemoveMultiplier("Level6Skill");
+        armor.RemoveMultiplier("Level6Skill");
+        attackSpeed.RemoveMultiplier("Level6Skill");
 
-        maxHP.RemoveModifier("LevelFullSkill");
-        damage.RemoveModifier("LevelFullSkill");
-        critChance.RemoveModifier("LevelFullSkill");
-        critPower.RemoveModifier("LevelFullSkill");
-        armor.RemoveModifier("LevelFullSkill");
+        maxHP.RemoveMultiplier("LevelFullSkill");
+        damage.RemoveMultiplier("LevelFullSkill");
+        critChance.RemoveMultiplier("LevelFullSkill");
+        critPower.RemoveMultiplier("LevelFullSkill");
+        armor.RemoveMultiplier("LevelFullSkill");
+        attackSpeed.RemoveMultiplier("LevelFullSkill");
 
         if (level2Unlocked) ReachLevel2Skill();
         if (level6Unlocked) ReachLevel6Skill();

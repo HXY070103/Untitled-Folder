@@ -18,13 +18,21 @@ public class EnemyHealth : EntityHealth {
         base.TakeDamage(damage, damageDealer);
 
         if (isDead) {
-            OnEnemyDeath?.Invoke();
-            OnEnemyKilled?.Invoke(enemy);
             return;
         }
 
         if (damageDealer.GetComponent<Player>() != null) {
             enemy.TryToEnterBattleState(damageDealer);
+        }
+    }
+
+    public override void ReduceHP(float reducedHP) {
+        bool wasDead = isDead;
+        base.ReduceHP(reducedHP);
+
+        if (!wasDead && isDead) {
+            OnEnemyDeath?.Invoke();
+            OnEnemyKilled?.Invoke(enemy);
         }
     }
 

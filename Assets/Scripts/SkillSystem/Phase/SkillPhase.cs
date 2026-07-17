@@ -60,11 +60,15 @@ public class SkillPhase : SkillBase {
     }
 
     public float GetHPThreshold() {
-        if (Unlocked("Shadow Assassination+")) {
-            return betterHPThreshold;
+        float threshold = Unlocked("Shadow Assassination+")
+            ? betterHPThreshold
+            : HPThreshold;
+
+        if (isPerfectPhase) {
+            threshold += 0.1f;
         }
 
-        return HPThreshold;
+        return Mathf.Clamp01(threshold);
     }
 
     public float GetBonusDamage() {

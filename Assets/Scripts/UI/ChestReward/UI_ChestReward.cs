@@ -28,6 +28,8 @@ public class UI_ChestReward : MonoBehaviour
     private PlayerSkillManager skillManager;
     private Chest currentChest;
     private bool isBetter;
+    private bool mainChoiceCommitted;
+    private bool rewardClaimInProgress;
 
     private void Awake()
     {
@@ -44,6 +46,8 @@ public class UI_ChestReward : MonoBehaviour
         player = playerObj;
         currentChest = chest;
         isBetter = better;
+        mainChoiceCommitted = false;
+        rewardClaimInProgress = false;
 
         vfx = player.GetComponent<PlayerVFX>();
         playerStats = player.GetComponent<PlayerStats>();
@@ -60,6 +64,12 @@ public class UI_ChestReward : MonoBehaviour
         if (skillManager == null)
         {
             Debug.LogError("ChestRewardUI: PlayerSkillManager not found on player.");
+            return;
+        }
+
+        if (playerHealth == null)
+        {
+            Debug.LogError("ChestRewardUI: PlayerHealth not found on player.");
             return;
         }
 
@@ -85,6 +95,12 @@ public class UI_ChestReward : MonoBehaviour
 
     public void ShowUpgrades()
     {
+        if (mainChoiceCommitted || rewardClaimInProgress)
+        {
+            return;
+        }
+        mainChoiceCommitted = true;
+
         mainChoicePanel.SetActive(false);
         purificationPanel.SetActive(false);
         upgradePanel.SetActive(true);
@@ -98,6 +114,17 @@ public class UI_ChestReward : MonoBehaviour
         else
         {
             options = GetRandomUpgradeOptions(3);
+        }
+
+        if (options.Count == 0)
+        {
+            mainChoiceCommitted = false;
+            mainChoicePanel.SetActive(true);
+            upgradePanel.SetActive(false);
+            upgradeChoiceButton.Setup(ShowUpgrades);
+            purificationChoiceButton.Setup(ShowPurification);
+            Debug.LogWarning("ChestRewardUI: No upgrade is currently available; returning to reward choice.");
+            return;
         }
 
         for (int i = 0; i < upgradeOptionUIs.Length; i++)
@@ -116,6 +143,13 @@ public class UI_ChestReward : MonoBehaviour
 
     public void ShowPurification()
     {
+        if (mainChoiceCommitted || rewardClaimInProgress)
+        {
+            return;
+        }
+        mainChoiceCommitted = true;
+        rewardClaimInProgress = true;
+
         mainChoicePanel.SetActive(false);
         upgradePanel.SetActive(false);
         purificationPanel.SetActive(true);
@@ -123,11 +157,15 @@ public class UI_ChestReward : MonoBehaviour
         vfx.GenerateParticleEffect(Color.blue);
         if (skillManager == null)
         {
+            rewardClaimInProgress = false;
+            mainChoiceCommitted = false;
             return;
         }
         SkillBase skill = skillManager.GetCurrentSkill();
         if (skill == null)
         {
+            rewardClaimInProgress = false;
+            mainChoiceCommitted = false;
             return;
         }
         int decayBefore = skill.GetDecayLevel();
@@ -157,6 +195,12 @@ public class UI_ChestReward : MonoBehaviour
 
     public void SelectUpgrade(ChestUpgradeOption option)
     {
+        if (option == null || rewardClaimInProgress)
+        {
+            return;
+        }
+        rewardClaimInProgress = true;
+
         option.Apply();
         RecordUpgradeHistory(option);
         if (currentChest != null)
@@ -183,6 +227,7 @@ public class UI_ChestReward : MonoBehaviour
         upgradePanel.SetActive(false);
         purificationPanel.SetActive(false);
         currentChest = null;
+        mainChoiceCommitted = false;
 
         GamePauseManager.Instance.Resume("ChestReward");
     }
@@ -197,6 +242,11 @@ public class UI_ChestReward : MonoBehaviour
 
         List<ChestUpgradeOption> result = new List<ChestUpgradeOption>();
 
+        if (pool.Count == 0 || count <= 0)
+        {
+            return result;
+        }
+
         //for the first one
         int randomIndex = Random.Range(0, pool.Count + playerStats.GetAttributeUpgrades().Length);
         if (randomIndex < 2 * playerStats.GetAttributeUpgrades().Length)
@@ -209,14 +259,28 @@ public class UI_ChestReward : MonoBehaviour
             pool.RemoveAt(randomIndex - playerStats.GetAttributeUpgrades().Length);
         }
         
+        if (result.Count >= count || pool.Count == 0)
+        {
+            return result;
+        }
+
         //for the second one
         randomIndex = Random.Range(0, pool.Count);
         result.Add(pool[randomIndex]);
         pool.RemoveAt(randomIndex);
 
+        if (result.Count >= count || pool.Count == 0)
+        {
+            return result;
+        }
+
         //for the third one
-        while (pool[pool.Count - 1].optionType == ChestUpgradeOptionType.Skill) {
+        while (pool.Count > 0 && pool[pool.Count - 1].optionType == ChestUpgradeOptionType.Skill) {
             pool.RemoveAt(pool.Count - 1);
+        }
+        if (pool.Count == 0)
+        {
+            return result;
         }
         randomIndex = Random.Range(0, pool.Count);
         result.Add(pool[randomIndex]);
