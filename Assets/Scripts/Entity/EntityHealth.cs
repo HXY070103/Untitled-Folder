@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class EntityHealth : MonoBehaviour, IDamageable {
     public event Action OnHealthUpdate;
@@ -15,7 +16,8 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] private float currentHP;
     [SerializeField] private float initialMaxHP = 100f;
     [SerializeField] private bool isExecutable = false;
-    [SerializeField] private float damageTakenMultiplier = 1;
+    private readonly Dictionary<string, float> damageTakenMultipliers = new Dictionary<string, float>();
+    private readonly HashSet<string> damageImmunitySources = new HashSet<string>();
 
     [Header("On damage knockback info")]
     [SerializeField] private Vector2 onDamageKnockback = new Vector2(1.5f, 2.5f);
@@ -55,7 +57,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
  
     public virtual void TakeDamage(Damage damage, Transform damageDealer) {
-        if (isDead) {
+        if (isDead || IsDamageImmune()) {
             return;
         }
 
@@ -69,14 +71,58 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         vfx.PlayOnDamageVFX();
     }
 
-    public void SetDamageTakenMultiplier(float damageTakenMultiplier) {
-        this.damageTakenMultiplier = damageTakenMultiplier;
+    public void AddDamageTakenMultiplier(float multiplier, string source) {
+        if (string.IsNullOrEmpty(source)) {
+            Debug.LogWarning("Damage taken multiplier requires a source.");
+            return;
+        }
+
+        damageTakenMultipliers[source] = Mathf.Max(0, multiplier);
+    }
+
+    public void RemoveDamageTakenMultiplier(string source) {
+        if (string.IsNullOrEmpty(source)) {
+            return;
+        }
+
+        damageTakenMultipliers.Remove(source);
+    }
+
+    public float GetDamageTakenMultiplier() {
+        float finalMultiplier = 1;
+
+        foreach (float multiplier in damageTakenMultipliers.Values) {
+            finalMultiplier *= multiplier;
+        }
+
+        return finalMultiplier;
+    }
+
+    public void AddDamageImmunity(string source) {
+        if (string.IsNullOrEmpty(source)) {
+            Debug.LogWarning("Damage immunity requires a source.");
+            return;
+        }
+
+        damageImmunitySources.Add(source);
+    }
+
+    public void RemoveDamageImmunity(string source) {
+        if (string.IsNullOrEmpty(source)) {
+            return;
+        }
+
+        damageImmunitySources.Remove(source);
+    }
+
+    public bool IsDamageImmune() {
+        return damageImmunitySources.Count > 0;
     }
 
     protected virtual float CalculateReducedHP(Damage damage, Transform damageDealer) {
         float mitigation = stats.GetArmorMitigation();
         float finalDamage = damage.value * (1 - mitigation);
-        return finalDamage * damageTakenMultiplier;
+        return finalDamage * GetDamageTakenMultiplier();
     }
 
     private Vector2 CalculateKnockback(float reducedHP, Transform damageDealer) {
@@ -114,7 +160,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     public virtual void ReduceHP(float reducedHP) {
-        if (isDead) {
+        if (isDead || IsDamageImmune()) {
             return;
         }
 

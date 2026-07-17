@@ -73,11 +73,11 @@ public class Enemy : Entity, ICounterable {
         sfx?.PlaySpecialAttack1();
     }
 
-    public bool CanBeCountered() {
+    public virtual bool CanBeCountered() {
         return InAttackWindow;
     }
     
-    public void HandleCounter() {
+    public virtual void HandleCounter() {
         stateMachine.ChangeState(stunnedState);
     }
 

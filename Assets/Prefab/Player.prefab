@@ -200,7 +200,7 @@ MonoBehaviour:
   temporaryShield: 50
   maxConversionRate: 2
   maxDamageMultiplier: 2
-  maxAttackSpeed: 2
+  maxAttackSpeedMultiplier: 2
   healingHPThreshold: 0.2
   bonusMaxHP: 10
   bonusArmor: 30
@@ -297,6 +297,10 @@ MonoBehaviour:
   damageReduction: 10
   armorReduction: 50
   damage: 15
+  HPThreshold: 0.5
+  bonusDamage: 50
+  betterHPThreshold: 0.75
+  betterBonusDamage: 75
   bonusPhaseDuration: 1.5
 --- !u!1 &1778650543145547617
 GameObject:
@@ -1015,8 +1019,7 @@ MonoBehaviour:
   isDead: 0
   currentHP: 0
   initialMaxHP: 100
-  isOnShotKillable: 1
-  damageTakenMultiplier: 1
+  isExecutable: 0
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -1203,6 +1206,7 @@ MonoBehaviour:
   dash: Player_Dash
   jump: Player_Jump
   jumpland: Player_JumpLand
+  conterAttack: Player_CounterAttack
 --- !u!1 &7984176650190143286
 GameObject:
   m_ObjectHideFlags: 0

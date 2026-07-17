@@ -51,6 +51,10 @@ MonoBehaviour:
     clips:
     - {fileID: 8300000, guid: d085cceb1fbd047e0860321089db9895, type: 3}
     maxVolume: 1
+  - audioName: Player_CounterAttack
+    clips:
+    - {fileID: 8300000, guid: d90286acea207465caa42908ddb6a1d7, type: 3}
+    maxVolume: 0.6
   enemies:
   - audioName: Skeleton_Attack
     clips:
