@@ -11,7 +11,7 @@ public class EnemyMage : Enemy {
     [SerializeField] private GameObject spellPrefab;
     [SerializeField] private Transform spellStartPoint;
     [SerializeField] private int amountToCast = 3;
-    [SerializeField] private float spellCastCooldown = 0.3f;
+    [SerializeField] private float spellCastInterval = 0.3f;
     
     [Header("Retreat info")]
     [SerializeField] private Transform backCollisionCheck;
@@ -73,7 +73,7 @@ public class EnemyMage : Enemy {
             GameObject projectile = 
                 Instantiate(spellPrefab, spellStartPoint.position, Quaternion.identity);
             projectile.GetComponent<EnemyMageProjectile>().SetUpProjectile(player.transform, combat);
-            yield return new WaitForSeconds(spellCastCooldown);
+            yield return new WaitForSeconds(spellCastInterval);
         }
 
         SetSpellCastPerformed(true);

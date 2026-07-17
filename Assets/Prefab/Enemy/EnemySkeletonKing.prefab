@@ -268,7 +268,7 @@ MonoBehaviour:
   secondaryWallCheck: {fileID: 4952427243123888198}
   battleMoveSpeed: 1.4
   attackDistance: 7.5
-  preAttackDuration: 0.5
+  attackWindup: 0.5
   attackCooldown: 2
   battleDuration: 7
   minRetreatDistance: 1.5
@@ -283,6 +283,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   playerCheck: {fileID: 4418708743536626225}
+  shockwaveWindup: 0.7
+  shockwaveDamage: 10
+  shockwaveCooldown: 2.5
   skeletonPrefab: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
   summonStartPoint: {fileID: 5222858994496647657}
   amountOfSkeletonToSummon: 3
@@ -945,7 +948,7 @@ Animator:
   m_GameObject: {fileID: 5141179605586914836}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1aec84f494168400c9bbe5b8646a53d2, type: 2}
+  m_Controller: {fileID: 22100000, guid: 9845b71e9fb114ca7a22157e22eb8d3b, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
