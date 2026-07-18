@@ -11,7 +11,7 @@ public class EnemyDarkKnightSwordwaveState : EnemyState {
     public override void Enter() {
         base.Enter();
         
-        enemy.Move(0, 0);
+        enemyDarkKnight.MoveRaw(0, 0);
     }
 
     public override void Update() {

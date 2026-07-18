@@ -70,31 +70,18 @@ public class EnemyStoneGuard : Enemy, IEnemyPhaseTransition {
         base.Awake();
 
         idleState = new EnemyStoneGuardIdleState(this, stateMachine, "Idle");
-
         moveState = new EnemyMoveState(this, stateMachine, "Idle");
-
         battleState = new EnemyStoneGuardBattleState(this, stateMachine, "Battle");
-
         preAttackState = new EnemyPreAttackState(this, stateMachine, "Battle");
-
         attackState = new EnemyStoneGuardAttackState(this, stateMachine, "Attack");
-
         shootState = new EnemyStoneGuardShootState(this, stateMachine, "Shoot");
-
         laserState = new EnemyStoneGuardLaserState(this, stateMachine, "Laser");
-
         comboState = new EnemyStoneGuardComboState(this, stateMachine, "Shoot");
-
         shieldState = new EnemyStoneGuardShieldState(this, stateMachine, "ShieldCast");
-
         phaseTransitionState = new EnemyPhaseTransitionState(this, stateMachine, "PhaseTransition");
-
         coreExposedState = new EnemyStoneGuardCoreExposedState(this, stateMachine, "CoreExposed");
-
         coreRecoveryState = new EnemyStoneGuardCoreRecoveryState(this, stateMachine, "CoreRecovery");
-
         deadState = new EnemyStoneGuardDeadState(this, stateMachine, "Dead");
-
         stunnedState = new EnemyStunnedState(this, stateMachine, "Battle");
     }
 
