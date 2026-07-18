@@ -19,11 +19,15 @@ public class Enemy : Entity, ICounterable {
     [Header("Battle info")]
     public float battleMoveSpeed = 3;
     public float attackDistance = 2;
-    public float preAttackDuration = 0.5f;
+    public float attackWindup = 0.5f;
     public float attackCooldown = 0.5f;
     public float battleDuration = 5;
     public float minRetreatDistance = 1;
     public Vector2 quickRetreatSpeed = new Vector2(5, 3);
+
+    public float currentWindup { get; private set; }
+    public float currentCooldown { get; private set; }
+    public EnemyState currentAttack { get; private set; }
 
     [Header("Stunned info")]
     public Vector2 stunnedSpeed = new Vector2(7, 7);
@@ -67,6 +71,12 @@ public class Enemy : Entity, ICounterable {
 
     protected override void Update() {
         base.Update();
+    }
+
+    public void SetAttack(float windup, float cooldown, EnemyState attack) {
+        currentWindup = windup;
+        currentCooldown = cooldown;
+        currentAttack = attack;
     }
 
     public virtual void SpecialAttack() {

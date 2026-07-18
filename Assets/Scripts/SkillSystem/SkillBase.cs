@@ -45,8 +45,8 @@ public class SkillBase : MonoBehaviour{
         stats = GetComponentInParent<PlayerStats>();
     
         lastTimeEnd = float.MinValue;
-        remainingDuration = 0;
-        isSkillActive = false;
+        ResetRuntimeState();
+
         decreaseRate = new float[6] {1f, 1f, 0.8f, 0.7f, 0.6f, 0.5f}; // normal, 1decay, 2decay, 3decay, 4decay, 5decay
         decreaseIndex = 0;
         numOfUse = 0;
@@ -58,16 +58,16 @@ public class SkillBase : MonoBehaviour{
             StopCoroutine(handleSkillCo);
         }
 
-        handleSkillCo = StartCoroutine(HanldeSkill());
+        handleSkillCo = StartCoroutine(HanldeSkillCo());
     }
 
-    public IEnumerator HanldeSkill() {
+    public IEnumerator HanldeSkillCo() {
         StartSkill();
         while(remainingDuration > 0) {
             remainingDuration -= Time.deltaTime;
             yield return null;
         }
-        EndSkill();
+        EndSkill(true);
     }
 
     protected virtual void StartSkill() {
@@ -77,7 +77,42 @@ public class SkillBase : MonoBehaviour{
         //IncreaseSkillDecay();
         playerSkillManager.UpdateSkillDecay(decreaseIndex);
     }
-    
+
+    protected virtual void EndSkill(bool endNormally) {
+        ResetRuntimeState();
+        UpdateSkillTimer();
+    }
+
+    public void ClearRuntimeSkillState() {
+        StopSkillCoroutine();
+        ResetRuntimeState();
+    }
+
+    public void CancelSkill() {
+        if (!isSkillActive) {
+            return;
+        }
+
+        StopSkillCoroutine();
+        EndSkill(false);
+    }
+
+    private void StopSkillCoroutine() {
+        if (handleSkillCo != null) {
+            StopCoroutine(handleSkillCo);
+            handleSkillCo = null;
+        }
+    }
+
+    private void ResetRuntimeState() {
+        isSkillActive = false;
+        remainingDuration = 0;
+    }
+
+    private void UpdateSkillTimer() {
+        lastTimeEnd = Time.time;
+    }
+
     protected void IncreaseSkillDecay()
     {
         //if (unlock 磨损1 && numOfUse % 2 == 0  ||  !unlock 磨损1)
@@ -92,12 +127,6 @@ public class SkillBase : MonoBehaviour{
             }
             decreaseIndex = Mathf.Min(decreaseIndex + 1, decreaseRate.Length - 1);
         }
-    }
-
-    protected virtual void EndSkill() {
-        isSkillActive = false;
-        remainingDuration = 0;
-        lastTimeEnd = Time.time;
     }
 
     public virtual float GetSkillDuration() {
@@ -399,17 +428,6 @@ public class SkillBase : MonoBehaviour{
         playerSkillManager.UpdateSkillDecay(decreaseIndex);
     }
 
-    public void ClearRuntimeSkillState()
-    {
-        if (handleSkillCo != null)
-        {
-            StopCoroutine(handleSkillCo);
-            handleSkillCo = null;
-        }
-        isSkillActive = false;
-        remainingDuration = 0;
-    }
-
     public void SetNumOfUse(int num)
     {
         numOfUse = num;
@@ -418,5 +436,9 @@ public class SkillBase : MonoBehaviour{
     public int GetNumOfUse()
     {
         return numOfUse;
+    }
+
+    private void OnDisable() {
+        CancelSkill();
     }
 }

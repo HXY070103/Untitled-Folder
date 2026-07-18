@@ -3,13 +3,12 @@ using UnityEngine;
 public class EnemySkeletonKingBattleState : EnemyBattleState {
     private EnemySkeletonKing enemySkeletonKing;
 
-    private bool shouldSummon;
+    private int attackCounter = 0;
+    private bool hasSummoned = false;
 
     public EnemySkeletonKingBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
         enemySkeletonKing = enemy as EnemySkeletonKing;
-
-        shouldSummon = false;
     }
 
     public override void Enter() {
@@ -17,10 +16,9 @@ public class EnemySkeletonKingBattleState : EnemyBattleState {
     }
 
     public override void Update() {
-        if (!shouldSummon && IsLowHealth()) {
-            shouldSummon = true;
-            enemySkeletonKing.attackCooldown = enemySkeletonKing.summonAttackCooldown;
-            enemySkeletonKing.attackDistance = enemySkeletonKing.summonAttackDistance;
+        if (!hasSummoned && IsLowHealth()) {
+            hasSummoned = true;
+            stateMachine.ChangeState(enemySkeletonKing.summonState);
         }
 
         base.Update();
@@ -33,18 +31,19 @@ public class EnemySkeletonKingBattleState : EnemyBattleState {
     protected override void HandleBattle() {
         if (WithInAttackRange() && enemySkeletonKing.PlayerDetected() && CanAttack()) {
             UpdateAttackTimer();
+            UpdateAttackCounter();
 
-            if (shouldSummon) {
-                stateMachine.ChangeState(enemySkeletonKing.summonState);
+            if (IsShockwave()) {
+                ApplyShockwave();
             } else {
-                stateMachine.ChangeState(enemySkeletonKing.preAttackState); 
+                ApplyBasicAttack();
             }
         } else {
             if (!enemySkeletonKing.PlayerDetected()) {
                 enemySkeletonKing.HandleFlip(DirectionToPlayer());
             }
 
-            if (WithInAttackRange() || enemySkeletonKing.wallDetected || shouldSummon) {
+            if (WithInAttackRange() || enemySkeletonKing.wallDetected || hasSummoned) {
                 return;
             }
 
@@ -53,7 +52,28 @@ public class EnemySkeletonKingBattleState : EnemyBattleState {
         }
     }
 
+    private void ApplyShockwave() {
+        enemySkeletonKing.SetAttack(
+                enemySkeletonKing.shockwaveWindup, 
+                enemySkeletonKing.shockwaveCooldown, 
+                enemySkeletonKing.shockwaveState
+            );
+        stateMachine.ChangeState(enemy.preAttackState); 
+    }
+
+    private void UpdateAttackCounter() {
+        attackCounter += 1;
+
+        if (attackCounter >= 3) {
+            attackCounter = 0;
+        }
+    }
+
+    private bool IsShockwave() {
+        return attackCounter == enemySkeletonKing.shockwaveIndex;
+    }
+
     private bool IsLowHealth() {
-        return enemy.health.GetHPPercentage() < enemySkeletonKing.healthThresholdForSummon;
+        return enemy.health.GetHPPercentage() < enemySkeletonKing.HPThreshold;
     }
 }

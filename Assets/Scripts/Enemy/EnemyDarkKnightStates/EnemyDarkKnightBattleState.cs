@@ -3,25 +3,12 @@ using UnityEngine;
 public class EnemyDarkKnightBattleState : EnemyBattleState {
     private EnemyDarkKnight enemyDarkKnight;
 
-    private int basicAttackCounter;
-    private bool isBasicAttack;
-
-    private int dashAttackCounter;
-    private bool isDashAttack;
-
-    private float originAttackCooldown;
+    private int attackIndex = 1;
+    private bool hasChangedPhase = false;
 
     public EnemyDarkKnightBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
         enemyDarkKnight = enemy as EnemyDarkKnight;
-
-        basicAttackCounter = 0;
-        isBasicAttack = true;
-
-        dashAttackCounter = 0;
-        isDashAttack = false;
-
-        originAttackCooldown = enemyDarkKnight.attackCooldown;
     }
 
     public override void Enter() {
@@ -29,6 +16,11 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
     }
 
     public override void Update() {
+        if (!hasChangedPhase && IsLowHP()) {
+            hasChangedPhase = true;
+            enemyDarkKnight.EnterNextPhase();
+        }
+
         base.Update();
     }
 
@@ -38,15 +30,20 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
 
     protected override void HandleBattle() {
         if (WithInAttackRange() && enemyDarkKnight.PlayerDetected() && CanAttack()) {
-            if (isBasicAttack) {
-                ApplyBasicAttack();
-                return;
+            switch (attackIndex) {
+                case 1: 
+                    ApplyComboAttack();
+                    break;
+                case 2: 
+                    ApplySwordwave();
+                    break;
+                case 3:
+                    ApplyDashAttack();
+                    break;
             }
 
-            if (isDashAttack) {
-                ApplyDashAttack();
-                return;
-            }
+            UpdateAttackTimer();
+            UpdateAttackCounter();
         } else {
             if (!enemyDarkKnight.PlayerDetected()) {
                 enemyDarkKnight.HandleFlip(DirectionToPlayer());
@@ -61,37 +58,55 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
         }
     }
 
-    private void ApplyBasicAttack() {
-        enemyDarkKnight.attackCooldown = originAttackCooldown;
-        UpdateAttackTimer();
-        UpdateBasicAttackCounter();
+    protected override bool WithInAttackRange() {
+        switch (attackIndex) {
+            case 1: 
+                return DistanceToPlayer() < enemyDarkKnight.attackDistance;
+            case 2: 
+                return DistanceToPlayer() < enemyDarkKnight.swordwaveDistance;
+            case 3:
+                return DistanceToPlayer() < enemyDarkKnight.dashDistance;
+            default: 
+                return false;
+        }
+    }
+
+    private void ApplyComboAttack() {
+        enemyDarkKnight.SetAttack(
+                enemyDarkKnight.comboAttackWindup[enemyDarkKnight.phaseIndex], 
+                enemyDarkKnight.comboAttackCooldown[enemyDarkKnight.phaseIndex], 
+                enemyDarkKnight.attackState
+            );
+        stateMachine.ChangeState(enemyDarkKnight.preAttackState);
+    }
+
+    private void ApplySwordwave() {
+        enemyDarkKnight.SetAttack(
+                enemyDarkKnight.swordwaveWindup[enemyDarkKnight.phaseIndex], 
+                enemyDarkKnight.swordwaveCooldown[enemyDarkKnight.phaseIndex], 
+                enemyDarkKnight.swordwaveState
+            );
         stateMachine.ChangeState(enemyDarkKnight.preAttackState);
     }
 
     private void ApplyDashAttack() {
-        enemyDarkKnight.attackCooldown = enemyDarkKnight.dashAttackCooldown;
-        UpdateAttackTimer();
-        UpdateDashAttackCounter();
-        stateMachine.ChangeState(enemyDarkKnight.dashAttackState);
+        enemyDarkKnight.SetAttack(
+                enemyDarkKnight.dashAttackWindup, 
+                enemyDarkKnight.dashAttackCooldown, 
+                enemyDarkKnight.dashAttackState
+            );
+        stateMachine.ChangeState(enemyDarkKnight.preAttackState);
     }
 
-    private void UpdateBasicAttackCounter() {
-        basicAttackCounter += 1;
+    private void UpdateAttackCounter() {
+        attackIndex += 1;
 
-        if (basicAttackCounter == enemyDarkKnight.numOfBasicAttack) {
-            basicAttackCounter = 0;
-            isBasicAttack = false;
-            isDashAttack = true;
+        if (attackIndex > enemyDarkKnight.numOfAttack) {
+            attackIndex = 1;
         }
     }
 
-    private void UpdateDashAttackCounter() {
-        dashAttackCounter += 1;
-
-        if (dashAttackCounter == enemyDarkKnight.numOfDashAttack) {
-            dashAttackCounter = 0;
-            isDashAttack = false;
-            isBasicAttack = true;
-        }
+    private bool IsLowHP() {
+        return enemyDarkKnight.health.GetHPPercentage() < enemyDarkKnight.HPThreshold;
     }
 }

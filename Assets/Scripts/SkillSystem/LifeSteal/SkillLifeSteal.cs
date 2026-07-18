@@ -87,22 +87,25 @@ public class SkillLifeSteal : SkillBase, ISaveable {
         }
     }
 
-    protected override void EndSkill() {
-        base.EndSkill();
+    protected override void EndSkill(bool endNormally) {
+        base.EndSkill(endNormally);
 
         EndAccumulateDamage();
         DestroyFireVFX();
-        CreateFireball();
 
         if (Unlocked("Stable Gain+")) {
             health.ShieldManager.RemoveTemporaryShield();
         }
 
         EndDesperateGambitBuff();
-        ApplyBloodGrowthReward();
 
         if (Unlocked("Deathbound Bargain")) {
             health.StopDeathPrevention();
+        }
+
+        if (endNormally) {
+            CreateFireball();
+            ApplyBloodGrowthReward();
         }
     }
 

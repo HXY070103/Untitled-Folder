@@ -7,7 +7,7 @@ public class EnemyPreAttackState : EnemyState {
     public override void Enter() {
         base.Enter();
 
-        stateTimer = enemy.preAttackDuration;
+        stateTimer = enemy.currentWindup;
         enemy.vfx.PlayPreAttackVFX();
     }
 
@@ -15,7 +15,7 @@ public class EnemyPreAttackState : EnemyState {
         base.Update();
 
         if (stateTimer < 0) {
-            stateMachine.ChangeState(enemy.attackState);
+            stateMachine.ChangeState(enemy.currentAttack);
         }
     }
 
