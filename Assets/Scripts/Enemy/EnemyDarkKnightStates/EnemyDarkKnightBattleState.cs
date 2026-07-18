@@ -4,7 +4,6 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
     private EnemyDarkKnight enemyDarkKnight;
 
     private int attackIndex = 1;
-    private bool hasChangedPhase = false;
 
     public EnemyDarkKnightBattleState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
@@ -16,11 +15,6 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
     }
 
     public override void Update() {
-        if (!hasChangedPhase && IsLowHP()) {
-            hasChangedPhase = true;
-            enemyDarkKnight.EnterNextPhase();
-        }
-
         base.Update();
     }
 
@@ -30,18 +24,7 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
 
     protected override void HandleBattle() {
         if (WithInAttackRange() && enemyDarkKnight.PlayerDetected() && CanAttack()) {
-            switch (attackIndex) {
-                case 1: 
-                    ApplyComboAttack();
-                    break;
-                case 2: 
-                    ApplySwordwave();
-                    break;
-                case 3:
-                    ApplyDashAttack();
-                    break;
-            }
-
+            HandleAttackLoop();
             UpdateAttackTimer();
             UpdateAttackCounter();
         } else {
@@ -68,6 +51,20 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
                 return DistanceToPlayer() < enemyDarkKnight.dashDistance;
             default: 
                 return false;
+        }
+    }
+
+    private void HandleAttackLoop() {
+        switch (attackIndex) {
+            case 1: 
+                ApplyComboAttack();
+                break;
+            case 2: 
+                ApplySwordwave();
+                break;
+            case 3:
+                ApplyDashAttack();
+                break;
         }
     }
 
@@ -104,9 +101,5 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
         if (attackIndex > enemyDarkKnight.numOfAttack) {
             attackIndex = 1;
         }
-    }
-
-    private bool IsLowHP() {
-        return enemyDarkKnight.health.GetHPPercentage() < enemyDarkKnight.HPThreshold;
     }
 }

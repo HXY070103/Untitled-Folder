@@ -1,20 +1,25 @@
 using System.Collections;
+using NUnit.Framework;
 using UnityEngine;
 
-public class EnemyDarkKnight : Enemy {
+public class EnemyDarkKnight : Enemy, IEnemyPhaseTransition {
+    public EnemyPhaseTransitionState phaseTransitionState;
     public EnemyDarkKnightSwordwaveState swordwaveState;
     public EnemyDarkKnightDashAttackState dashAttackState;
 
     [Header("Dark knight specific info")]
     public int numOfAttack = 3;
+    public float phaseTransitionDuration = 2;
 
+    public bool isPhaseTwo { get; private set; } = false;
     public int phaseIndex { get; private set; } = 0;
+    private bool phaseTransitionTriggered = false;
 
     [Header("Combo attack info")]
     public float[] comboAttackWindup = {0.5f, 0.3f};
     public float[] comboAttackCooldown = {1, 0.6f};
     public int[] comboLimit = {2, 3};
-    public float HPThreshold = 0.5f;
+    public float phaseTwoHPThreshold = 0.5f;
 
     private Coroutine enterAttackStateWithDelayCo;
 
@@ -47,6 +52,7 @@ public class EnemyDarkKnight : Enemy {
         attackState = new EnemyDarkKnightAttackState(this, stateMachine, "Attack");
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
+        phaseTransitionState = new EnemyPhaseTransitionState(this, stateMachine, "Battle");
         swordwaveState = new EnemyDarkKnightSwordwaveState(this, stateMachine, "Swordwave");
         dashAttackState = new EnemyDarkKnightDashAttackState(this, stateMachine, "DashAttack");
 
@@ -57,6 +63,49 @@ public class EnemyDarkKnight : Enemy {
         base.Start();
 
         stateMachine.Initialize(idleState);
+        health.OnHealthUpdate += TryStartPhaseTransition;
+        TryStartPhaseTransition();
+    }
+
+    public float GetPhaseTransitionDuration() {
+        return phaseTransitionDuration;
+    }
+
+    public EntityState GetPhaseTransitionNextState() {
+        return battleState;
+    }
+        
+    public void BeginPhaseTransition() {
+        MoveRaw(0, 0);
+        vfx.DoFadeEffect();
+        gameObject.layer = LayerMask.NameToLayer("Untargetable");
+    }
+
+    public void CompletePhaseTransition() {
+        isPhaseTwo = true;
+        phaseIndex = 1;
+    }
+
+    public void EndPhaseTransition() {
+        vfx.ResetTransparency();
+        gameObject.layer = LayerMask.NameToLayer("Enemy");
+    }
+
+    private void TryStartPhaseTransition() {
+        if (health.GetCurrentHP() <= 0 ||  stateMachine.currentState == deadState) {
+            return;
+        }
+
+        if (phaseTransitionTriggered || !IsLowHP()) {
+            return;
+        }
+
+        phaseTransitionTriggered = true;
+        stateMachine.ChangeState(phaseTransitionState);
+    }
+
+    private bool IsLowHP() {
+        return health.GetHPPercentage() < phaseTwoHPThreshold;
     }
 
     public override void SpecialAttack() {
@@ -80,10 +129,6 @@ public class EnemyDarkKnight : Enemy {
             swordWave.GetComponent<EnemyDarkKnightSwordWave>().SetUpSwordWave(facingDir * swordWaveSpeed, combat);
             yield return new WaitForSeconds(swordwaveInterval);
         }
-    }
-
-    public void EnterNextPhase() {
-        phaseIndex = 1;
     }
 
     public void EnterAttackStateWithDelay() {

@@ -722,16 +722,35 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   playerCheck: {fileID: 8366896281239408500}
-  numOfComboAttack: 2
+  numOfAttack: 3
+  phaseTransitionDuration: 1
+  comboAttackWindup:
+  - 0.5
+  - 0.3
+  comboAttackCooldown:
+  - 1
+  - 0.6
+  comboLimit: 0200000003000000
+  phaseTwoHPThreshold: 0.5
   swordWavePrefab: {fileID: 363669544949241483, guid: f91f2d081262f48bfaabd4a96bdcbbdb, type: 3}
   swordWaveStartPoint: {fileID: 7408160521430063564}
   swordWaveSpeed: 15
-  swordwaveWindup: 0.8
-  swordwaveCooldown: 2
-  dashAttackWindup: 0.5
-  dashAttackCooldown: 2
+  numOfSwordwave:
+  - 1
+  - 2
+  swordwaveInterval: 0.3
+  swordwaveWindup:
+  - 0.8
+  - 0.5
+  swordwaveCooldown:
+  - 2
+  - 1.5
+  swordwaveDistance: 12
   dashAttackMaxDistance: 12
   dashSpeed: 15
+  dashAttackWindup: 0.5
+  dashAttackCooldown: 2
+  dashDistance: 12
 --- !u!114 &8731862740972105079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -765,7 +784,6 @@ MonoBehaviour:
   currentHP: 0
   initialMaxHP: 100
   isExecutable: 0
-  damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -784,6 +802,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  targetAlpha: 0.2
+  fadeSpeed: 2
+  fadeInterval: 0.05
   particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 2619526382332349341, guid: 382fc80bcad624108bcaa33f55906ef5, type: 3}
