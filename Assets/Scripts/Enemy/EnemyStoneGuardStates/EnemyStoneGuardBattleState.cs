@@ -9,6 +9,7 @@ public class EnemyStoneGuardBattleState : EnemyBattleState {
     public override void Enter() {
         base.Enter();
 
+        stoneGuard.SetAttack(stoneGuard.attackWindup, stoneGuard.attackCooldown, stoneGuard.attackState);
         UpdateAttackTimer();
     }
 

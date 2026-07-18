@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyStoneGuard : Enemy {
+public class EnemyStoneGuard : Enemy, IEnemyPhaseTransition {
     public const string CoreDamageSource = "MechaGolemCore";
     public const string PhaseTransitionImmunitySource = "MechaGolemPhaseTransition";
 
@@ -9,7 +9,7 @@ public class EnemyStoneGuard : Enemy {
     public EnemyStoneGuardLaserState laserState { get; private set; }
     public EnemyStoneGuardComboState comboState { get; private set; }
     public EnemyStoneGuardShieldState shieldState { get; private set; }
-    public EnemyStoneGuardPhaseTransitionState phaseTransitionState { get; private set; }
+    public EnemyPhaseTransitionState phaseTransitionState { get; private set; }
     public EnemyStoneGuardCoreExposedState coreExposedState { get; private set; }
     public EnemyStoneGuardCoreRecoveryState coreRecoveryState { get; private set; }
 
@@ -87,7 +87,7 @@ public class EnemyStoneGuard : Enemy {
 
         shieldState = new EnemyStoneGuardShieldState(this, stateMachine, "ShieldCast");
 
-        phaseTransitionState = new EnemyStoneGuardPhaseTransitionState(this, stateMachine, "PhaseTransition");
+        phaseTransitionState = new EnemyPhaseTransitionState(this, stateMachine, "PhaseTransition");
 
         coreExposedState = new EnemyStoneGuardCoreExposedState(this, stateMachine, "CoreExposed");
 
@@ -233,17 +233,26 @@ public class EnemyStoneGuard : Enemy {
     }
 
     public void BeginPhaseTransition() {
+        MoveRaw(0, rb.linearVelocity.y);
         DestroyActiveAttacks();
         ExitAttackWindow();
         vfx.SetAttackAlert(false);
         health.AddDamageImmunity(PhaseTransitionImmunitySource);
     }
 
+    public float GetPhaseTransitionDuration() {
+        return phaseTransitionDuration;
+    }
+
+    public EntityState GetPhaseTransitionNextState() {
+        return battleState;
+    }
+
     public void CompletePhaseTransition() {
         isPhaseTwo = true;
     }
 
-    public void EndPhaseTransitionImmunity() {
+    public void EndPhaseTransition() {
         health.RemoveDamageImmunity(PhaseTransitionImmunitySource);
     }
 
