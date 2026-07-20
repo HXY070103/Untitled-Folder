@@ -9,6 +9,7 @@ public class EnemyDarkKnight : Enemy, IEnemyPhaseTransition {
 
     [Header("Dark knight specific info")]
     public int numOfAttack = 3;
+    public float phaseTwoHPThreshold = 0.5f;
     public float phaseTransitionDuration = 2;
 
     public bool isPhaseTwo { get; private set; } = false;
@@ -19,7 +20,6 @@ public class EnemyDarkKnight : Enemy, IEnemyPhaseTransition {
     public float[] comboAttackWindup = {0.5f, 0.3f};
     public float[] comboAttackCooldown = {1, 0.6f};
     public int[] comboLimit = {2, 3};
-    public float phaseTwoHPThreshold = 0.5f;
 
     private Coroutine enterAttackStateWithDelayCo;
 

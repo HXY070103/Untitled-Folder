@@ -7,7 +7,7 @@ public class EnemySkeletonKingShockwaveState : EnemyState {
     public override void Enter() {
         base.Enter();
 
-        enemy.Move(0, 0);
+        enemy.MoveRaw(0, 0);
     }
 
     public override void Update() {

@@ -829,7 +829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityStats
   maxHP:
-    baseValue: 300
+    baseValue: 1000
     modifiers: []
     multipliers: []
   damage:
