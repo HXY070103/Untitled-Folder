@@ -127,6 +127,9 @@ public class MainMenuManager : MonoBehaviour
             newData.hasChosenSkill = false;
             newData.currentSceneName = newGameSceneName;
             newData.playerCurrentHP = -1;
+            newData.playerTemporaryShield = 0;
+            newData.playerPermanentShield = 0;
+            newData.playerTemporaryShieldRemainingDuration = 0;
             newData.numOfLevel = 0;
             newData.numOfUse = 0;
             newData.hasPlayerPosition = false;

@@ -9,6 +9,12 @@ public class PlayerHealth : EntityHealth, ISaveable {
     public ShieldManager ShieldManager => shieldManager;
 
     private bool canApplyBuff = false;
+    private Coroutine loadPlayerStateCoroutine;
+    private bool hasPendingLoad;
+    private float pendingCurrentHP;
+    private float pendingTemporaryShield;
+    private float pendingPermanentShield;
+    private float pendingTemporaryShieldRemainingDuration;
 
     protected override void Awake() {
         base.Awake();
@@ -47,17 +53,62 @@ public class PlayerHealth : EntityHealth, ISaveable {
     }
 
     public void LoadData(GameData data) {
-        if (data.playerCurrentHP > 0) {
-            StartCoroutine(LoadHealthNextFrame(data.playerCurrentHP));
+        if (loadPlayerStateCoroutine != null) {
+            StopCoroutine(loadPlayerStateCoroutine);
         }
+
+        pendingCurrentHP = data.playerCurrentHP;
+        pendingTemporaryShield = Mathf.Max(data.playerTemporaryShield, 0);
+        pendingPermanentShield = Mathf.Max(data.playerPermanentShield, 0);
+        pendingTemporaryShieldRemainingDuration = Mathf.Max(data.playerTemporaryShieldRemainingDuration,0);
+
+        if ( pendingTemporaryShield <= 0 || pendingTemporaryShieldRemainingDuration <= 0) {
+            pendingTemporaryShield = 0;
+            pendingTemporaryShieldRemainingDuration = 0;
+        }
+
+        hasPendingLoad = true;
+        loadPlayerStateCoroutine = StartCoroutine(LoadPlayerStateNextFrame());
     }
 
-    private IEnumerator LoadHealthNextFrame(float HP) {
+    private IEnumerator LoadPlayerStateNextFrame() {
         yield return null;
-        SetCurrentHP(HP);
+
+        if (pendingCurrentHP > 0) {
+            SetCurrentHP(pendingCurrentHP);
+        }
+
+        float maxTemporaryShieldDuration = Mathf.Max(lifeSteal.GetSkillDuration(),0);
+        float remainingDuration = Mathf.Clamp(
+            pendingTemporaryShieldRemainingDuration,
+            0,
+            maxTemporaryShieldDuration
+        );
+        float temporaryShieldToRestore = remainingDuration > 0 ? pendingTemporaryShield : 0;
+
+        shieldManager.RestoreShields(temporaryShieldToRestore, pendingPermanentShield);
+        lifeSteal.RestoreTemporaryShieldDuration(remainingDuration);
+
+        hasPendingLoad = false;
+        loadPlayerStateCoroutine = null;
     }
 
     public void SaveData(ref GameData data) {
+        if (hasPendingLoad) {
+            data.playerCurrentHP = pendingCurrentHP;
+            data.playerTemporaryShield = pendingTemporaryShield;
+            data.playerPermanentShield = pendingPermanentShield;
+            data.playerTemporaryShieldRemainingDuration =
+                pendingTemporaryShieldRemainingDuration;
+            return;
+        }
+
         data.playerCurrentHP = GetCurrentHP();
+        data.playerTemporaryShield = shieldManager.TemporaryShield;
+        data.playerPermanentShield = shieldManager.PermanentShield;
+        data.playerTemporaryShieldRemainingDuration =
+            shieldManager.HasTemporaryShield
+                ? lifeSteal.GetTemporaryShieldRemainingDuration()
+                : 0;
     }
 }

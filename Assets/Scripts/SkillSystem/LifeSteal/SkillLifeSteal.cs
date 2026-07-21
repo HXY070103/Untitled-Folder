@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -18,6 +19,8 @@ public class SkillLifeSteal : SkillBase, ISaveable {
 
     [Header("Stable gain info")]
     [SerializeField] private float temporaryShield = 50;
+    private Coroutine restoredTemporaryShieldCoroutine;
+    private float restoredTemporaryShieldRemainingDuration;
 
     [Header("Desperate gambit info")]
     [SerializeField] private float maxConversionRate = 2;
@@ -41,6 +44,76 @@ public class SkillLifeSteal : SkillBase, ISaveable {
     [SerializeField] private float reviveHPMultiplier = 0.2f;
 
     [SerializeField] private float amountOfBloodBack;
+
+    public float GetTemporaryShieldRemainingDuration() {
+        if (!health.ShieldManager.HasTemporaryShield) {
+            return 0;
+        }
+
+        if (IsSkillActive) {
+            return Mathf.Clamp(RemainingDuration, 0, GetSkillDuration());
+        }
+
+        return Mathf.Clamp(
+            restoredTemporaryShieldRemainingDuration,
+            0,
+            GetSkillDuration()
+        );
+    }
+
+    public void RestoreTemporaryShieldDuration(float remainingDuration) {
+        StopRestoredTemporaryShieldTimer();
+
+        if (!health.ShieldManager.HasTemporaryShield) {
+            return;
+        }
+
+        restoredTemporaryShieldRemainingDuration = Mathf.Clamp(
+            remainingDuration,
+            0,
+            GetSkillDuration()
+        );
+
+        if (restoredTemporaryShieldRemainingDuration <= 0) {
+            health.ShieldManager.RemoveTemporaryShield();
+            return;
+        }
+
+        restoredTemporaryShieldCoroutine =
+            StartCoroutine(HandleRestoredTemporaryShieldDuration());
+    }
+
+    private IEnumerator HandleRestoredTemporaryShieldDuration() {
+        while (
+            restoredTemporaryShieldRemainingDuration > 0 &&
+            health.ShieldManager.HasTemporaryShield
+        ) {
+            restoredTemporaryShieldRemainingDuration = Mathf.Max(
+                restoredTemporaryShieldRemainingDuration - Time.deltaTime,
+                0
+            );
+
+            yield return null;
+        }
+
+        bool durationExpired = restoredTemporaryShieldRemainingDuration <= 0;
+
+        restoredTemporaryShieldCoroutine = null;
+        restoredTemporaryShieldRemainingDuration = 0;
+
+        if (durationExpired && health.ShieldManager.HasTemporaryShield) {
+            health.ShieldManager.RemoveTemporaryShield();
+        }
+    }
+
+    private void StopRestoredTemporaryShieldTimer() {
+        if (restoredTemporaryShieldCoroutine != null) {
+            StopCoroutine(restoredTemporaryShieldCoroutine);
+            restoredTemporaryShieldCoroutine = null;
+        }
+
+        restoredTemporaryShieldRemainingDuration = 0;
+    }
 
     public float GetConversionRate() {
         float bonusConversionRate;
@@ -71,6 +144,7 @@ public class SkillLifeSteal : SkillBase, ISaveable {
     }
 
     protected override void StartSkill() {
+        StopRestoredTemporaryShieldTimer();
         base.StartSkill();
 
         StartAccumulateDamage();
@@ -88,6 +162,7 @@ public class SkillLifeSteal : SkillBase, ISaveable {
     }
 
     protected override void EndSkill(bool endNormally) {
+        StopRestoredTemporaryShieldTimer();
         base.EndSkill(endNormally);
 
         EndAccumulateDamage();
