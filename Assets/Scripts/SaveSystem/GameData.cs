@@ -22,6 +22,9 @@ public class GameData
 
    //player health
    public float playerCurrentHP = -1;
+   public float playerTemporaryShield = 0;
+   public float playerPermanentShield = 0;
+   public float playerTemporaryShieldRemainingDuration = 0;
    
    //skill
    public int chosenSkillType;
