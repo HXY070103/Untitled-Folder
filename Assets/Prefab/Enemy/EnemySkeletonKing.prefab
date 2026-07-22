@@ -257,7 +257,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySkeletonKing
   groundCheckDistance: 0.5
-  wallCheckDistance: 1.5
+  wallCheckDistance: 3.55
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -297,7 +297,7 @@ MonoBehaviour:
   - 0.6
   shockwavePrefab: {fileID: 5769640915517719776, guid: 17003127f330646ef83bddb693c20ba0, type: 3}
   shockwaveStartPoint: {fileID: 4376837621660766815}
-  shockwaveSpeed: 10
+  shockwaveSpeed: 8
   shockwaveWindup:
   - 0.8
   - 0.5
