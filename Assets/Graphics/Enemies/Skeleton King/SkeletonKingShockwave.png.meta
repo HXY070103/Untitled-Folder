@@ -1,103 +1,109 @@
 fileFormatVersion: 2
-guid: 1cd2cfd91b401449290e1513bc236580
+guid: 163242564397e4dbd8a443ab80ae7283
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1283141581029783567
-    second: WechatIMG11697_0
+      213: -4796202644591384568
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_0
   - first:
-      213: -8587861115964382922
-    second: WechatIMG11697_1
+      213: 6919864507590097694
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_1
   - first:
-      213: -7799999420072087262
-    second: WechatIMG11697_2
+      213: 2340284104086587479
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_2
   - first:
-      213: 6086845336361598200
-    second: WechatIMG11697_3
+      213: -7177335588128550035
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_3
   - first:
-      213: 6779234186952805411
-    second: WechatIMG11697_4
+      213: 4857781149011102128
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_4
   - first:
-      213: 712688941726705590
-    second: WechatIMG11697_5
+      213: 283057562193607410
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_5
   - first:
-      213: -6951831534062651970
-    second: WechatIMG11697_6
+      213: 4131048824479615261
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_6
   - first:
-      213: 5224925782796072932
-    second: WechatIMG11697_7
+      213: 7997738486178910338
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_7
   - first:
-      213: -7919103876983922112
-    second: WechatIMG11697_8
+      213: 529860420044264112
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_8
   - first:
-      213: -2961481407084716219
-    second: WechatIMG11697_9
+      213: -4531234288483945010
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_9
   - first:
-      213: 4548089228609822818
-    second: WechatIMG11697_10
+      213: 3385593313626691017
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_10
   - first:
-      213: 402411027916033793
-    second: WechatIMG11697_11
+      213: 884783039676987209
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_11
   - first:
-      213: -3377692248641717044
-    second: WechatIMG11697_12
+      213: -7756633868348728429
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_12
   - first:
-      213: -8126056380150890016
-    second: WechatIMG11697_13
+      213: 8416228651614150406
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_13
   - first:
-      213: 5180979504606643953
-    second: WechatIMG11697_14
+      213: -1269069358636180355
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_14
   - first:
-      213: 3634902307505037428
-    second: WechatIMG11697_15
+      213: 4901469108353544580
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_15
   - first:
-      213: 1426432983554511525
-    second: WechatIMG11697_16
+      213: 3956264405020491288
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_16
   - first:
-      213: -8259602302361804672
-    second: WechatIMG11697_17
+      213: -4788350538912733067
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_17
   - first:
-      213: 3471230748749315915
-    second: WechatIMG11697_18
+      213: -3220247427740552673
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_18
   - first:
-      213: -9130694819551881966
-    second: WechatIMG11697_19
+      213: -183208291034744710
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_19
   - first:
-      213: -1534700675653125595
-    second: WechatIMG11697_20
+      213: -5604048609863210758
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_20
   - first:
-      213: 5722080124126648124
-    second: WechatIMG11697_21
+      213: 7558833337864446422
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_21
   - first:
-      213: -2260665579865295703
-    second: WechatIMG11697_22
+      213: 3187825305517455307
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_22
   - first:
-      213: -4571141924610316581
-    second: WechatIMG11697_23
+      213: 7764389215587082164
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_23
   - first:
-      213: -1758033801849111523
-    second: WechatIMG11697_24
+      213: -7825658976610155834
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_24
   - first:
-      213: 2675619699089912875
-    second: WechatIMG11697_25
+      213: -884904820894410454
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_25
   - first:
-      213: 3586582278810084780
-    second: WechatIMG11697_26
+      213: -2316425035280551712
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_26
   - first:
-      213: -7058363047401395276
-    second: WechatIMG11697_27
+      213: -67219141529018315
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_27
   - first:
-      213: -780995937961843249
-    second: WechatIMG11697_28
+      213: -5974497535708961658
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_28
   - first:
-      213: -4911524410217268461
-    second: WechatIMG11697_29
+      213: 8475821501368353015
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_29
   - first:
-      213: -1669115742749405639
-    second: WechatIMG11697_30
+      213: -3989055135101354449
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_30
   - first:
-      213: -9096789971597538687
-    second: WechatIMG11697_31
+      213: 3182214160496415266
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_31
+  - first:
+      213: 6432805422690424420
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_32
+  - first:
+      213: -4428926588630805348
+    second: D05559FF-D105-4E81-A072-CC6F594C19F8_33
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -196,20 +202,20 @@ TextureImporter:
       name: SkeletonKingShockwave_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 13
         y: 512
-        width: 384
+        width: 371
         height: 512
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 04ddaa4983fb8445fb751e5a6d4d70c5
-      internalID: -1683213267
+      spriteID: 736dd42fbd9c043fea38350c5badc940
+      internalID: -1449678509
       vertices: []
       indices: 
       edges: []
@@ -222,16 +228,16 @@ TextureImporter:
         y: 512
         width: 384
         height: 512
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a433d1bad73b94f9eb174c07bd393265
-      internalID: 717314674
+      spriteID: d1543d43228f84b5c9e251c2f15d3d67
+      internalID: 1904071608
       vertices: []
       indices: 
       edges: []
@@ -244,16 +250,16 @@ TextureImporter:
         y: 512
         width: 384
         height: 512
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 265d2b14238674fb8985f5275b7a7198
-      internalID: 1908965701
+      spriteID: 8168b3abfa7e049139bce085ca8e8731
+      internalID: 1486984948
       vertices: []
       indices: 
       edges: []
@@ -266,16 +272,16 @@ TextureImporter:
         y: 512
         width: 384
         height: 512
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb3559ef72fc1484e936c625bb4ff774
-      internalID: 864547916
+      spriteID: ef00584e99b324efc8594a605cb933ae
+      internalID: 1783527478
       vertices: []
       indices: 
       edges: []
@@ -284,20 +290,20 @@ TextureImporter:
       name: SkeletonKingShockwave_4
       rect:
         serializedVersion: 2
-        x: 0
+        x: 13
         y: 0
-        width: 384
+        width: 371
         height: 512
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.6}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 43fbf9c02a41a4d63a366fbb258026c1
-      internalID: -1522052389
+      spriteID: 379ae883c1b424c82a103d7d19e6e556
+      internalID: 830480920
       vertices: []
       indices: 
       edges: []
@@ -310,16 +316,16 @@ TextureImporter:
         y: 0
         width: 384
         height: 512
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.6}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ded01f8000b7c4a9e82291342c3c61d4
-      internalID: -1117754883
+      spriteID: 3127b6d76909246a0811849194d84250
+      internalID: -648762816
       vertices: []
       indices: 
       edges: []
@@ -332,16 +338,16 @@ TextureImporter:
         y: 0
         width: 384
         height: 512
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.6}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c83ea8075cf9b4531809d0cbf6eb818a
-      internalID: -1396866213
+      spriteID: 285af80d161a74f6c87f7c82429a2fdd
+      internalID: -489343565
       vertices: []
       indices: 
       edges: []
@@ -354,16 +360,16 @@ TextureImporter:
         y: 0
         width: 384
         height: 512
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      alignment: 9
+      pivot: {x: 0.5, y: 0.6}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: acbaf731850194685a0afc99427bdd9a
-      internalID: 1113876527
+      spriteID: 240549dffd4184fc7886abe56c81f599
+      internalID: -202093624
       vertices: []
       indices: 
       edges: []
@@ -372,7 +378,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: ccdaf6afbe6b14a79a48627532e219ea
+    spriteID: 583c8183f37c84ba6af804266fddbf83
     internalID: 0
     vertices: []
     indices: 
@@ -384,14 +390,14 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":384.0,"y":512.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      SkeletonKingShockwave_0: -1683213267
-      SkeletonKingShockwave_1: 717314674
-      SkeletonKingShockwave_2: 1908965701
-      SkeletonKingShockwave_3: 864547916
-      SkeletonKingShockwave_4: -1522052389
-      SkeletonKingShockwave_5: -1117754883
-      SkeletonKingShockwave_6: -1396866213
-      SkeletonKingShockwave_7: 1113876527
+      SkeletonKingShockwave_0: -1449678509
+      SkeletonKingShockwave_1: 1904071608
+      SkeletonKingShockwave_2: 1486984948
+      SkeletonKingShockwave_3: 1783527478
+      SkeletonKingShockwave_4: 830480920
+      SkeletonKingShockwave_5: -648762816
+      SkeletonKingShockwave_6: -489343565
+      SkeletonKingShockwave_7: -202093624
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
