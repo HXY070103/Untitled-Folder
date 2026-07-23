@@ -9,8 +9,10 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
 
     private Transform target;
     private float speedMultiplier;
+    private Vector2 dir;
     private float chaseSpeed;
     private bool canChase;
+    private bool isTracking;
 
     [SerializeField] private LayerMask whatIsTarget;
     [SerializeField] private LayerMask whatCanCollideWith;
@@ -18,7 +20,7 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
     [SerializeField] private GameObject destroyVFXPrefab;
     [SerializeField] private float waitingTime = 0.8f;
 
-    public void SetUpProjectile(float chaseSpeed, Transform target, EnemyCombat combat) {
+    public void SetUpProjectile(Vector2 dir, float chaseSpeed, Transform target, EnemyCombat combat, bool isTracking) {
         col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
@@ -27,10 +29,12 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
         this.combat = combat;
 
         speedMultiplier = 1;
+        this.dir = dir;
         this.chaseSpeed = chaseSpeed;
 
         canChase = false;
-        Invoke(nameof(StartChasing), waitingTime);
+        this.isTracking = isTracking;
+        Invoke(nameof(StartMoving), waitingTime);
 
         anim.enabled = false;
     }
@@ -64,8 +68,12 @@ public class EnemyNecromancerProjectile : MonoBehaviour, ICounterable, ISlowable
         rb.linearVelocity = dir * chaseSpeed * speedMultiplier;
     }
 
-    private void StartChasing() {
-        canChase = true;
+    private void StartMoving() {
+        rb.linearVelocity = dir * chaseSpeed;
+
+        if (isTracking) {
+            canChase = true;
+        }
     }
 
     public bool CanBeCountered() {

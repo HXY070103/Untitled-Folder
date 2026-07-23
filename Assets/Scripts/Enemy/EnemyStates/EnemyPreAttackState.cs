@@ -8,7 +8,7 @@ public class EnemyPreAttackState : EnemyState {
         base.Enter();
 
         stateTimer = enemy.currentWindup;
-        enemy.vfx.PlayPreAttackVFX();
+        //enemy.vfx.PlayPreAttackVFX();
     }
 
     public override void Update() {

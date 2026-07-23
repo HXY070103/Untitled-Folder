@@ -797,7 +797,7 @@ Transform:
   m_GameObject: {fileID: 4989915176894364361}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.7, y: 0, z: 0}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -966,7 +966,7 @@ MonoBehaviour:
   secondaryWallCheck: {fileID: 8881684689771987365}
   battleMoveSpeed: 3
   attackDistance: 9
-  preAttackDuration: 0.5
+  attackWindup: 0.5
   attackCooldown: 2
   battleDuration: 7
   minRetreatDistance: 1
@@ -981,15 +981,27 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   playerCheck: {fileID: 8881684689771987365}
+  numOfAttack: 3
+  phaseTwoHPThreshold: 0.5
+  phaseTransitionDuration: 2
+  positions: []
+  xOffset: 3
+  yOffset: 0.5
+  switchPositionCooldown: 10
   firePrefab: {fileID: 5474144167573307440, guid: 8e8e6df714e9c44938ef0daab5237abc, type: 3}
   fireStartPoint: {fileID: 7969811584880714702}
+  numOfFire: 0100000006000000
   spellPrefab: {fileID: 5897940193099943609, guid: 6fcfa09a789f74b8baba3f9878545017, type: 3}
   spellStartPoint: {fileID: 6829784812205296368}
   spellGenerationRadius: 0.5
-  amountToCast: 3
-  spellCastInterval: 0.3
+  numOfTrackingProjectile: 0300000004000000
+  numOfBasicProjectile: 080000000c000000
+  trackingSpellCastInterval: 0.3
+  basicSpellCastInterval: 0.1
   spellChaseSpeed: 10
-  spellCastCooldown: 0.3
+  numOfSpellCast: 3
+  spellCastWindup: 1
+  spellCastCooldown: 5
 --- !u!50 &2507083146646626435
 Rigidbody2D:
   serializedVersion: 5
@@ -1087,7 +1099,6 @@ MonoBehaviour:
   currentHP: 0
   initialMaxHP: 100
   isExecutable: 0
-  damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -1106,6 +1117,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  targetAlpha: 0.2
+  fadeSpeed: 2
+  fadeInterval: 0.05
   particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 2619526382332349341, guid: 382fc80bcad624108bcaa33f55906ef5, type: 3}
@@ -1130,7 +1144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityStats
   maxHP:
-    baseValue: 200
+    baseValue: 1000
     modifiers: []
     multipliers: []
   damage:

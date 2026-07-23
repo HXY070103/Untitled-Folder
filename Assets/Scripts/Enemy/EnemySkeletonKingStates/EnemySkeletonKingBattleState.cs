@@ -38,6 +38,7 @@ public class EnemySkeletonKingBattleState : EnemyBattleState {
 
             float xVelocity = DirectionToPlayer() * enemySkeletonKing.battleMoveSpeed;
             enemySkeletonKing.Move(xVelocity, rb.linearVelocity.y);
+            enemySkeletonKing.sfx?.TryPlayMove(0.2f);
         }
     }
 

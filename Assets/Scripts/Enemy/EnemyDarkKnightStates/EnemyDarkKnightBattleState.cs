@@ -38,6 +38,7 @@ public class EnemyDarkKnightBattleState : EnemyBattleState {
 
             float xVelocity = DirectionToPlayer() * enemyDarkKnight.battleMoveSpeed;
             enemyDarkKnight.Move(xVelocity, rb.linearVelocity.y);
+            enemyDarkKnight.sfx?.TryPlayMove(0.2f);
         }
     }
 

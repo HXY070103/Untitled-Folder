@@ -34,8 +34,9 @@ public class EnemyArcherElfBattleState : EnemyBattleState {
             if (CanWalkAway() && InWalkAwayRange()) {
                 float xVeloity = -DirectionToPlayer() * enemy.battleMoveSpeed;
                 enemy.Move(xVeloity, rb.linearVelocity.y);
+                enemy.sfx?.TryPlayMove(0.2f);
             } else {
-                enemy.Move(0, rb.linearVelocity.y);
+                enemy.MoveRaw(0, 0);
 
                 if (!enemy.PlayerDetected()) {
                     enemy.HandleFlip(DirectionToPlayer());

@@ -11,7 +11,7 @@ private EnemyNecromancer enemyNecromancer;
     public override void Enter() {
         base.Enter();
 
-        enemyNecromancer.Move(0, rb.linearVelocity.y);
+        enemyNecromancer.MoveRaw(0, 0);
         enemyNecromancer.SetSpellCastPerformed(false);
     }
 
@@ -29,7 +29,7 @@ private EnemyNecromancer enemyNecromancer;
 
     public override void Exit() {
         base.Exit();
-
+        
         anim.SetBool("SpellCastPerformed", false);
     }
 }
