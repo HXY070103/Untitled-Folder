@@ -29,7 +29,7 @@ public class EnemyArcherElfBattleState : EnemyBattleState {
     protected override void HandleBattle() {
         if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
             UpdateAttackTimer();
-            stateMachine.ChangeState(enemy.preAttackState); 
+            ApplyBasicAttack();
         } else {
             if (CanWalkAway() && InWalkAwayRange()) {
                 float xVeloity = -DirectionToPlayer() * enemy.battleMoveSpeed;

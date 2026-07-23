@@ -239,6 +239,9 @@ public class SaveManager : MonoBehaviour
         gameData.hasChosenSkill = false;
         gameData.currentSceneName = startSceneName;
         gameData.playerCurrentHP = -1;
+        gameData.playerTemporaryShield = 0;
+        gameData.playerPermanentShield = 0;
+        gameData.playerTemporaryShieldRemainingDuration = 0;
         gameData.numOfLevel = 0;
         gameData.numOfUse = 0;
         gameData.hasPlayerPosition = false;
@@ -259,6 +262,9 @@ public class SaveManager : MonoBehaviour
         gameData.currentSceneName = "";
         gameData.hasPlayerPosition = false;
         gameData.playerCurrentHP = -1;
+        gameData.playerTemporaryShield = 0;
+        gameData.playerPermanentShield = 0;
+        gameData.playerTemporaryShieldRemainingDuration = 0;
 
         dataHandler.SaveData(gameData);
     }

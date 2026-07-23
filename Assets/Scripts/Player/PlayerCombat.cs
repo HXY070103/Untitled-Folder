@@ -7,6 +7,7 @@ public class PlayerCombat : EntityCombat {
     [Header("Conuter attack info")]
     [SerializeField] private float counterRecoveryDuration = 0.25f;
     [SerializeField] private LayerMask whatIsCounterable;
+    [SerializeField] private float bossCounterCheckRadius = 3.5f;
 
     protected override void Awake() {
         base.Awake();
@@ -19,7 +20,11 @@ public class PlayerCombat : EntityCombat {
     }
 
     public override void PerformAttackOnTarget(Transform target) {
-        base.PerformAttackOnTarget(target);
+        PerformAttackOnTarget(target, 1f);
+    }
+
+    public override void PerformAttackOnTarget(Transform target, float damageMultiplier) {
+        base.PerformAttackOnTarget(target, damageMultiplier);
 
         if (!canExecute) {
             return;
@@ -50,7 +55,39 @@ public class PlayerCombat : EntityCombat {
             }
         }
 
+        if (TryCounterBossAtExtendedRange()) {
+            hasPerformedCounter = true;
+        }
+
         return hasPerformedCounter;
+    }
+
+    private bool TryCounterBossAtExtendedRange() {
+        float facingDirection = Mathf.Sign(
+            TargetCheck.position.x - transform.position.x
+        );
+
+        foreach (Collider2D target in GetDetectedColliders(
+            whatIsCounterable,
+            bossCounterCheckRadius
+        )) {
+            EnemyBoss boss = target.GetComponentInParent<EnemyBoss>();
+
+            if (boss == null) {
+                continue;
+            }
+
+            float directionToBoss = boss.transform.position.x - transform.position.x;
+
+            if (directionToBoss * facingDirection < 0 || !boss.CanBeCountered()) {
+                continue;
+            }
+
+            boss.HandleCounter();
+            return true;
+        }
+
+        return false;
     }
 
     public float GetCounterRecoveryDuration() {

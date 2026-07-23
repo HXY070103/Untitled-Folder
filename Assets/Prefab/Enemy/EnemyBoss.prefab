@@ -43,7 +43,6 @@ Transform:
   - {fileID: 7819832784848144703}
   - {fileID: 3430215107036134538}
   - {fileID: 300650718379185006}
-  - {fileID: 2361454819513897388}
   - {fileID: 5868600963691116500}
   - {fileID: 6585735622355136277}
   - {fileID: 2418953973068275193}
@@ -73,11 +72,11 @@ MonoBehaviour:
   primaryWallCheck: {fileID: 6346743711559511979}
   secondaryWallCheck: {fileID: 6346743711559511979}
   battleMoveSpeed: 4
-  attackDistance: 6
+  attackDistance: 3.5
   preAttackDuration: 0.5
   attackCooldown: 1
   battleDuration: 10
-  minRetreatDistance: 2.5
+  minRetreatDistance: 0
   quickRetreatSpeed: {x: 7, y: 4}
   stunnedSpeed: {x: 9, y: 9}
   stunnedDuration: 1
@@ -89,24 +88,36 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   playerCheck: {fileID: 6346743711559511979}
-  specialAttackCooldown: 5
+  summonPhaseHPThreshold: 0.7
+  phaseThreeHPThreshold: 0.35
+  phaseTransitionDuration: 1.2
+  transitionOffstageOffset: 5
   dashSpeed: 20
   minDashDistance: 12
+  harvestDashWindup: 0.65
+  harvestDashVisualLeadTime: 0.15
+  harvestDashDamageDelay: 0.2
+  harvestDashDuration: 0.55
+  phaseOneRecoveryDuration: 1
+  phaseTwoRecoveryDuration: 1
+  phaseThreeRecoveryDuration: 1
+  bidirectionalHarvestPauseDuration: 0.45
+  bidirectionalHarvestCounterStunDuration: 1.2
   energyWavePrefab: {fileID: 2101764571864566292, guid: 9f86f74ccdbfa4139bd0b97d24033a6b, type: 3}
   energyWaveStartPoint: {fileID: 5868600963691116500}
   energyWaveSpeed: 10
   energyWaveCooldown: 2
-  spellPrefab: {fileID: 6049034181147551912, guid: 68e1bf4e3425e4adc80dc7b04e05c514, type: 3}
-  amountToCast: 3
-  spellCastCooldown: 0.8
-  spellPositionOffset: 4
+  groundFissurePrefab: {fileID: 6049034181147551912, guid: 68e1bf4e3425e4adc80dc7b04e05c514, type: 3}
+  groundFissureWarningDuration: 1.2
+  groundFissureArenaMargin: 3
+  groundFissureVerticalOffset: 2.5
+  groundFissureRoundInterval: 0.7
+  knightPrefab: {fileID: 4438716662346398900, guid: d6716d6548edd45148efaeb9b6b73ebd, type: 3}
+  archerElfPrefab: {fileID: 8462388656820771433, guid: 06f7ad6a198ce4ef5a21530422e66884, type: 3}
   skeletonPrefab: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
-  summonStartPoint: {fileID: 2361454819513897388}
-  amountOfSkeletonToSummon: 3
+  magePrefab: {fileID: 1307503079930646942, guid: 57313f2e3276347dbb78314c1e769049, type: 3}
+  evilWizardPrefab: {fileID: 3275644217491406495, guid: 3fd1cd901047b4551a6208172eb5015e, type: 3}
   summonCooldown: 0.5
-  teleportDelay: 1.2
-  teleportBehindOffset: 5
-  teleportAwayOffset: 20
 --- !u!50 &2665595112516559906
 Rigidbody2D:
   serializedVersion: 5
@@ -202,7 +213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   isDead: 0
   currentHP: 0
-  initialMaxHP: 100
+  initialMaxHP: 1600
   isExecutable: 0
   damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
@@ -247,11 +258,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EntityStats
   maxHP:
-    baseValue: 1000
+    baseValue: 1600
     modifiers: []
     multipliers: []
   damage:
-    baseValue: 20
+    baseValue: 18
     modifiers: []
     multipliers: []
   critPower:
@@ -259,11 +270,11 @@ MonoBehaviour:
     modifiers: []
     multipliers: []
   critChance:
-    baseValue: 20
+    baseValue: 0
     modifiers: []
     multipliers: []
   armor:
-    baseValue: 200
+    baseValue: 20
     modifiers: []
     multipliers: []
 --- !u!114 &8117039925320396993
@@ -279,10 +290,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBossUpgrade
   bossName: Final Boss
-  maxHPIncreasePerLevel: 0.05
-  damageIncreasePerLevel: 0.05
-  armorIncreasePerLevel: 0.05
-  moveSpeedIncreasePerLevel: 0.05
+  maxHPIncreasePerLevel: 0.04
+  maxHPIncreaseCap: 0.8
+  damageIncreasePerLevel: 0.025
+  damageIncreaseCap: 0.5
+  armorIncreasePerLevel: 1
+  maxArmor: 30
+  moveSpeedIncreasePerLevel: 0.005
+  moveSpeedIncreaseCap: 0.1
+  summonMaxHPIncreasePerLevel: 0.03
+  summonMaxHPIncreaseCap: 0.3
+  summonDamageIncreasePerLevel: 0.02
+  summonDamageIncreaseCap: 0.2
 --- !u!114 &8002286029686080104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -520,97 +539,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!1 &2160318023192086978
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2361454819513897388}
-  - component: {fileID: 6637234973165306706}
-  m_Layer: 8
-  m_Name: SummonStartPoint
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2361454819513897388
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2160318023192086978}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.4, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 6346743711559511979}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &6637234973165306706
-SpriteRenderer:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2160318023192086978}
-  m_Enabled: 0
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
 --- !u!1 &2385847980113131019
 GameObject:
   m_ObjectHideFlags: 0

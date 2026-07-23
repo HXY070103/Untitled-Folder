@@ -1004,6 +1004,7 @@ MonoBehaviour:
   whatIsCounterable:
     serializedVersion: 2
     m_Bits: 768
+  bossCounterCheckRadius: 3.5
 --- !u!114 &647535936263750144
 MonoBehaviour:
   m_ObjectHideFlags: 0
