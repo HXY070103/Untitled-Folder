@@ -11,20 +11,23 @@ public class EnemyBossSummonState : EnemyState {
     public override void Enter() {
         base.Enter();
 
+        enemyBoss.ClearAttackPresentation();
         enemyBoss.Move(0, 0);
-        enemyBoss.StartSummon();
         enemyBoss.SetSummonPerformed(false);
+        enemyBoss.StartSummon();
     }
 
     public override void Update() {
         base.Update();
+        enemyBoss.RefreshSummonCompletion();
 
         if (enemyBoss.SummonPerformed) {
-            stateMachine.ChangeState(enemyBoss.battleState);
+            enemyBoss.CompleteSummonPhase();
         }
     }
 
     public override void Exit() {
+        enemyBoss.ClearAttackPresentation();
         base.Exit();
     }
 }
