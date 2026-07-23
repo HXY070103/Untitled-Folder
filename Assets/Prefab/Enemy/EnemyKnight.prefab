@@ -381,7 +381,7 @@ MonoBehaviour:
   secondaryWallCheck: {fileID: 474838836005265591}
   battleMoveSpeed: 2.5
   attackDistance: 1.7
-  preAttackDuration: 0.5
+  attackWindup: 0.5
   attackCooldown: 1.5
   battleDuration: 5
   minRetreatDistance: 0.6
@@ -493,7 +493,6 @@ MonoBehaviour:
   currentHP: 0
   initialMaxHP: 100
   isExecutable: 1
-  damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -512,6 +511,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  targetAlpha: 0.2
+  fadeSpeed: 2
+  fadeInterval: 0.05
   particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 0}
@@ -687,7 +689,7 @@ Animator:
   m_GameObject: {fileID: 5454288691684027495}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: d9d18f90152a44fab857200dbe25c3cb, type: 2}
+  m_Controller: {fileID: 22100000, guid: 58b2a91e006ed4954a12b263b2c522ee, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -32,12 +32,12 @@ public class EnemyBossBattleState : EnemyBattleState {
     }
 
     protected override void HandleBattle() {
-        if (WithInAttackRange() && enemy.PlayerDetected() && CanAttack()) {
+        if (WithInAttackRange() && enemyBoss.PlayerDetected() && CanAttack()) {
             UpdateAttackTimer();
             stateMachine.ChangeState(enemyBoss.preAttackState); 
         } else {
-            if (!enemy.PlayerDetected()) {
-                enemy.HandleFlip(DirectionToPlayer());
+            if (!enemyBoss.PlayerDetected()) {
+                enemyBoss.HandleFlip(DirectionToPlayer());
             }
 
             if (WithInAttackRange() || enemyBoss.OutOfMoveRange()) {
@@ -49,8 +49,9 @@ public class EnemyBossBattleState : EnemyBattleState {
                 return;
             }
 
-            float xVelocity = DirectionToPlayer() * enemy.battleMoveSpeed;
-            enemy.Move(xVelocity, rb.linearVelocity.y);
+            float xVelocity = DirectionToPlayer() * enemyBoss.battleMoveSpeed;
+            enemyBoss.Move(xVelocity, rb.linearVelocity.y);
+            enemyBoss.sfx?.TryPlayMove(0.2f);
         }
     }
 
