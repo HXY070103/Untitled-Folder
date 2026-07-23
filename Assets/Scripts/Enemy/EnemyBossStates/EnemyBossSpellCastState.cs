@@ -12,22 +12,24 @@ public class EnemyBossSpellCastState : EnemyState {
         base.Enter();
 
         enemyBoss.Move(0, rb.linearVelocity.y);
-        enemyBoss.SetSpellCastPerformed(false);
+        enemyBoss.SetEnergyWavePerformed(false);
     }
 
     public override void Update() {
         base.Update();
 
-        if (enemyBoss.SpellCastPerformed) {
+        if (enemyBoss.EnergyWavePerformed) {
             anim.SetBool("SpellCastPerformed", true);
         }
 
         if (triggerCalled) {
+            enemyBoss.CompleteEnergyWaveAction();
             stateMachine.ChangeState(enemyBoss.battleState);
         }
     }
 
     public override void Exit() {
+        enemyBoss.ClearAttackPresentation();
         base.Exit();
 
         anim.SetBool("SpellCastPerformed", false);

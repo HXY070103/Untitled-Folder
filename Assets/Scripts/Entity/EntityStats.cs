@@ -16,10 +16,11 @@ public class EntityStats : MonoBehaviour {
         return maxHP.GetValue();
     }
 
-    public Damage GetDamage() {
+    public Damage GetDamage(float damageMultiplier = 1f) {
         float chance = Mathf.Clamp(critChance.GetValue(), 0, 100);
         bool isCrit = Random.Range(0, 100) < chance;
-        float finalDamage = isCrit ? damage.GetValue() * critPower.GetValue() : damage.GetValue();
+        float scaledDamage = damage.GetValue() * Mathf.Max(0, damageMultiplier);
+        float finalDamage = isCrit ? scaledDamage * critPower.GetValue() : scaledDamage;
 
         if (finalDamage < 5) {
             finalDamage = 5;
