@@ -24,6 +24,10 @@ public class EnemyNecromancerBattleState : EnemyBattleState {
         if (CanSwitchPosition()) {
             SwitchPosition();
             UpdateSwitchPositionTimer();
+
+            if (enemyNecromancer.isPhaseTwo) {
+                enemyNecromancer.StartSummon();
+            }
         }
     }
 

@@ -8,7 +8,6 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
 
     [Header("Necromancer specific info")]
     public int numOfAttack = 3;
-
     public float phaseTwoHPThreshold = 0.5f;
     public float phaseTransitionDuration = 2;
 
@@ -17,7 +16,6 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
     private bool phaseTransitionTriggered = false;
 
     [Header("Position info")]
-
     public List<Transform> positions = new List<Transform>();
     public float xOffset = 3;
     public float yOffset = 0.5f;
@@ -47,6 +45,15 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
     private bool isTracking;
     private bool spellCastPerformed;
     public bool SpellCastPerformed => spellCastPerformed;
+
+
+    [Header("Summon info")]
+    [SerializeField] private GameObject skeletonPrefab;
+    [SerializeField] private GameObject archerElfPrefab;
+    [SerializeField] private Transform summonStartPoint;
+    [SerializeField] private float summonInterval = 0.5f;
+
+    private Coroutine summonCo;
 
     protected override void Awake() {
         base.Awake();
@@ -208,6 +215,28 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
     private Quaternion CalculateRotation(Vector2 dir) {
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         return Quaternion.Euler(0, 0, angle);
+    }
+
+    public void StartSummon() {
+        if (summonCo != null) {
+            StopCoroutine(summonCo);
+        }
+
+        summonCo = StartCoroutine(SummonCo());
+    }
+
+    private IEnumerator SummonCo() {
+        GameObject skeleton = Instantiate(skeletonPrefab, summonStartPoint.position, Quaternion.identity);
+        skeleton.GetComponent<EnemySkeleton>().HandleFlip(facingDir);
+        skeleton.GetComponent<EnemySkeleton>().TryToEnterBattleState(player);
+        vfx.GenerateParticleEffect(Color.purple);
+
+        yield return new WaitForSeconds(summonInterval);
+
+        GameObject archerElf = Instantiate(archerElfPrefab, summonStartPoint.position, Quaternion.identity);
+        archerElf.GetComponent<EnemyArcherElf>().HandleFlip(facingDir);
+        archerElf.GetComponent<EnemyArcherElf>().TryToEnterBattleState(player);
+        vfx.GenerateParticleEffect(Color.purple);
     }
 
     protected override Transform DetectPlayer() {
