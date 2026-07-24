@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
         {
             return;
         }
+        ClearPauseStateForSceneTransition();
         StartCoroutine(LoadSceneCo(sceneName, false));
     }
 
@@ -80,6 +81,7 @@ public class GameManager : MonoBehaviour
         {
             HistoryManager.instance.PrepareForSavedSceneLoad(sceneName);
         }
+        ClearPauseStateForSceneTransition();
         StartCoroutine(LoadSceneCo(sceneName, true));
     } 
 
@@ -113,7 +115,19 @@ public class GameManager : MonoBehaviour
     // change scene by waypoint: map to map
     public void ChangeScene(string sceneName, WaypointType type)
     {
+        ClearPauseStateForSceneTransition();
         StartCoroutine(ChangeSceneCo(sceneName, type));
+    }
+
+    private void ClearPauseStateForSceneTransition()
+    {
+        if (GamePauseManager.Instance != null)
+        {
+            GamePauseManager.Instance.ClearAllPauses();
+            return;
+        }
+
+        Time.timeScale = 1f;
     }
 
     private IEnumerator ChangeSceneCo(string sceneName, WaypointType waypointType)
