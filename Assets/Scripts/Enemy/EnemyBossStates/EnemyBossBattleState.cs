@@ -76,8 +76,8 @@ public class EnemyBossBattleState : EnemyBattleState {
             Debug.Log($"Boss basic attack started at distance {DistanceToPlayer():0.00}");
             stateMachine.ChangeState(enemyBoss.preAttackState);
         } else {
-            if (!enemy.PlayerDetected()) {
-                enemy.HandleFlip(DirectionToPlayer());
+            if (!enemyBoss.PlayerDetected()) {
+                enemyBoss.HandleFlip(DirectionToPlayer());
             }
 
             if (WithInAttackRange() || enemyBoss.OutOfMoveRange()) {
@@ -89,8 +89,9 @@ public class EnemyBossBattleState : EnemyBattleState {
                 return;
             }
 
-            float xVelocity = DirectionToPlayer() * enemy.battleMoveSpeed;
-            enemy.Move(xVelocity, rb.linearVelocity.y);
+            float xVelocity = DirectionToPlayer() * enemyBoss.battleMoveSpeed;
+            enemyBoss.Move(xVelocity, rb.linearVelocity.y);
+            enemyBoss.sfx?.TryPlayMove(0.2f);
         }
     }
 
