@@ -1044,6 +1044,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1597de2df00e64cbdbd721dea216c5d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerVFX
+  targetAlpha: 0.2
+  fadeSpeed: 2
+  fadeInterval: 0.05
   particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 2270825432934318720, guid: 4f1f4f8826d734b10b1ba186c9e19441, type: 3}
@@ -1052,9 +1055,6 @@ MonoBehaviour:
   onHitVFXColor: {r: 1, g: 1, b: 1, a: 1}
   onHitVFX: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
   onCritHitVFX: {fileID: 1321752846314756928, guid: b9426da7f34ab4e6dac992440f1c4583, type: 3}
-  targetAlpha: 0.2
-  fadeSpeed: 2
-  fadeInterval: 0.05
   globalPauseScale: 0.1
   globalPauseDuration: 0.5
 --- !u!114 &3690069604150053797
@@ -1070,11 +1070,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
   maxHP:
-    baseValue: 10000
+    baseValue: 100
     modifiers: []
     multipliers: []
   damage:
-    baseValue: 50
+    baseValue: 20
     modifiers: []
     multipliers: []
   critPower:
@@ -1082,7 +1082,7 @@ MonoBehaviour:
     modifiers: []
     multipliers: []
   critChance:
-    baseValue: 20
+    baseValue: 10
     modifiers: []
     multipliers: []
   armor:

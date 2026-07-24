@@ -43,7 +43,9 @@ public class SkillTimeControl : SkillBase {
             return 1;
         }
 
-        return slowDownPercentage * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
+        float scaledSlowDown =
+            slowDownPercentage * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
+        return Mathf.Clamp01(scaledSlowDown);
     }
 
     public override float GetSkillDuration() {

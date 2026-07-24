@@ -54,6 +54,8 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
     [SerializeField] private float summonInterval = 0.5f;
 
     private Coroutine summonCo;
+    private PlatformManager platformManager;
+    private bool summonRegistrationActive;
 
     protected override void Awake() {
         base.Awake();
@@ -74,6 +76,7 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
     protected override void Start() {
         base.Start();
 
+        platformManager = FindAnyObjectByType<PlatformManager>();
         stateMachine.Initialize(idleState);
         health.OnHealthUpdate += TryStartPhaseTransition;
         TryStartPhaseTransition();
@@ -220,23 +223,47 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
     public void StartSummon() {
         if (summonCo != null) {
             StopCoroutine(summonCo);
+            CompleteSummonRegistration();
         }
 
+        platformManager?.BeginSummon();
+        summonRegistrationActive = true;
         summonCo = StartCoroutine(SummonCo());
     }
 
     private IEnumerator SummonCo() {
         GameObject skeleton = Instantiate(skeletonPrefab, summonStartPoint.position, Quaternion.identity);
-        skeleton.GetComponent<EnemySkeleton>().HandleFlip(facingDir);
-        skeleton.GetComponent<EnemySkeleton>().TryToEnterBattleState(player);
+        EnemySkeleton skeletonEnemy = skeleton.GetComponent<EnemySkeleton>();
+        skeletonEnemy.HandleFlip(facingDir);
+        skeletonEnemy.TryToEnterBattleState(player);
+        platformManager?.RegisterSummonedEnemy(skeletonEnemy);
         vfx.GenerateParticleEffect(Color.purple);
 
         yield return new WaitForSeconds(summonInterval);
 
         GameObject archerElf = Instantiate(archerElfPrefab, summonStartPoint.position, Quaternion.identity);
-        archerElf.GetComponent<EnemyArcherElf>().HandleFlip(facingDir);
-        archerElf.GetComponent<EnemyArcherElf>().TryToEnterBattleState(player);
+        EnemyArcherElf archerElfEnemy = archerElf.GetComponent<EnemyArcherElf>();
+        archerElfEnemy.HandleFlip(facingDir);
+        archerElfEnemy.TryToEnterBattleState(player);
+        platformManager?.RegisterSummonedEnemy(archerElfEnemy);
         vfx.GenerateParticleEffect(Color.purple);
+
+        CompleteSummonRegistration();
+        summonCo = null;
+    }
+
+    private void CompleteSummonRegistration() {
+        if (!summonRegistrationActive) {
+            return;
+        }
+
+        summonRegistrationActive = false;
+        platformManager?.CompleteSummon();
+    }
+
+    public override void EntityDeath() {
+        CompleteSummonRegistration();
+        base.EntityDeath();
     }
 
     protected override Transform DetectPlayer() {

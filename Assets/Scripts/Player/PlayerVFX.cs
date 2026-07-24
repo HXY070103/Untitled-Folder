@@ -33,6 +33,7 @@ public class PlayerVFX : EntityVFX {
 
     private IEnumerator GlobalPauseCo() {
         if (Time.timeScale <= 0f) {
+            globalPauseCo = null;
             yield break;
         }
 
@@ -41,7 +42,29 @@ public class PlayerVFX : EntityVFX {
 
         yield return new WaitForSecondsRealtime(globalPauseDuration);
 
-        Time.timeScale = originalTimeScale;
+        RestoreTimeAfterGlobalPause();
+        globalPauseCo = null;
+    }
+
+    private void RestoreTimeAfterGlobalPause() {
         Time.fixedDeltaTime = originalFixedDeltaTime;
+
+        if (GamePauseManager.Instance != null &&
+            GamePauseManager.Instance.IsGamePaused()) {
+            Time.timeScale = 0f;
+            return;
+        }
+
+        Time.timeScale = originalTimeScale;
+    }
+
+    private void OnDisable() {
+        if (globalPauseCo == null) {
+            return;
+        }
+
+        StopCoroutine(globalPauseCo);
+        globalPauseCo = null;
+        RestoreTimeAfterGlobalPause();
     }
 }

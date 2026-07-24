@@ -467,7 +467,7 @@ MonoBehaviour:
     modifiers: []
     multipliers: []
   armor:
-    baseValue: 200
+    baseValue: 20
     modifiers: []
     multipliers: []
 --- !u!114 &3570765387834628417

@@ -41,4 +41,10 @@ public class GamePauseManager : MonoBehaviour
     {
         return pauseReasons.Count > 0;
     }
+
+    public void ClearAllPauses()
+    {
+        pauseReasons.Clear();
+        Time.timeScale = 1f;
+    }
 }

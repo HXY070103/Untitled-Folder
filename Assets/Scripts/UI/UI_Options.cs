@@ -23,13 +23,28 @@ public class UI_Options : MonoBehaviour
 
     private void Awake()
     {
-        player = FindFirstObjectByType<Player>();
-        healthBarToggle.onValueChanged.AddListener(OnHealthBarToggleChanged);
+        player = FindAnyObjectByType<Player>();
+
+        if (healthBarToggle != null)
+        {
+            healthBarToggle.interactable = player != null;
+            healthBarToggle.onValueChanged.AddListener(OnHealthBarToggleChanged);
+        }
     }
 
     private void OnHealthBarToggleChanged(bool isOn)
     {
         AudioManager.instance.PlayGlobalSFX("Button_Click");
+
+        if (player == null)
+        {
+            player = FindAnyObjectByType<Player>();
+        }
+        if (player == null || player.health == null)
+        {
+            return;
+        }
+
         player.health.EnableHealthBar(isOn);
     }
 
@@ -71,18 +86,18 @@ public class UI_Options : MonoBehaviour
             SaveManager.instance.SaveGameIfAllowed();
         }
 
-        Time.timeScale = 1f;
+        if (GamePauseManager.Instance != null)
+        {
+            GamePauseManager.Instance.ClearAllPauses();
+        }
+        else
+        {
+            Time.timeScale = 1f;
+        }
+
         if (HistoryManager.instance != null)
         {
             HistoryManager.instance.RecordCurrentStatsBeforeExit();
-        }
-
-        if (GamePauseManager.Instance != null)
-        {
-            GamePauseManager.Instance.Resume("UI_Input");
-            GamePauseManager.Instance.Resume("SkillChoose");
-            GamePauseManager.Instance.Resume("ChestReward");
-            GamePauseManager.Instance.Resume("Options");
         }
 
         if (SaveManager.instance != null)

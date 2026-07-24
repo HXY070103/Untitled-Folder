@@ -1076,8 +1076,11 @@ MonoBehaviour:
   numOfAttack: 3
   phaseTwoHPThreshold: 0.5
   phaseTransitionDuration: 2
-  positions: []
-  xOffset: 3
+  positions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  xOffset: 4
   yOffset: 0.5
   switchPositionCooldown: 10
   firePrefab: {fileID: 5474144167573307440, guid: 8e8e6df714e9c44938ef0daab5237abc, type: 3}
