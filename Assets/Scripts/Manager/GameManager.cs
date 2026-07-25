@@ -136,6 +136,11 @@ public class GameManager : MonoBehaviour
         isChangeScene = true;
         yield return Fade(0f, 1f);
 
+        if (SaveManager.instance != null)
+        {
+            SaveManager.instance.SaveGame();
+        }
+
         SceneManager.LoadScene(sceneName);
 
         TryIncreaseBossLevel(sceneName);

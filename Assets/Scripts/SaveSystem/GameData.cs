@@ -29,6 +29,7 @@ public class GameData
    //skill
    public int chosenSkillType;
    public int skillDecay;
+   public float skillDecayMaxHPPenalty = 0;
    public int numOfUse;
    public float remainSkillColldown;
    public List<string> unlockedSkillUpgrades = new List<string>();

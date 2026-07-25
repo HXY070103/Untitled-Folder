@@ -120,9 +120,17 @@ public class SkillBase : MonoBehaviour{
         {
             if (decreaseIndex == decreaseRate.Length - 1) {
                 PlayerHealth playerHealth = GetComponentInParent<PlayerHealth>();
-                if (stats.GetMaxHP() >= 0.3 * playerHealth.GetInitialMaxHP())
+                float currentMaxHP = stats.GetMaxHP();
+                float minimumMaxHP = 0.3f * playerHealth.GetInitialMaxHP();
+                float requestedReduction = currentMaxHP * 0.2f;
+                float allowedReduction = Mathf.Max(currentMaxHP - minimumMaxHP, 0);
+                float actualReduction = Mathf.Min(requestedReduction, allowedReduction);
+                float maxHPMultiplier = stats.maxHP.GetCombinedMultiplier();
+
+                if (actualReduction > 0 && maxHPMultiplier > 0)
                 {
-                    playerHealth.DecreaseMaxHP(stats.GetMaxHP() * 0.2f, "Skill Decay");
+                    float additivePenalty = actualReduction / maxHPMultiplier;
+                    playerSkillManager.ApplySkillDecayMaxHPPenalty(additivePenalty);
                 }
             }
             decreaseIndex = Mathf.Min(decreaseIndex + 1, decreaseRate.Length - 1);
