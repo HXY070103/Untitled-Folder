@@ -46,6 +46,16 @@ public class Stat {
         needToCalculate = true;
     }
 
+    public float GetCombinedMultiplier() {
+        float combinedMultiplier = 1f;
+
+        foreach (var multiplier in multipliers) {
+            combinedMultiplier *= multiplier.GetValue();
+        }
+
+        return combinedMultiplier;
+    }
+
     private float GetFinalValue() {
         float finalValue = baseValue;
 
@@ -53,9 +63,7 @@ public class Stat {
             finalValue += mod.GetValue() ;
         }
 
-        foreach (var mul in multipliers) {
-            finalValue *= mul.GetValue();
-        }
+        finalValue *= GetCombinedMultiplier();
 
         return finalValue;
     }

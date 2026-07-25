@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 public class PlayerSkillManager : MonoBehaviour, ISaveable {
+    private const string SkillDecayMaxHPSource = "Skill Decay";
+
     private SkillBase[] skills;
     [SerializeField] private SkillType currentSkillType;
     [SerializeField] private UI_SkillDecay skillDecayUI;
     [SerializeField] private bool hasChosenSkill;
     private int skillDecay;
+    private float skillDecayMaxHPPenalty;
+    private PlayerStats playerStats;
+    private PlayerHealth playerHealth;
 
     public int SkillDecay => skillDecay;
 
@@ -51,6 +56,8 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         skills[(int) SkillType.TimeControl] = GetComponentInChildren<SkillTimeControl>();
         skills[(int) SkillType.LifeSteal] = GetComponentInChildren<SkillLifeSteal>();
         skills[(int) SkillType.Phase] = GetComponentInChildren<SkillPhase>();
+        playerStats = GetComponent<PlayerStats>();
+        playerHealth = GetComponent<PlayerHealth>();
     }
 
     public void UpdateSkillDecay(int skillDecay)
@@ -68,6 +75,7 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         {
             Initialize();
         }
+        RestoreSkillDecayMaxHPPenalty(0);
         hasChosenSkill = true;
         currentSkillType = type;
         SkillBase currentSkill = GetCurrentSkill();
@@ -82,6 +90,40 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         UpdateSkillDecay(0);
     }
 
+    public void ApplySkillDecayMaxHPPenalty(float penalty)
+    {
+        if (penalty <= 0)
+        {
+            return;
+        }
+        if (playerHealth == null)
+        {
+            Initialize();
+        }
+
+        skillDecayMaxHPPenalty += penalty;
+        playerHealth.DecreaseMaxHP(penalty, SkillDecayMaxHPSource);
+    }
+
+    private void RestoreSkillDecayMaxHPPenalty(float penalty)
+    {
+        if (playerStats == null || playerHealth == null)
+        {
+            Initialize();
+        }
+
+        playerStats.maxHP.RemoveModifier(SkillDecayMaxHPSource);
+        skillDecayMaxHPPenalty = Mathf.Max(penalty, 0);
+
+        if (skillDecayMaxHPPenalty > 0)
+        {
+            playerHealth.DecreaseMaxHP(
+                skillDecayMaxHPPenalty,
+                SkillDecayMaxHPSource
+            );
+        }
+    }
+
     public void LoadData(GameData data)
     {
         if (skills == null)
@@ -89,6 +131,9 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
             Initialize();
         }
         hasChosenSkill = data.hasChosenSkill;
+        RestoreSkillDecayMaxHPPenalty(
+            hasChosenSkill ? data.skillDecayMaxHPPenalty : 0
+        );
         if (!hasChosenSkill)
         {
             UpdateSkillDecay(0);
@@ -112,6 +157,7 @@ public class PlayerSkillManager : MonoBehaviour, ISaveable {
         {
             Initialize();
         }
+        data.skillDecayMaxHPPenalty = skillDecayMaxHPPenalty;
         if (!hasChosenSkill)
         {
             return;
