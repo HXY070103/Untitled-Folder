@@ -2648,10 +2648,10 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 20, y: 16.25}
-      - {x: -20, y: 16.25}
-      - {x: -20, y: -6.25}
-      - {x: 20, y: -6.25}
+    - - {x: 58, y: 14}
+      - {x: -56, y: 14}
+      - {x: -56, y: -31}
+      - {x: 58, y: -31}
   m_UseDelaunayMesh: 1
 --- !u!4 &626244915
 Transform:
@@ -3300,7 +3300,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 718603855}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f453f694addf4275988fac205bc91968, type: 3}
   m_Name: 
