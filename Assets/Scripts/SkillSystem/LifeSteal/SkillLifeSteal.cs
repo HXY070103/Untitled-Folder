@@ -40,7 +40,7 @@ public class SkillLifeSteal : SkillBase, ISaveable {
     public float damageMultiplier = 2;
     public float attackSpeedMultiplier = 1.5f;
     
-    [Header("Unshakable resolve info")]
+    [Header("Deathbound bargain info")]
     [SerializeField] private float reviveHPMultiplier = 0.2f;
 
     [SerializeField] private float amountOfBloodBack;
@@ -237,7 +237,11 @@ public class SkillLifeSteal : SkillBase, ISaveable {
     }
 
     private void CreateFireball() {
-        if (Unlocked("Deathbound Bargain") || Unlocked("Stable Gain")) {
+        if (Unlocked("Stable Gain")) {
+            return;
+        }
+
+        if (Unlocked("Deathbound Bargain") && health.hasRevived) {
             return;
         }
 

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class Waypoint : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class Waypoint : MonoBehaviour
     [SerializeField] private Transform respawnPoint;
     [SerializeField] private bool canBeTrigger = true;
     [SerializeField] private bool isBossWinExit = false;
+
+    [Header("Input")]
+    [SerializeField] private InputActionReference interactAction;
+
+    private Player playerInRange;
 
     public void SetCanbeTrigger(bool canBeTrigger)
     {
@@ -47,10 +53,43 @@ public class Waypoint : MonoBehaviour
             return;
         }
 
-        if (collision.GetComponent<Player>() == null)
+        Player player = collision.GetComponent<Player>();
+
+        if (player == null)
         {
             return;
         }
+
+        playerInRange = player;
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        if (!canBeTrigger)
+        {
+            return;
+        }
+
+        Player player = collision.GetComponent<Player>();
+
+        if (player == null)
+        {
+            return;
+        }
+
+        if (player == playerInRange) 
+        {
+            playerInRange = null;
+        }
+    }
+
+    private void OnInteract(InputAction.CallbackContext ctx) 
+    {
+        if (playerInRange == null)
+        {
+            return;
+        }
+
         canBeTrigger = false;
         if (isBossWinExit)
         {
@@ -70,7 +109,6 @@ public class Waypoint : MonoBehaviour
             SaveManager.instance.SaveGame();
         }
         GameManager.instance.ChangeScene(transferToScene, connectedWaypoint);
-        
     }
 
     private void DecideScene()
@@ -109,4 +147,15 @@ public class Waypoint : MonoBehaviour
         canBeTrigger = true;
     }
     */
+
+    private void OnEnable() {
+        interactAction.action.performed += OnInteract;
+        interactAction.action.Enable();
+    }
+
+    private void OnDisable() 
+    {
+        interactAction.action.performed -= OnInteract;
+        interactAction.action.Disable();
+    }
 }

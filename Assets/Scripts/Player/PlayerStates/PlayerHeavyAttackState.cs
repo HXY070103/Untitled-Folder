@@ -16,6 +16,8 @@ public class PlayerHeavyAttackState : PlayerState {
     public override void Enter() {
         base.Enter();
 
+        player.gameObject.layer = LayerMask.NameToLayer("Untargetable");
+
         vfx.DoImageEchoEffect(float.PositiveInfinity);
         phase.InterruptSkill();
         StartHeavyAttack();
@@ -42,6 +44,8 @@ public class PlayerHeavyAttackState : PlayerState {
 
     public override void Exit() {
         base.Exit();
+
+        player.gameObject.layer = LayerMask.NameToLayer("Player");
 
         rb.gravityScale = originalGravityScale;
         player.Move(0, 0);
