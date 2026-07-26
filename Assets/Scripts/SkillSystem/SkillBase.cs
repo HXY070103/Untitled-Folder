@@ -113,7 +113,7 @@ public class SkillBase : MonoBehaviour{
         lastTimeEnd = Time.time;
     }
 
-    protected void IncreaseSkillDecay()
+    protected virtual void IncreaseSkillDecay()
     {
         //if (unlock 磨损1 && numOfUse % 2 == 0  ||  !unlock 磨损1)
         if ((level4Skill && numOfUse % 2 == 0) || !level4Skill)

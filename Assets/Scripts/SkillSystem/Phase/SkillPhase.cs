@@ -118,6 +118,14 @@ public class SkillPhase : SkillBase {
         }
     }
 
+    protected override void IncreaseSkillDecay() {
+        if (hasBonusPhase) {
+            return;
+        }
+
+        base.IncreaseSkillDecay();
+    }
+
     private int GetNumOfHeavyAttack() {
         if ((Unlocked("Chain Strikes") && isPerfectPhase) || Unlocked("Chain Strikes+")) {
             return bonusNumOfHeavyAttack;

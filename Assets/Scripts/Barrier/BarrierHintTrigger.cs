@@ -29,7 +29,7 @@ public class BarrierHintTrigger : MonoBehaviour
             return;
         }
 
-        if (!LevelClearManager.instance.IsLevelClear)
+        if (!LevelClearManager.instance.IsLevelClear) 
         {
             ShowHint();
         }

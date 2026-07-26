@@ -977,7 +977,7 @@ MonoBehaviour:
   moveSpeed: 8
   jumpSpeed: 12
   wallJumpDuration: 0.2
-  wallJumpSpeed: {x: 6, y: 12}
+  wallJumpSpeed: {x: 6, y: 15}
   inAirMoveMultiplier: 0.8
   wallSlideMultiplier: 0.7
   dashDuration: 0.25

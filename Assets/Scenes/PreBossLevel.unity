@@ -258,6 +258,10 @@ PrefabInstance:
       value: Object_Waypoint - Exit - EliteLevel_Repeat
       objectReference: {fileID: 0}
     - target: {fileID: 2866735177992142057, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2866735177992142057, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 5.25
       objectReference: {fileID: 0}
@@ -9321,6 +9325,14 @@ PrefabInstance:
     - target: {fileID: 1151336177630037018, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_Name
       value: Object_Waypoint - Exit - BossLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 2866735177992142057, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2866735177992142057, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 5.76
       objectReference: {fileID: 0}
     - target: {fileID: 6135237988340932872, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_text
@@ -58048,6 +58060,10 @@ PrefabInstance:
     - target: {fileID: 1151336177630037018, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_Name
       value: Object_Waypoint - Exit - NormalLevel_Repeat
+      objectReference: {fileID: 0}
+    - target: {fileID: 2866735177992142057, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2866735177992142057, guid: 981f7c0d6f9fd47218e02c1cbe9546b7, type: 3}
       propertyPath: m_AnchoredPosition.x
