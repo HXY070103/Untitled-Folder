@@ -74,7 +74,7 @@ public class Entity : MonoBehaviour {
         HandleFlip(xVelocity);
     }
 
-    public void MoveRaw(float xVelocity, float yVelocity) {
+    public virtual void MoveRaw(float xVelocity, float yVelocity) {
         if (isKnocked) {
             return;
         }

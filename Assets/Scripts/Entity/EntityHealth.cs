@@ -31,6 +31,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public bool miniHealthBarActive;
 
+    public bool hasRevived { get; private set; } = false;
     private bool canRevival = false;
     private float reviveHPMultiplier;
     
@@ -175,8 +176,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     private void Die() {
-        Debug.Log("Die");
-
         if (canRevival) {
             Revival();
             return;
@@ -187,6 +186,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     }
 
     public void StartDeathPrevention(float reviveHPMultiplier) {
+        hasRevived = false;
         canRevival = true;
         this.reviveHPMultiplier = reviveHPMultiplier;
     }
@@ -197,6 +197,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     private void Revival() {
         currentHP = stats.GetMaxHP() * reviveHPMultiplier;
+        hasRevived = true;
         canRevival = false;
         OnHealthUpdate?.Invoke();
     }

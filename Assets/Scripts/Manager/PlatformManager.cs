@@ -10,7 +10,7 @@ public class PlatformManager : MonoBehaviour
 
     private void Awake()
     {
-        int ignoredLayers = LayerMask.GetMask("Enemy", "Untargetable");
+        int ignoredLayers = LayerMask.GetMask("Enemy");
 
         foreach (Collider2D platformCollider in platform.GetComponents<Collider2D>())
         {

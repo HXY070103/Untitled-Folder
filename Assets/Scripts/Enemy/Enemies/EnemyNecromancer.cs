@@ -266,6 +266,10 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
         base.EntityDeath();
     }
 
+    public override void MoveRaw(float xVelocity, float yVelocity) {
+        base.MoveRaw(xVelocity, yVelocity * tc.localTimeScale);
+    }
+
     protected override Transform DetectPlayer() {
         Collider2D player = 
             Physics2D.OverlapCircle(playerCheck.position, playerCheckDistance, whatIsPlayer);
