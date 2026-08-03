@@ -73,7 +73,7 @@ MonoBehaviour:
   secondaryWallCheck: {fileID: 6346743711559511979}
   battleMoveSpeed: 4
   attackDistance: 3.5
-  preAttackDuration: 0.5
+  attackWindup: 0.5
   attackCooldown: 1
   battleDuration: 10
   minRetreatDistance: 0
@@ -88,30 +88,64 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   playerCheck: {fileID: 6346743711559511979}
+  numOfAttack: 040000000400000004000000
   summonPhaseHPThreshold: 0.7
   phaseThreeHPThreshold: 0.35
   phaseTransitionDuration: 1.2
   transitionOffstageOffset: 5
+  comboAttackWindup:
+  - 0.5
+  - 0.35
+  - 0.2
+  comboAttackCooldown:
+  - 1
+  - 0.7
+  - 0.5
+  comboLimit: 010000000200000003000000
   dashSpeed: 20
-  minDashDistance: 12
-  harvestDashWindup: 0.65
-  harvestDashVisualLeadTime: 0.15
-  harvestDashDamageDelay: 0.2
-  harvestDashDuration: 0.55
-  phaseOneRecoveryDuration: 1
-  phaseTwoRecoveryDuration: 1
-  phaseThreeRecoveryDuration: 1
-  bidirectionalHarvestPauseDuration: 0.45
-  bidirectionalHarvestCounterStunDuration: 1.2
+  dashAttackMaxDistance: 15
+  dashDamageDelay: 0.2
+  dashAttackRange: {x: 2.5, y: 3.5}
+  dashAttackWindup:
+  - 0.8
+  - 0.7
+  - 0.6
+  dashAttackCooldown:
+  - 0.5
+  - 0.4
+  - 0.3
+  dashAttackLimit:
+  - 1
+  - 2
+  - 2
+  dashAttackDistance: 14
   energyWavePrefab: {fileID: 2101764571864566292, guid: 9f86f74ccdbfa4139bd0b97d24033a6b, type: 3}
   energyWaveStartPoint: {fileID: 5868600963691116500}
   energyWaveSpeed: 10
-  energyWaveCooldown: 2
-  groundFissurePrefab: {fileID: 6049034181147551912, guid: 68e1bf4e3425e4adc80dc7b04e05c514, type: 3}
-  groundFissureWarningDuration: 1.2
-  groundFissureArenaMargin: 3
-  groundFissureVerticalOffset: 2.5
-  groundFissureRoundInterval: 0.7
+  energyWaveWindup:
+  - 0.2
+  - 0.15
+  - 0.1
+  energyWaveCooldown:
+  - 1.5
+  - 1.2
+  - 0.9
+  energyWaveDistance: 15
+  lightningPrefab: {fileID: 6049034181147551912, guid: 68e1bf4e3425e4adc80dc7b04e05c514, type: 3}
+  lightningArenaMargin: 3
+  lightningOffsetY: 4
+  lightningInterval: 0.7
+  lightningWarningDuration: 1.2
+  numOfLightningRound: 000000000100000002000000
+  lightningWindup:
+  - 0
+  - 0.1
+  - 0.05
+  lightningCooldown:
+  - 0
+  - 2.5
+  - 2
+  lightningDistance: 20
   knightPrefab: {fileID: 4438716662346398900, guid: d6716d6548edd45148efaeb9b6b73ebd, type: 3}
   archerElfPrefab: {fileID: 8462388656820771433, guid: 06f7ad6a198ce4ef5a21530422e66884, type: 3}
   skeletonPrefab: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
@@ -195,7 +229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyCombat
   targetCheck: {fileID: 7819832784848144703}
-  targetCheckRadius: 3
+  targetCheckRadius: 3.5
   whatIsTarget:
     serializedVersion: 2
     m_Bits: 2176
@@ -215,7 +249,6 @@ MonoBehaviour:
   currentHP: 0
   initialMaxHP: 1600
   isExecutable: 0
-  damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -234,6 +267,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  targetAlpha: 0.2
+  fadeSpeed: 2
+  fadeInterval: 0.05
   particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 2619526382332349341, guid: 382fc80bcad624108bcaa33f55906ef5, type: 3}
@@ -757,7 +793,7 @@ Transform:
   m_GameObject: {fileID: 5836754220514425915}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.85, y: -0.45, z: 0}
+  m_LocalPosition: {x: 3, y: -0.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

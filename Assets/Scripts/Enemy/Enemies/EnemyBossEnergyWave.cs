@@ -12,17 +12,11 @@ public class EnemyBossEnergyWave : MonoBehaviour, ICounterable, ISlowable {
 
     private Vector3 startPosition;
     private float energyWaveSpeed;
-    private float damageMultiplier = 1f;
 
-    public void SetUpEnergyWave(
-        float energyWaveSpeed,
-        EntityCombat combat,
-        float damageMultiplier = 1f
-    ) {
+    public void SetUpEnergyWave(float energyWaveSpeed, EntityCombat combat) {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<Animator>();
         this.combat = combat;
-        this.damageMultiplier = Mathf.Max(0, damageMultiplier);
 
         startPosition = transform.position;
         this.energyWaveSpeed = energyWaveSpeed;
@@ -46,7 +40,7 @@ public class EnemyBossEnergyWave : MonoBehaviour, ICounterable, ISlowable {
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (((1 << collision.gameObject.layer) & whatIsTarget) != 0) {
-            combat.PerformAttackOnTarget(collision.transform, damageMultiplier);
+            combat.PerformAttackOnTarget(collision.transform);
         }
 
         if (((1 << collision.gameObject.layer) & canCollideWith) != 0) {
