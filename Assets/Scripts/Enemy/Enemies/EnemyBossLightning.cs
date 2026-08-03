@@ -3,24 +3,29 @@ using UnityEngine;
 
 public class EnemyBossLightning : MonoBehaviour {
     private Collider2D col;
+    private Animator anim;
+
     private EnemyCombat combat;
-    private float damageMultiplier = 1f;
     private HashSet<Transform> hitTargets;
 
     [SerializeField] private LayerMask whatIsTarget;
 
 
-    public void SetUpLightning(
-        EnemyCombat combat,
-        float damageMultiplier = 1f,
-        HashSet<Transform> sharedHitTargets = null
-    ) {
+    public void SetUpLightning(EnemyCombat combat, HashSet<Transform> hitTargets, float warningDuration) {
         col = GetComponent<Collider2D>();
+        anim = GetComponentInChildren<Animator>();
+
         this.combat = combat;
-        this.damageMultiplier = Mathf.Max(0, damageMultiplier);
-        hitTargets = sharedHitTargets ?? new HashSet<Transform>();
+        this.hitTargets = hitTargets;
 
         col.enabled = false;
+        anim.enabled = false;
+
+        Invoke(nameof(StartAnimation), warningDuration);
+    }
+
+    private void StartAnimation() {
+        anim.enabled = true;
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
@@ -29,15 +34,13 @@ public class EnemyBossLightning : MonoBehaviour {
         }
 
         Player player = collision.GetComponentInParent<Player>();
-        Transform target = player == null
-            ? collision.transform
-            : player.transform;
+        Transform target = player == null ? collision.transform : player.transform;
 
         if (hitTargets != null && !hitTargets.Add(target)) {
             return;
         }
 
-        combat.PerformAttackOnTarget(target, damageMultiplier);
+        combat.PerformAttackOnTarget(target);
     }
 
     public void StartAttack() {

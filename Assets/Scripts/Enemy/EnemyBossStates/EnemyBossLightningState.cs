@@ -1,9 +1,9 @@
 using UnityEngine;
 
-public class EnemyBossSpellCastState : EnemyState {
-    private EnemyBoss enemyBoss;
+public class EnemyBossLightningState : EnemyState {
+    private readonly EnemyBoss enemyBoss;
 
-    public EnemyBossSpellCastState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
+    public EnemyBossLightningState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
         : base(enemy, stateMachine, animBoolName) {
         enemyBoss = enemy as EnemyBoss;
     }
@@ -11,27 +11,24 @@ public class EnemyBossSpellCastState : EnemyState {
     public override void Enter() {
         base.Enter();
 
-        enemyBoss.Move(0, rb.linearVelocity.y);
-        enemyBoss.SetEnergyWavePerformed(false);
+        enemyBoss.MoveRaw(0, 0);
+        enemyBoss.SetLightningPerformed(false);
+        anim.SetBool("SpellCastPerformed", false);
     }
 
     public override void Update() {
         base.Update();
 
-        if (enemyBoss.EnergyWavePerformed) {
+        if (enemyBoss.LightningPerformed) {
             anim.SetBool("SpellCastPerformed", true);
         }
 
         if (triggerCalled) {
-            enemyBoss.CompleteEnergyWaveAction();
             stateMachine.ChangeState(enemyBoss.battleState);
         }
     }
 
     public override void Exit() {
-        enemyBoss.ClearAttackPresentation();
         base.Exit();
-
-        anim.SetBool("SpellCastPerformed", false);
     }
 }

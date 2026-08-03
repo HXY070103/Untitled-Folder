@@ -98,6 +98,10 @@ public class EnemyStoneGuard : Enemy, IEnemyPhaseTransition {
         UpdateShieldProximityTimer();
     }
 
+    private void OnDestroy() {
+        health.OnHealthUpdate -= TryStartPhaseTransition;
+    }
+
     protected override Transform DetectPlayer() {
         Collider2D detectedCollider = Physics2D.OverlapCircle(playerCheck.position, playerCheckDistance, whatIsPlayer);
 

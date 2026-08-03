@@ -1,117 +1,81 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public enum EnemyBossPhase {
-    PhaseOne,
-    SummonTransition,
-    PhaseTwo,
-    PhaseThree
-}
-
-public enum BossPhaseTransitionTarget {
-    Summon,
-    PhaseThree
-}
-
-public enum EnemyBossPhaseOneAction {
-    Combo,
-    EnergyWave,
-    HarvestDash,
-    Recovery
-}
-
-public enum EnemyBossPhaseTwoAction {
-    Combo,
-    EnergyWave,
-    RecoveryAfterEnergyWave,
-    GroundFissure,
-    HarvestDash,
-    RecoveryAfterHarvestDash
-}
-
-public enum EnemyBossPhaseThreeAction {
-    Combo,
-    EnergyWave,
-    RecoveryAfterEnergyWave,
-    BidirectionalHarvest,
-    DoubleGroundFissure,
-    RecoveryAfterGroundFissure
-}
+public enum BossPhaseTransition { PhaseOneToTwo, PhaseTwoToThree }
 
 public class EnemyBoss : Enemy, IEnemyPhaseTransition {
     private const string PhaseTransitionImmunitySource = "BossPhaseTransition";
 
     public EnemyPhaseTransitionState phaseTransitionState;
-    public EnemyBossDashState dashState;
-    public EnemyBossSpellCastState spellCastState;
+    public EnemyBossDashAttackState dashAttackState;
+    public EnemyBossEnergyWaveState energyWaveState;
     public EnemyBossSummonState summonState;
-    public EnemyBossComboState comboState;
-    public EnemyBossGroundFissureState groundFissureState;
-    public EnemyBossBidirectionalHarvestState bidirectionalHarvestState;
+    public EnemyBossLightningState lightningState;
+    public EnemyBossTeleportState teleportState;
+    
+    [Header("Boss specific")]
+    public int[] numOfAttack = {4, 4, 4};
 
-    [Header("Phase info")]
-    [Range(0, 1)]
-    [SerializeField] private float summonPhaseHPThreshold = 0.7f;
-    [Range(0, 1)]
-    [SerializeField] private float phaseThreeHPThreshold = 0.35f;
-    [FormerlySerializedAs("teleportDelay")]
+    private EnemyBossUpgrade bossUpgrade;
+
+    [SerializeField] private float phaseOneToTwoHPThreshold = 0.7f;
+    [SerializeField] private float phaseTwoToThreeHPThreshold = 0.35f;
     [SerializeField] private float phaseTransitionDuration = 1.2f;
     [SerializeField] private float transitionOffstageOffset = 5f;
 
-    private BossPhaseTransitionTarget phaseTransitionTarget;
-    private bool summonTransitionTriggered;
-    private bool phaseThreeTransitionTriggered;
+    private BossPhaseTransition phaseTransition;
+    private bool phaseOneToTwoTransitionTriggered;
+    private bool phaseTwoToThreeTransitionTriggered;
 
-    public EnemyBossPhase CurrentPhase { get; private set; } = EnemyBossPhase.PhaseOne;
-    public BossPhaseTransitionTarget PhaseTransitionTarget => phaseTransitionTarget;
+    public int phaseIndex { get; private set; } = 0;
 
-    [Header("Dash info")]
-    public float dashSpeed = 12;
-    public float minDashDistance = 12;
-    [Min(0.65f)] public float harvestDashWindup = 0.65f;
-    [Min(0.1f)] public float harvestDashVisualLeadTime = 0.15f;
-    [Min(0.05f)] public float harvestDashDamageDelay = 0.2f;
-    [Min(0.1f)] public float harvestDashDuration = 0.55f;
-    [Min(0)] public float phaseOneRecoveryDuration = 1f;
-    [Min(0)] public float phaseTwoRecoveryDuration = 1f;
-    [Min(0)] public float phaseThreeRecoveryDuration = 1f;
+    [Header("Combo attack info")]
+    public float[] comboAttackWindup = {0.5f, 0.35f, 0.2f};
+    public float[] comboAttackCooldown = {1, 0.7f, 0.5f};
+    public int[] comboLimit = {1, 2, 3};
 
-    [Header("Bidirectional harvest info")]
-    [Min(0.1f)]
-    public float bidirectionalHarvestPauseDuration = 0.45f;
-    [Min(0.1f)]
-    public float bidirectionalHarvestCounterStunDuration = 1.2f;
+    private Coroutine enterAttackStateWithDelayCo;
+
+    [Header("Dash attak info")]
+    public float dashSpeed = 20;
+    public float dashAttackMaxDistance = 15;
+    public float dashDamageDelay = 0.2f;
+    public Vector2 dashAttackRange = new Vector2(2.5f, 3.5f);
+    public float[] dashAttackWindup = {0.8f, 0.7f, 0.6f};
+    public float[] dashAttackCooldown = {0.5f, 0.4f, 0.3f};
+    public float[] dashAttackLimit = {1, 2, 2};
+    public float dashAttackDistance = 14;
+
+    private Coroutine enterDashAttackStateWithDelayCo;
+
+    public int dashAttackDir { get; private set; } = 1;
 
     [Header("Energy wave info")]
     [SerializeField] private GameObject energyWavePrefab;
     [SerializeField] private Transform energyWaveStartPoint;
     [SerializeField] private float energyWaveSpeed = 10;
-    [SerializeField] private float energyWaveCooldown = 2;
+    public float[] energyWaveWindup = {0.2f, 0.15f, 0.1f};
+    public float[] energyWaveCooldown = {1.5f, 1.2f, 0.9f};
+    public float energyWaveDistance = 15;
 
     private bool energyWavePerformed;
     public bool EnergyWavePerformed => energyWavePerformed;
 
-    [Header("Ground fissure info")]
-    [FormerlySerializedAs("spellPrefab")]
-    [SerializeField] private GameObject groundFissurePrefab;
-    [Min(0.8f)]
-    [SerializeField] private float groundFissureWarningDuration = 1.2f;
-    [Min(0)]
-    [SerializeField] private float groundFissureArenaMargin = 3f;
-    [SerializeField] private float groundFissureVerticalOffset = 2.5f;
-    [Min(0.1f)]
-    [SerializeField] private float groundFissureRoundInterval = 0.7f;
+    [Header("Lightning info")]
+    [SerializeField] private GameObject lightningPrefab;
+    [SerializeField] private float lightningOffsetY = 4;
+    [SerializeField] private float lightningInterval = 0.7f;
+    [SerializeField] private float lightningWarningDuration = 1.2f;
+    public int[] numOfLightningRound = {0, 1, 2};
+    public float[] lightningWindup = {0, 0.1f, 0.05f};
+    public float[] lightningCooldown = {0, 2.5f, 2};
+    public float lightningDistance = 20;
 
-    private Coroutine groundFissureCo;
-    private readonly List<Coroutine> groundFissureRoundCos =
-        new List<Coroutine>();
-    private bool groundFissurePerformed;
-    private int requestedGroundFissureRounds = 1;
-    private readonly List<GameObject> activeGroundFissures =
-        new List<GameObject>();
-    public bool GroundFissurePerformed => groundFissurePerformed;
+    private Coroutine lightningCo;
+
+    private bool lightningPerformed;
+    public bool LightningPerformed => lightningPerformed;
 
     [Header("Summon info")]
     [SerializeField] private GameObject knightPrefab;
@@ -119,21 +83,29 @@ public class EnemyBoss : Enemy, IEnemyPhaseTransition {
     [SerializeField] private GameObject skeletonPrefab;
     [SerializeField] private GameObject magePrefab;
     [SerializeField] private GameObject evilWizardPrefab;
+    [SerializeField] private float minPlayerDistance = 3f;
     [SerializeField] private float summonCooldown = 0.5f;
 
     private Coroutine summonCo;
-    private EnemyBossUpgrade bossUpgrade;
-    private bool summonPerformed;
+    private List<Enemy> activeSummonedEnemies = new List<Enemy>();
+
     private bool summonSpawnCompleted;
-    private readonly List<Enemy> activeSummonedEnemies = new List<Enemy>();
+    private bool summonPerformed;
     public bool SummonPerformed => summonPerformed;
+
+    [Header("Teleport info")]
+    public float teleportDuration = 1.5f;
+
+    private Vector3 TeleportPosition;
+    public EnemyState teleportNextState { get; private set; }
+
+    [Header("Arena info")]
+    [SerializeField] private float arenaRadius = 20f;
+    [SerializeField] private float arenaMargin = 3f;
 
     private float leftMoveBound;
     private float rightMoveBound;
     private float arenaGroundY;
-    private readonly List<GameObject> activeBossAttackObjects = new List<GameObject>();
-    private readonly Dictionary<GameObject, int> phaseTransitionLayers =
-        new Dictionary<GameObject, int>();
 
     protected override void Awake() {
         base.Awake();
@@ -141,26 +113,17 @@ public class EnemyBoss : Enemy, IEnemyPhaseTransition {
         idleState = new EnemyIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
         battleState = new EnemyBossBattleState(this, stateMachine, "Battle");
-        preAttackState = new EnemyPreAttackState(this, stateMachine, "Battle");
-        comboState = new EnemyBossComboState(this, stateMachine, "Attack");
-        attackState = comboState;
+        preAttackState = new EnemyBossPreAttackState(this, stateMachine, "Battle");
+        attackState = new EnemyBossAttackState(this, stateMachine, "Attack");
         deadState = new EnemyDeadState(this, stateMachine, "Idle");
         stunnedState = new EnemyStunnedState(this, stateMachine, "Stunned");
-        phaseTransitionState = new EnemyPhaseTransitionState(this, stateMachine, "Teleport");
-        dashState = new EnemyBossDashState(this, stateMachine, "Battle");
-        spellCastState = new EnemyBossSpellCastState(this, stateMachine, "SpellCast");
+        phaseTransitionState = new EnemyPhaseTransitionState(this, stateMachine, "Battle");
+        dashAttackState = new EnemyBossDashAttackState(this, stateMachine, "DashAttack");
+        energyWaveState = new EnemyBossEnergyWaveState(this, stateMachine, "SpellCast");
         summonState = new EnemyBossSummonState(this, stateMachine, "Battle");
-        groundFissureState = new EnemyBossGroundFissureState(
-            this,
-            stateMachine,
-            "Battle"
-        );
-        bidirectionalHarvestState =
-            new EnemyBossBidirectionalHarvestState(
-                this,
-                stateMachine,
-                "Battle"
-            );
+        lightningState = new EnemyBossLightningState(this, stateMachine, "SpellCast");
+        teleportState = new EnemyBossTeleportState(this, stateMachine, "Teleport");
+
         bossUpgrade = GetComponent<EnemyBossUpgrade>();
 
         anim.SetBool("HasStunnedRecovery", false);
@@ -169,142 +132,76 @@ public class EnemyBoss : Enemy, IEnemyPhaseTransition {
     protected override void Start() {
         base.Start();
 
-        leftMoveBound = transform.position.x - playerCheckDistance;
-        rightMoveBound = transform.position.x + playerCheckDistance;
+        leftMoveBound = transform.position.x - arenaRadius;
+        rightMoveBound = transform.position.x + arenaRadius;
         arenaGroundY = transform.position.y;
 
         stateMachine.Initialize(idleState);
-        health.OnHealthUpdate += HandleHealthUpdate;
+
+        health.OnHealthUpdate += TryStartPhaseTransition;
         EnemyHealth.OnEnemyKilled += HandleSummonedEnemyKilled;
         TryStartPhaseTransition();
     }
 
-    protected override void Update() {
-        base.Update();
-    }
-
-    public override void EntityDeath() {
-        CancelActiveBossAttacks();
-        ClearAttackPresentation();
-        base.EntityDeath();
-    }
-
     private void OnDestroy() {
-        if (health != null) {
-            health.OnHealthUpdate -= HandleHealthUpdate;
-        }
-
+        health.OnHealthUpdate -= TryStartPhaseTransition;
         EnemyHealth.OnEnemyKilled -= HandleSummonedEnemyKilled;
     }
 
-    private void HandleHealthUpdate() {
-        TryStartPhaseTransition();
-    }
-
-    public override void HandleCounter() {
-        if (!CanBeCountered()) {
-            return;
-        }
-
-        if (stateMachine.currentState == bidirectionalHarvestState
-            && bidirectionalHarvestState.IsSecondDashCounterable) {
-            Debug.Log("Boss bidirectional harvest second dash countered");
-            bidirectionalHarvestState.CancelForCounter();
-            CompleteBidirectionalHarvestAction();
-
-            float defaultStunnedDuration = stunnedDuration;
-            stunnedDuration =
-                bidirectionalHarvestCounterStunDuration;
-            base.HandleCounter();
-            stunnedDuration = defaultStunnedDuration;
-            return;
-        }
-
-        Debug.Log(
-            $"Boss combo countered on hit " +
-            $"{comboState.CurrentAttackIndex + 1}/{comboState.ComboLength}"
-        );
-        comboState.CancelCombo();
-        base.HandleCounter();
-    }
-
-    public void PerformCurrentComboAttack() {
-        comboState.PerformCurrentHit();
-    }
-
-    public bool IsComboAttackActive() {
-        return stateMachine.currentState == comboState;
-    }
-
-    public bool IsBidirectionalHarvestActive() {
-        return stateMachine.currentState == bidirectionalHarvestState;
-    }
-
-    public bool IsBidirectionalHarvestCounterWindowActive() {
-        return IsBidirectionalHarvestActive()
-            && bidirectionalHarvestState.IsSecondDashCounterable;
-    }
-
-    public void CompletePhaseOneAction(EnemyBossPhaseOneAction completedAction) {
-        if (CurrentPhase != EnemyBossPhase.PhaseOne) {
-            return;
-        }
-
-        ((EnemyBossBattleState)battleState).CompletePhaseOneAction(
-            completedAction
-        );
-    }
-
-    public void CompleteComboAction() {
-        ((EnemyBossBattleState)battleState).CompleteComboAction();
-    }
-
-    public void CompleteEnergyWaveAction() {
-        ((EnemyBossBattleState)battleState).CompleteEnergyWaveAction();
-    }
-
-    public void CompleteHarvestDashAction() {
-        ((EnemyBossBattleState)battleState).CompleteHarvestDashAction();
-    }
-
-    public void CompleteGroundFissureAction() {
-        ((EnemyBossBattleState)battleState).CompleteGroundFissureAction();
-    }
-
-    public void CompleteBidirectionalHarvestAction() {
-        ((EnemyBossBattleState)battleState)
-            .CompleteBidirectionalHarvestAction();
-    }
-
-    private bool TryStartPhaseTransition() {
+    private void TryStartPhaseTransition() {
         if (health.GetCurrentHP() <= 0 || stateMachine.currentState == deadState) {
-            return false;
+            return;
         }
 
-        if (CurrentPhase == EnemyBossPhase.PhaseOne
-            && !summonTransitionTriggered
-            && health.GetHPPercentage() <= summonPhaseHPThreshold) {
-            summonTransitionTriggered = true;
-            CurrentPhase = EnemyBossPhase.SummonTransition;
-            StartPhaseTransition(BossPhaseTransitionTarget.Summon);
-            return true;
+        switch (phaseIndex) {
+            case 0: 
+                HandlePhaseOneToTwoTransition();
+                break;
+            case 1:
+                HandlePhaseTwoToThreeTransition();
+                break;
         }
-
-        if (CurrentPhase == EnemyBossPhase.PhaseTwo
-            && !phaseThreeTransitionTriggered
-            && health.GetHPPercentage() <= phaseThreeHPThreshold) {
-            phaseThreeTransitionTriggered = true;
-            StartPhaseTransition(BossPhaseTransitionTarget.PhaseThree);
-            return true;
-        }
-
-        return false;
     }
 
-    private void StartPhaseTransition(BossPhaseTransitionTarget target) {
-        phaseTransitionTarget = target;
-        Debug.Log($"Boss phase transition started: {target}");
-        stateMachine.ChangeState(phaseTransitionState);
+    private void HandlePhaseOneToTwoTransition() {
+        if (!phaseOneToTwoTransitionTriggered && IsPhaseOneToTwoLowHP()) {
+            phaseOneToTwoTransitionTriggered = true;
+            phaseTransition = BossPhaseTransition.PhaseOneToTwo;
+
+            SetTeleportOffArena();
+            stateMachine.ChangeState(teleportState);
+            InterruptAllAttacks();
+        }
+    }
+
+    private void HandlePhaseTwoToThreeTransition() {
+        if (!phaseTwoToThreeTransitionTriggered && IsPhaseTwoToThreeLowHP()) {
+            phaseTwoToThreeTransitionTriggered = true;
+            phaseTransition = BossPhaseTransition.PhaseTwoToThree;
+
+            SetTeleportOffArena();
+            stateMachine.ChangeState(teleportState);
+            InterruptAllAttacks();
+        }
+    }
+
+    private bool IsPhaseOneToTwoLowHP() {
+        return health.GetHPPercentage() <= phaseOneToTwoHPThreshold;
+    }
+
+    private bool IsPhaseTwoToThreeLowHP() {
+        return health.GetHPPercentage() <= phaseTwoToThreeHPThreshold;
+    }
+
+    private void InterruptAllAttacks() {
+        StopComboAttack();
+        StopDashAttack();
+        StopLightning();
+        StopSummon();
+
+        anim.SetBool("SpellCastPerformed", true);
+        vfx.SetAttackAlert(false);
+        ExitAttackWindow();
     }
 
     public float GetPhaseTransitionDuration() {
@@ -316,138 +213,96 @@ public class EnemyBoss : Enemy, IEnemyPhaseTransition {
     }
 
     public void BeginPhaseTransition() {
-        CancelActiveBossAttacks();
-        MoveRaw(0, 0);
-        ClearAttackPresentation();
-        vfx.DoFadeEffect();
         health.AddDamageImmunity(PhaseTransitionImmunitySource);
-        SetBossUntargetable();
     }
 
     public void CompletePhaseTransition() {
-        TeleportForPhaseTransition();
+        UpdatePhaseIndex();
     }
 
-    public void EndPhaseTransition() {
-        // Both transitions now continue into an offstage summon phase.
-    }
+    public void EndPhaseTransition() {}
 
-    public void CompleteSummonPhase() {
-        bool enteringPhaseThree =
-            phaseTransitionTarget
-            == BossPhaseTransitionTarget.PhaseThree;
-        CurrentPhase = enteringPhaseThree
-            ? EnemyBossPhase.PhaseThree
-            : EnemyBossPhase.PhaseTwo;
-        Debug.Log(
-            $"Boss phase entered: {CurrentPhase}"
-        );
-        transform.position = new Vector3(
-            (leftMoveBound + rightMoveBound) / 2f,
-            arenaGroundY,
-            transform.position.z
-        );
-        RestoreAfterPhaseTransition();
-
-        if (enteringPhaseThree) {
-            stateMachine.ChangeState(battleState);
-            return;
-        }
-
-        if (!TryStartPhaseTransition()) {
-            stateMachine.ChangeState(battleState);
+    private void UpdatePhaseIndex() {
+        switch (phaseTransition) {
+            case BossPhaseTransition.PhaseOneToTwo:
+                phaseIndex = 1;
+                break;
+            case BossPhaseTransition.PhaseTwoToThree:
+                phaseIndex = 2;
+                break;
         }
     }
 
-    private void RestoreAfterPhaseTransition() {
-        MoveRaw(0, 0);
+    public void CompleteSummon() {
         health.RemoveDamageImmunity(PhaseTransitionImmunitySource);
-        RestoreBossLayers();
-        vfx.ResetTransparency();
-        ResetPhaseTransitionAnimation();
-        Debug.Log(
-            $"Boss phase restored: layer {gameObject.layer}, " +
-            $"damage immune {health.IsDamageImmune()}, " +
-            $"position {transform.position}"
-        );
-
-        if (player != null) {
-            HandleFlip(player.position.x > transform.position.x ? 1 : -1);
-        }
+        SetTeleportInArena();
+        stateMachine.ChangeState(teleportState);
     }
 
-    private void SetBossUntargetable() {
-        phaseTransitionLayers.Clear();
-        int enemyLayer = LayerMask.NameToLayer("Enemy");
-        int untargetableLayer = LayerMask.NameToLayer("Untargetable");
-
-        foreach (Transform child in GetComponentsInChildren<Transform>(true)) {
-            GameObject childObject = child.gameObject;
-
-            if (childObject.layer != enemyLayer) {
-                continue;
-            }
-
-            phaseTransitionLayers[childObject] = childObject.layer;
-            childObject.layer = untargetableLayer;
-        }
+    private void SetTeleportOffArena() {
+        float targetX = rightMoveBound + transitionOffstageOffset;
+        Vector3 position = new Vector3(targetX, arenaGroundY, transform.position.z);
+        SetTeleport(position, phaseTransitionState);
     }
 
-    private void RestoreBossLayers() {
-        foreach (KeyValuePair<GameObject, int> layerEntry in phaseTransitionLayers) {
-            if (layerEntry.Key != null) {
-                layerEntry.Key.layer = layerEntry.Value;
-            }
-        }
-
-        phaseTransitionLayers.Clear();
-    }
-
-    private void ResetPhaseTransitionAnimation() {
-        anim.SetBool("TeleportPerformed", false);
-        anim.SetBool("Teleport", false);
-        anim.Play("BossBattle-IdleMove", 0, 0f);
-    }
-
-    private void CancelActiveBossAttacks() {
-        CancelInvoke(nameof(OnEnergyWaveFinished));
-        CancelGroundFissure();
-
-        if (summonCo != null) {
-            StopCoroutine(summonCo);
-            summonCo = null;
-        }
-
-        foreach (GameObject attackObject in activeBossAttackObjects) {
-            if (attackObject != null) {
-                Destroy(attackObject);
-            }
-        }
-
-        activeBossAttackObjects.Clear();
-        energyWavePerformed = false;
-        summonPerformed = false;
-    }
-
-    private void TrackBossAttackObject(GameObject attackObject) {
-        if (attackObject != null) {
-            activeBossAttackObjects.Add(attackObject);
-        }
-    }
-
-    private void TeleportForPhaseTransition() {
-        float targetX =
-            rightMoveBound + transitionOffstageOffset;
-
-        transform.position = new Vector3(
-            targetX,
-            arenaGroundY,
-            transform.position.z
-        );
+    private void SetTeleportInArena() {
+        float arenaCenterX = (leftMoveBound + rightMoveBound) / 2;
+        Vector3 position = new Vector3(arenaCenterX, arenaGroundY, transform.position.z);
+        SetTeleport(position, battleState);
     }
 
     public override void SpecialAttack() {
-        StartEnergyWave();
+        if (stateMachine.currentState == energyWaveState) {
+            StartEnergyWave();
+        }
+
+        if (stateMachine.currentState == lightningState) {
+            StartLightning();
+        }
+    }
+
+    public void EnterAttackStateWithDelay() {
+        if (enterAttackStateWithDelayCo != null) {
+            StopCoroutine(enterAttackStateWithDelayCo);
+        }
+
+        enterAttackStateWithDelayCo = StartCoroutine(EnterAtatckStateWithDelayCo());
+    }
+
+    private void StopComboAttack() {
+        if (enterAttackStateWithDelayCo != null) {
+            StopCoroutine(enterAttackStateWithDelayCo);
+            enterAttackStateWithDelayCo = null;
+        }
+    }
+
+    private IEnumerator EnterAtatckStateWithDelayCo() {
+        yield return new WaitForEndOfFrame();
+        stateMachine.ChangeState(attackState);
+    }
+
+    public void SetDashAttackDir(int dir) {
+        dashAttackDir = dir;
+    }
+
+    public void EnterDashAttackStateWithDelay() {
+        if (enterDashAttackStateWithDelayCo != null) {
+            StopCoroutine(enterDashAttackStateWithDelayCo);
+        }
+
+        enterDashAttackStateWithDelayCo = StartCoroutine(EnterDashAttackStateWithDelayCo());
+    }
+
+    private void StopDashAttack() {
+        if (enterDashAttackStateWithDelayCo != null) {
+            StopCoroutine(enterDashAttackStateWithDelayCo);
+            enterDashAttackStateWithDelayCo = null;
+        }
+    }
+
+    private IEnumerator EnterDashAttackStateWithDelayCo() {
+        yield return new WaitForEndOfFrame();
+        stateMachine.ChangeState(dashAttackState);
     }
 
     public void SetEnergyWavePerformed(bool performed) {
@@ -458,192 +313,82 @@ public class EnemyBoss : Enemy, IEnemyPhaseTransition {
         sfx?.PlaySpecialAttack2();
         GameObject energyWave = 
             Instantiate(energyWavePrefab, energyWaveStartPoint.position, Quaternion.identity);
-        TrackBossAttackObject(energyWave);
         energyWave.GetComponent<EnemyBossEnergyWave>().SetUpEnergyWave(
-            facingDir * energyWaveSpeed,
-            combat,
-            14f / 18f
-        );
-        Invoke(nameof(OnEnergyWaveFinished), energyWaveCooldown);
-    }
-
-    private void OnEnergyWaveFinished() {
+                facingDir * energyWaveSpeed, 
+                combat
+            );
         SetEnergyWavePerformed(true);
     }
 
-    public void StartGroundFissure(int roundCount = 1) {
-        CancelGroundFissure();
-        requestedGroundFissureRounds = Mathf.Max(1, roundCount);
-        groundFissurePerformed = false;
-        groundFissureCo = StartCoroutine(GroundFissureCo());
+    public void SetLightningPerformed(bool performed) {
+        lightningPerformed = performed;
     }
 
-    public void CancelGroundFissure() {
-        if (groundFissureCo != null) {
-            StopCoroutine(groundFissureCo);
-            groundFissureCo = null;
+    public void StartLightning() {
+        if (lightningCo != null) {
+            StopCoroutine(lightningCo);
         }
 
-        foreach (Coroutine roundCoroutine in groundFissureRoundCos) {
-            if (roundCoroutine != null) {
-                StopCoroutine(roundCoroutine);
-            }
-        }
-
-        groundFissureRoundCos.Clear();
-
-        foreach (GameObject fissure in activeGroundFissures) {
-            if (fissure != null) {
-                Destroy(fissure);
-            }
-        }
-
-        activeGroundFissures.Clear();
-        groundFissurePerformed = false;
+        lightningCo = StartCoroutine(LightningCo());
     }
 
-    private IEnumerator GroundFissureCo() {
-        int previousPatternIndex = -1;
-
-        for (
-            int roundIndex = 0;
-            roundIndex < requestedGroundFissureRounds;
-            roundIndex += 1
-        ) {
-            int patternIndex = GetGroundFissurePatternIndex(
-                previousPatternIndex
-            );
-            previousPatternIndex = patternIndex;
-            Coroutine roundCoroutine = StartCoroutine(
-                GroundFissureRoundCo(
-                    patternIndex,
-                    roundIndex + 1,
-                    requestedGroundFissureRounds
-                )
-            );
-            groundFissureRoundCos.Add(roundCoroutine);
-
-            if (roundIndex + 1 < requestedGroundFissureRounds) {
-                yield return new WaitForSeconds(
-                    groundFissureRoundInterval
-                );
-            }
+    private void StopLightning() {
+        if (lightningCo != null) {
+            StopCoroutine(lightningCo);
+            lightningCo = null;
         }
-
-        yield return new WaitForSeconds(
-            groundFissureWarningDuration + 0.55f
-        );
-
-        groundFissureCo = null;
-        groundFissureRoundCos.Clear();
-        activeGroundFissures.Clear();
-        groundFissurePerformed = true;
     }
 
-    private IEnumerator GroundFissureRoundCo(
-        int patternIndex,
-        int roundNumber,
-        int totalRounds
-    ) {
-        const float lightningAttackEventTime = 0.3f;
-        const float regionWidthPadding = 0.98f;
+    private IEnumerator LightningCo() {
+        int patternIndex = -1;
 
-        int[] dangerousRegions =
-            EnemyBossGroundFissurePatterns.All[patternIndex];
-        float minX = leftMoveBound + groundFissureArenaMargin;
-        float maxX = rightMoveBound - groundFissureArenaMargin;
-        float regionWidth =
-            (maxX - minX) / EnemyBossGroundFissurePatterns.RegionCount;
-        HashSet<Transform> roundHitTargets = new HashSet<Transform>();
-        List<Animator> fissureAnimators = new List<Animator>();
+        for (int i = 0; i < numOfLightningRound[phaseIndex]; i += 1) {
+            patternIndex = GetLightningPatternIndex(patternIndex);
+            LightningRound(patternIndex);
+            yield return new WaitForSeconds(lightningInterval);
+        }
 
-        Debug.Log(
-            $"Boss ground fissure round {roundNumber}/{totalRounds}: " +
-            $"{string.Join("+", dangerousRegions)}"
-        );
+        yield return new WaitForSeconds(lightningWarningDuration);
+
+        SetLightningPerformed(true);
+    }
+
+    private void LightningRound(int patternIndex) {
+        int[] dangerousRegions = EnemyBossLightningPattern.All[patternIndex];
+        float minX = leftMoveBound + arenaMargin;
+        float maxX = rightMoveBound - arenaMargin;
+        float regionWidth = (maxX - minX) / EnemyBossLightningPattern.RegionCount;
+
+        HashSet<Transform> hitTargets = new HashSet<Transform>();
 
         foreach (int regionIndex in dangerousRegions) {
-            float regionCenterX =
-                minX + regionWidth * (regionIndex + 0.5f);
-            Vector3 position = new Vector3(
-                regionCenterX,
-                arenaGroundY + groundFissureVerticalOffset,
-                0
-            );
-            GameObject fissure = Instantiate(
-                groundFissurePrefab,
-                position,
-                Quaternion.identity
-            );
-            activeGroundFissures.Add(fissure);
-            TrackBossAttackObject(fissure);
+            float regionCenterX = minX + regionWidth * (regionIndex + 0.5f);
+            Vector3 position = new Vector3(regionCenterX, arenaGroundY + lightningOffsetY, 0);
+            
+            GameObject lightning = Instantiate(lightningPrefab, position, Quaternion.identity);
 
-            BoxCollider2D fissureCollider =
-                fissure.GetComponent<BoxCollider2D>();
+            Vector3 scale = lightning.transform.localScale;
+            float lightningSizeX = lightning.GetComponent<BoxCollider2D>().size.x;
+            scale.x = regionWidth * 0.98f / lightningSizeX;
+            lightning.transform.localScale = scale;
 
-            if (fissureCollider != null
-                && fissureCollider.size.x > 0) {
-                Vector3 scale = fissure.transform.localScale;
-                scale.x =
-                    regionWidth * regionWidthPadding
-                    / fissureCollider.size.x;
-                fissure.transform.localScale = scale;
-            }
-
-            EnemyBossLightning lightning =
-                fissure.GetComponent<EnemyBossLightning>();
-
-            if (lightning == null) {
-                Debug.LogError(
-                    "Ground fissure prefab must contain " +
-                    "EnemyBossLightning.",
-                    fissure
+            lightning.GetComponent<EnemyBossLightning>().SetUpLightning(
+                    combat, 
+                    hitTargets, 
+                    lightningWarningDuration
                 );
-                continue;
-            }
-
-            lightning.SetUpLightning(
-                combat,
-                15f / 18f,
-                roundHitTargets
-            );
-
-            Animator fissureAnimator =
-                fissure.GetComponentInChildren<Animator>();
-
-            if (fissureAnimator != null) {
-                fissureAnimator.speed = 0;
-                fissureAnimators.Add(fissureAnimator);
-            }
-        }
-
-        float freezeDuration = Mathf.Max(
-            0,
-            groundFissureWarningDuration - lightningAttackEventTime
-        );
-        yield return new WaitForSeconds(freezeDuration);
-
-        foreach (Animator fissureAnimator in fissureAnimators) {
-            if (fissureAnimator != null) {
-                fissureAnimator.speed = 1;
-            }
         }
     }
 
-    private int GetGroundFissurePatternIndex(
-        int previousPatternIndex
-    ) {
-        int patternCount =
-            EnemyBossGroundFissurePatterns.All.Length;
+    private int GetLightningPatternIndex(int previousPatternIndex) {
+        int patternCount = EnemyBossLightningPattern.All.Length;
 
         if (previousPatternIndex < 0 || patternCount <= 1) {
             return Random.Range(0, patternCount);
         }
 
         int patternIndex = Random.Range(0, patternCount - 1);
-        return patternIndex >= previousPatternIndex
-            ? patternIndex + 1
-            : patternIndex;
+        return patternIndex >= previousPatternIndex ? patternIndex + 1 : patternIndex;
     }
 
     public void SetSummonPerformed(bool performed) {
@@ -661,120 +406,69 @@ public class EnemyBoss : Enemy, IEnemyPhaseTransition {
         summonCo = StartCoroutine(SummonCo());
     }
 
+    private void StopSummon() {
+        if (summonCo != null) {
+            StopCoroutine(summonCo);
+            summonCo = null;
+        }
+    }
+
     private IEnumerator SummonCo() {
         GameObject[] summonGroup = GetSummonGroup();
-        int repeatLevel = bossUpgrade == null
-            ? 0
-            : bossUpgrade.RepeatLevel;
-        string[] summonNames =
-            new string[summonGroup.Length];
 
         for (int i = 0; i < summonGroup.Length; i += 1) {
-            summonNames[i] = summonGroup[i].name;
-        }
-
-        Debug.Log(
-            $"Boss summon group for {phaseTransitionTarget} " +
-            $"at repeat {repeatLevel}: " +
-            $"{string.Join(" + ", summonNames)}"
-        );
-
-        for (int i = 0; i < summonGroup.Length; i += 1) {
-            Vector3 summonPosition = GetArenaSummonPosition(
-                i,
-                summonGroup.Length
-            );
-            GameObject summonedObject = Instantiate(
-                summonGroup[i],
-                summonPosition,
-                Quaternion.identity
-            );
+            Vector3 summonPosition = GetSummonPosition(i, summonGroup.Length);
+            GameObject summonedObject = 
+                Instantiate(summonGroup[i], summonPosition, Quaternion.identity);
             Enemy summonedEnemy = summonedObject.GetComponent<Enemy>();
 
-            if (summonedEnemy == null) {
-                Debug.LogError(
-                    $"{summonGroup[i].name} must contain an Enemy component.",
-                    summonedObject
-                );
-                Destroy(summonedObject);
-                continue;
-            }
-
             activeSummonedEnemies.Add(summonedEnemy);
-            bossUpgrade?.ApplySummonIncrease(summonedEnemy);
-
-            int directionToPlayer =
-                player != null && player.position.x < summonPosition.x
-                    ? -1
-                    : 1;
-            summonedEnemy.HandleFlip(directionToPlayer);
+            bossUpgrade.ApplySummonIncrease(summonedEnemy);
+            summonedEnemy.HandleFlip(DirectionToPlayer());
+            summonedEnemy.TryToEnterBattleState(player);
 
             Color color = Color.red;
             vfx.GenerateParticleEffect(color);
 
-            yield return null;
-
-            if (summonedEnemy != null && player != null) {
-                summonedEnemy.TryToEnterBattleState(player);
-            }
-
             yield return new WaitForSeconds(summonCooldown);
         }
 
-        summonCo = null;
         summonSpawnCompleted = true;
-        RefreshSummonCompletion();
+        UpdateSummonCompletion();
     }
 
     private GameObject[] GetSummonGroup() {
-        if (phaseTransitionTarget
-            == BossPhaseTransitionTarget.PhaseThree) {
-            return GetRandomPhaseThreeSummons();
+        if (phaseTransition == BossPhaseTransition.PhaseOneToTwo) {
+            return GetSummonPair();
         }
 
-        return GetSummonPair();
+        if (phaseTransition == BossPhaseTransition.PhaseTwoToThree) {
+            return GetSummonTriple();
+        }
+
+        return null;
     }
 
-    private GameObject[] GetRandomPhaseThreeSummons() {
-        const int summonCount = 3;
+    private GameObject[] GetSummonTriple() {
+        List<GameObject> candidates = new List<GameObject> 
+            { knightPrefab, archerElfPrefab, skeletonPrefab, magePrefab, evilWizardPrefab };
 
-        List<GameObject> candidates = new List<GameObject> {
-            knightPrefab,
-            archerElfPrefab,
-            skeletonPrefab,
-            magePrefab,
-            evilWizardPrefab
-        };
-        candidates.RemoveAll(candidate => candidate == null);
-
-        if (candidates.Count < summonCount) {
-            Debug.LogError(
-                "Phase three requires at least three summon prefabs.",
-                this
-            );
-            return candidates.ToArray();
-        }
-
-        for (int i = 0; i < summonCount; i += 1) {
+        for (int i = 0; i < 3; i += 1) {
             int randomIndex = Random.Range(i, candidates.Count);
             GameObject selected = candidates[randomIndex];
             candidates[randomIndex] = candidates[i];
             candidates[i] = selected;
         }
 
-        return candidates.GetRange(0, summonCount).ToArray();
+        return candidates.GetRange(0, 3).ToArray();
     }
 
     private GameObject[] GetSummonPair() {
-        int repeatLevel = bossUpgrade == null
-            ? 0
-            : bossUpgrade.RepeatLevel;
-
-        if (repeatLevel <= 0) {
+        if (bossUpgrade.RepeatLevel <= 0) {
             return new[] { knightPrefab, archerElfPrefab };
         }
 
-        int repeatPairIndex = (repeatLevel - 1) % 3;
+        int repeatPairIndex = (bossUpgrade.RepeatLevel - 1) % 3;
 
         switch (repeatPairIndex) {
             case 0:
@@ -786,52 +480,62 @@ public class EnemyBoss : Enemy, IEnemyPhaseTransition {
         }
     }
 
-    public void RefreshSummonCompletion() {
-        activeSummonedEnemies.RemoveAll(summonedEnemy => summonedEnemy == null);
-        summonPerformed = summonSpawnCompleted && activeSummonedEnemies.Count == 0;
-    }
-
     private void HandleSummonedEnemyKilled(Enemy killedEnemy) {
         if (!activeSummonedEnemies.Remove(killedEnemy)) {
             return;
         }
 
-        Debug.Log(
-            $"Boss summons remaining: {activeSummonedEnemies.Count}"
-        );
-        RefreshSummonCompletion();
+        UpdateSummonCompletion();
     }
 
-    private Vector3 GetArenaSummonPosition(int index, int count) {
-        const float arenaMargin = 3f;
-        const float minPlayerDistance = 3f;
+    public void UpdateSummonCompletion() {
+        activeSummonedEnemies.RemoveAll(summonedEnemy => summonedEnemy == null);
+        summonPerformed = summonSpawnCompleted && activeSummonedEnemies.Count == 0;
+    }
 
+    private Vector3 GetSummonPosition(int index, int count) {
         float minX = leftMoveBound + arenaMargin;
         float maxX = rightMoveBound - arenaMargin;
         float t = (index + 1f) / (count + 1f);
         float x = Mathf.Lerp(minX, maxX, t);
 
-        if (player != null && Mathf.Abs(x - player.position.x) < minPlayerDistance) {
-            float rightCandidate = player.position.x + minPlayerDistance;
-            float leftCandidate = player.position.x - minPlayerDistance;
-            x = rightCandidate <= maxX ? rightCandidate : leftCandidate;
+        if (DistanceToPlayer() < minPlayerDistance) {
+            float arenaCenterX = (minX + maxX) / 2;
+
+            if (player.position.x < arenaCenterX) {
+                x = player.position.x + minPlayerDistance;
+            } else {
+                x = player.position.x - minPlayerDistance;
+            }
         }
 
         x = Mathf.Clamp(x, minX, maxX);
         return new Vector3(x, arenaGroundY, 0);
     }
 
-    public void Teleport() {
-        if (stateMachine.currentState == phaseTransitionState) {
-            TeleportForPhaseTransition();
+    private int DirectionToPlayer() {
+        if (player == null) {
+            return 0;
         }
+
+        return player.position.x > transform.position.x ? 1 : -1;
     }
 
-    public void ClearAttackPresentation() {
-        ExitAttackWindow();
-        vfx.SetAttackAlert(false);
-        vfx.StopImageEchoEffect();
-        anim.SetBool("Attack", false);
+    private float DistanceToPlayer() {
+        if (player == null) {
+            return float.MaxValue;
+        }
+
+        return Mathf.Abs(transform.position.x - player.position.x);
+    }
+
+    public void SetTeleport(Vector3 position, EnemyState nextState) {
+        TeleportPosition = position;
+        teleportNextState = nextState;
+    }
+
+    public void Teleport() {
+        transform.position = TeleportPosition;
     }
 
     public bool OutOfMoveRange() {

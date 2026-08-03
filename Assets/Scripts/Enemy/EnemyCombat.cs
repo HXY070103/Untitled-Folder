@@ -2,11 +2,7 @@ using UnityEngine;
 
 public class EnemyCombat : EntityCombat {
     public override void PerformAttackOnTarget(Transform target) {
-        PerformAttackOnTarget(target, 1f);
-    }
-
-    public override void PerformAttackOnTarget(Transform target, float damageMultiplier) {
-        base.PerformAttackOnTarget(target, damageMultiplier);
+        base.PerformAttackOnTarget(target);
 
         HurtCheckerController hurtChecker = target.GetComponent<HurtCheckerController>();
 

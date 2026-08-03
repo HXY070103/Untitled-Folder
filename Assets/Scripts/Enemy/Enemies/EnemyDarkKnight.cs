@@ -67,6 +67,10 @@ public class EnemyDarkKnight : Enemy, IEnemyPhaseTransition {
         TryStartPhaseTransition();
     }
 
+    private void OnDestroy() {
+        health.OnHealthUpdate -= TryStartPhaseTransition;
+    }
+
     public float GetPhaseTransitionDuration() {
         return phaseTransitionDuration;
     }
@@ -100,12 +104,22 @@ public class EnemyDarkKnight : Enemy, IEnemyPhaseTransition {
             return;
         }
 
+        InterruptAllAttacks();
+
         phaseTransitionTriggered = true;
         stateMachine.ChangeState(phaseTransitionState);
     }
 
     private bool IsLowHP() {
         return health.GetHPPercentage() < phaseTwoHPThreshold;
+    }
+
+    private void InterruptAllAttacks() {
+        StopSwordwave();
+        StopComboAttack();
+
+        vfx.SetAttackAlert(false);
+        ExitAttackWindow();
     }
 
     public override void SpecialAttack() {
@@ -120,6 +134,13 @@ public class EnemyDarkKnight : Enemy, IEnemyPhaseTransition {
         }
 
         swordwaveCo = StartCoroutine(SwordwaveCo());
+    }
+
+    private void StopSwordwave() {
+        if (swordwaveCo != null) {
+            StopCoroutine(swordwaveCo);
+            swordwaveCo = null;
+        }
     }
 
     private IEnumerator SwordwaveCo() {
@@ -137,6 +158,13 @@ public class EnemyDarkKnight : Enemy, IEnemyPhaseTransition {
         }
 
         enterAttackStateWithDelayCo = StartCoroutine(EnterAtatckStateWithDelayCo());
+    }
+
+    private void StopComboAttack() {
+        if (enterAttackStateWithDelayCo != null) {
+            StopCoroutine(enterAttackStateWithDelayCo);
+            enterAttackStateWithDelayCo = null;
+        }
     }
 
     private IEnumerator EnterAtatckStateWithDelayCo() {

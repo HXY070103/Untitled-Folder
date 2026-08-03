@@ -84,8 +84,8 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
         rb.gravityScale = 0;
     }
 
-    protected override void Update() {
-        base.Update();
+    private void OnDestroy() {
+        health.OnHealthUpdate -= TryStartPhaseTransition;
     }
 
     public float GetPhaseTransitionDuration() {
@@ -121,8 +121,7 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
             return;
         }
 
-        StopSpellCast();
-        anim.SetBool("SpellCastPerformed", true);
+        InterruptAllAttacks();
 
         phaseTransitionTriggered = true;
         stateMachine.ChangeState(phaseTransitionState);
@@ -130,6 +129,15 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
 
     private bool IsLowHP() {
         return health.GetHPPercentage() < phaseTwoHPThreshold;
+    }
+
+    private void InterruptAllAttacks() {
+        StopSpellCast();
+        StopSummon();
+
+        anim.SetBool("SpellCastPerformed", true);
+        vfx.SetAttackAlert(false);
+        ExitAttackWindow();
     }
 
     public override void SpecialAttack() {
@@ -182,6 +190,7 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
     private void StopSpellCast() {
         if (spellCastCo != null) {
             StopCoroutine(spellCastCo);
+            spellCastCo = null;
         }
     }
 
@@ -229,6 +238,14 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
         platformManager?.BeginSummon();
         summonRegistrationActive = true;
         summonCo = StartCoroutine(SummonCo());
+    }
+
+    private void StopSummon() {
+        if (summonCo != null) {
+            StopCoroutine(summonCo);
+            CompleteSummonRegistration();
+            summonCo = null;
+        }
     }
 
     private IEnumerator SummonCo() {
