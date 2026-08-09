@@ -1,40 +1,50 @@
 using UnityEngine;
 
 public class EnemyStoneGuardShieldState : EnemyState {
-    private readonly EnemyStoneGuard stoneGuard;
+    private EnemyStoneGuard enemyStoneGuard;
 
-    private float elapsedTime;
-    private bool playerPushed;
+    private Transform player;
 
-    public EnemyStoneGuardShieldState(EnemyStoneGuard stoneGuard, StateMachine stateMachine, string animBoolName) 
-        : base(stoneGuard, stateMachine, animBoolName) {
-        this.stoneGuard = stoneGuard;
+    public EnemyStoneGuardShieldState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
+        : base(enemy, stateMachine, animBoolName) {
+        enemyStoneGuard = enemy as EnemyStoneGuard;
     }
 
     public override void Enter() {
         base.Enter();
 
-        elapsedTime = 0;
-        playerPushed = false;
+        if (player == null) {
+            player = enemy.GetPlayerReference();
+        }
 
-        stoneGuard.BeginShieldCast();
-        stoneGuard.MoveRaw(0, rb.linearVelocity.y);
-        stoneGuard.ExitAttackWindow();
-        stoneGuard.vfx.SetAttackAlert(false);
+        PushPlayerAway();
     }
 
     public override void Update() {
         base.Update();
 
-        elapsedTime += Time.deltaTime * tc.localTimeScale;
+        if (triggerCalled) {
+            stateMachine.ChangeState(enemyStoneGuard.battleState);
+        }
+    }
 
-        if (!playerPushed && elapsedTime >= stoneGuard.shieldWindup) {
-            playerPushed = true;
-            stoneGuard.PushPlayerAway();
+    public override void Exit() {
+        base.Exit();
+    }
+
+    private void PushPlayerAway() {
+        Vector2 pushVelocity = new Vector2(
+                DirectionToPlayer() * enemyStoneGuard.shieldPushVelocity.x, 
+                enemyStoneGuard.shieldPushVelocity.y
+            );
+        player.GetComponent<Player>().ReceiveKnockback(pushVelocity, enemyStoneGuard.shieldPushDuration);
+    }
+
+    private int DirectionToPlayer() {
+        if (player == null) {
+            return 0;
         }
 
-        if (elapsedTime >= stoneGuard.shieldDuration) {
-            stateMachine.ChangeState(stoneGuard.battleState);
-        }
+        return player.position.x > enemy.transform.position.x ? 1 : -1;
     }
 }

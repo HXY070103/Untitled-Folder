@@ -1,55 +1,37 @@
 using UnityEngine;
 
 public class EnemyStoneGuardLaserState : EnemyState {
-    private readonly EnemyStoneGuard stoneGuard;
+    private EnemyStoneGuard enemyStoneGuard;
 
-    private EnemyStoneGuardLaser activeLaser;
-    private float elapsedTime;
-    private bool laserFired;
-
-    public EnemyStoneGuardLaserState(EnemyStoneGuard stoneGuard, StateMachine stateMachine, string animBoolName) 
-        : base(stoneGuard, stateMachine, animBoolName) {
-        this.stoneGuard = stoneGuard;
+    public EnemyStoneGuardLaserState(Enemy enemy, StateMachine stateMachine, string animBoolName) 
+        : base(enemy, stateMachine, animBoolName) {
+        enemyStoneGuard = enemy as EnemyStoneGuard;
     }
 
     public override void Enter() {
         base.Enter();
 
-        elapsedTime = 0;
-        laserFired = false;
+        anim.SetBool("LaserCastPerformed", false);
 
-        stoneGuard.MoveRaw(0, rb.linearVelocity.y);
-        stoneGuard.ExitAttackWindow();
-        stoneGuard.vfx.SetAttackAlert(false);
-
-        activeLaser = stoneGuard.CreateLaser();
-        activeLaser?.SetTimeScale(tc.localTimeScale);
+        enemyStoneGuard.CreateLaser();
+        stateTimer = enemyStoneGuard.laserDuration;
     }
 
     public override void Update() {
         base.Update();
 
-        elapsedTime += Time.deltaTime * tc.localTimeScale;
-        activeLaser?.SetTimeScale(tc.localTimeScale);
-
-        if (!laserFired && elapsedTime >= stoneGuard.laserAimDuration) {
-            laserFired = true;
-            activeLaser?.Fire();
+        if (stateTimer < 0) {
+            anim.SetBool("LaserCastPerformed", true);
         }
 
-        if (elapsedTime >= stoneGuard.laserAimDuration + stoneGuard.laserBeamDuration) {
-            FinishLaser();
-            stateMachine.ChangeState(stoneGuard.battleState);
+        if (triggerCalled) {
+            stateMachine.ChangeState(enemyStoneGuard.battleState);
         }
     }
 
     public override void Exit() {
-        FinishLaser();
         base.Exit();
-    }
 
-    private void FinishLaser() {
-        activeLaser?.Finish();
-        activeLaser = null;
+        enemyStoneGuard.DestroyLaser();
     }
 }

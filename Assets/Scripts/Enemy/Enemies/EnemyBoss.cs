@@ -252,6 +252,8 @@ public class EnemyBoss : Enemy, IEnemyPhaseTransition {
     }
 
     public override void SpecialAttack() {
+        base.SpecialAttack();
+
         if (stateMachine.currentState == energyWaveState) {
             StartEnergyWave();
         }
