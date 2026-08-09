@@ -110,7 +110,7 @@ public class EnemyBoss : Enemy, IEnemyPhaseTransition {
     protected override void Awake() {
         base.Awake();
 
-        idleState = new EnemyIdleState(this, stateMachine, "Idle");
+        idleState = new EnemyEliteIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
         battleState = new EnemyBossBattleState(this, stateMachine, "Battle");
         preAttackState = new EnemyBossPreAttackState(this, stateMachine, "Battle");

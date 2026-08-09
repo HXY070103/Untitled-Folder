@@ -58,7 +58,7 @@ public class EnemyBossDashAttackState : EnemyState {
             dashDamageApplied = true;
         }
 
-        if (ReachedMaxDistance() || enemyBoss.OutOfMoveRange()) {
+        if (ReachedMaxDistance() || enemyBoss.wallDetected) {
             enemyBoss.MoveRaw(0, 0);
             enemyBoss.vfx.StopImageEchoEffect();
             dashPerformed = true;

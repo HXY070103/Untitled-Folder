@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &857588381463453776
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5377643476092259944}
+  m_Layer: 8
+  m_Name: WallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5377643476092259944
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857588381463453776}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1.7, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6346743711559511979}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1133442268614638165
 GameObject:
   m_ObjectHideFlags: 0
@@ -40,6 +71,7 @@ Transform:
   m_Children:
   - {fileID: 4566610741637842900}
   - {fileID: 4407415276505256338}
+  - {fileID: 5377643476092259944}
   - {fileID: 7819832784848144703}
   - {fileID: 3430215107036134538}
   - {fileID: 300650718379185006}
@@ -61,7 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBoss
   groundCheckDistance: 0.5
-  wallCheckDistance: 2
+  wallCheckDistance: 3
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -69,14 +101,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   groundCheck: {fileID: 4407415276505256338}
-  primaryWallCheck: {fileID: 6346743711559511979}
-  secondaryWallCheck: {fileID: 6346743711559511979}
+  primaryWallCheck: {fileID: 5377643476092259944}
+  secondaryWallCheck: {fileID: 5377643476092259944}
   battleMoveSpeed: 4
   attackDistance: 3.5
   attackWindup: 0.5
   attackCooldown: 1
   battleDuration: 10
-  minRetreatDistance: 0
+  minRetreatDistance: 1.2
   quickRetreatSpeed: {x: 7, y: 4}
   stunnedSpeed: {x: 9, y: 9}
   stunnedDuration: 1
@@ -89,8 +121,8 @@ MonoBehaviour:
     m_Bits: 128
   playerCheck: {fileID: 6346743711559511979}
   numOfAttack: 040000000400000004000000
-  summonPhaseHPThreshold: 0.7
-  phaseThreeHPThreshold: 0.35
+  phaseOneToTwoHPThreshold: 0.7
+  phaseTwoToThreeHPThreshold: 0.35
   phaseTransitionDuration: 1.2
   transitionOffstageOffset: 5
   comboAttackWindup:
@@ -132,7 +164,6 @@ MonoBehaviour:
   - 0.9
   energyWaveDistance: 15
   lightningPrefab: {fileID: 6049034181147551912, guid: 68e1bf4e3425e4adc80dc7b04e05c514, type: 3}
-  lightningArenaMargin: 3
   lightningOffsetY: 4
   lightningInterval: 0.7
   lightningWarningDuration: 1.2
@@ -151,7 +182,11 @@ MonoBehaviour:
   skeletonPrefab: {fileID: 4043535905820101034, guid: e1f7e0d13c8ea4d988360314a422b9f6, type: 3}
   magePrefab: {fileID: 1307503079930646942, guid: 57313f2e3276347dbb78314c1e769049, type: 3}
   evilWizardPrefab: {fileID: 3275644217491406495, guid: 3fd1cd901047b4551a6208172eb5015e, type: 3}
+  minPlayerDistance: 3
   summonCooldown: 0.5
+  teleportDuration: 1.5
+  arenaRadius: 20
+  arenaMargin: 3
 --- !u!50 &2665595112516559906
 Rigidbody2D:
   serializedVersion: 5

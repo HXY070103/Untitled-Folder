@@ -171,6 +171,37 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.25}
   m_Size: {x: 0.6, y: 1.5}
   m_Direction: 0
+--- !u!1 &1075996125768867693
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6749478924243512686}
+  m_Layer: 8
+  m_Name: WallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6749478924243512686
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1075996125768867693}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5939796045182456773}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2132822256409236208
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,6 +443,7 @@ Transform:
   m_Children:
   - {fileID: 212685256737308119}
   - {fileID: 8262399107502491296}
+  - {fileID: 6749478924243512686}
   - {fileID: 7963739379977170035}
   - {fileID: 831638389733654531}
   - {fileID: 6151946227587515500}
@@ -440,11 +472,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   groundCheck: {fileID: 8262399107502491296}
-  primaryWallCheck: {fileID: 5939796045182456773}
-  secondaryWallCheck: {fileID: 5939796045182456773}
+  primaryWallCheck: {fileID: 6749478924243512686}
+  secondaryWallCheck: {fileID: 6749478924243512686}
   battleMoveSpeed: 3
   attackDistance: 2
-  preAttackDuration: 0.5
+  attackWindup: 0.5
   attackCooldown: 1.5
   battleDuration: 5
   minRetreatDistance: 1
@@ -556,7 +588,6 @@ MonoBehaviour:
   currentHP: 0
   initialMaxHP: 100
   isExecutable: 1
-  damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -575,6 +606,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  targetAlpha: 0.2
+  fadeSpeed: 2
+  fadeInterval: 0.05
   particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 2619526382332349341, guid: 382fc80bcad624108bcaa33f55906ef5, type: 3}

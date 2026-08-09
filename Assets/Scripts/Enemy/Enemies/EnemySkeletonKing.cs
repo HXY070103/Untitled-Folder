@@ -40,7 +40,7 @@ public class EnemySkeletonKing : Enemy, IEnemyPhaseTransition {
     protected override void Awake() {
         base.Awake();
 
-        idleState = new EnemyIdleState(this, stateMachine, "Idle");
+        idleState = new EnemyEliteIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
         battleState = new EnemySkeletonKingBattleState(this, stateMachine, "Battle");
         preAttackState = new EnemyPreAttackState(this, stateMachine, "Battle");

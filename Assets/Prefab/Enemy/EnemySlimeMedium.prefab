@@ -642,6 +642,37 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!1 &5181596867130586422
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6263738654937761183}
+  m_Layer: 8
+  m_Name: WallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6263738654937761183
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5181596867130586422}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8739299238061728165}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5621819663482540463
 GameObject:
   m_ObjectHideFlags: 0
@@ -839,6 +870,7 @@ Transform:
   m_Children:
   - {fileID: 6286799274679111485}
   - {fileID: 4875449476049671954}
+  - {fileID: 6263738654937761183}
   - {fileID: 2740391117665969766}
   - {fileID: 2336255887509139623}
   - {fileID: 2090690261086634292}
@@ -867,8 +899,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   groundCheck: {fileID: 4875449476049671954}
-  primaryWallCheck: {fileID: 8739299238061728165}
-  secondaryWallCheck: {fileID: 8739299238061728165}
+  primaryWallCheck: {fileID: 6263738654937761183}
+  secondaryWallCheck: {fileID: 6263738654937761183}
   battleMoveSpeed: 2.7
   attackDistance: 1
   attackWindup: 0.5

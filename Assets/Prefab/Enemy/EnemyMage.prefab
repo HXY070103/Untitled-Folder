@@ -155,6 +155,7 @@ Transform:
   m_Children:
   - {fileID: 917909129955261222}
   - {fileID: 3288695979555839484}
+  - {fileID: 5833817369308522858}
   - {fileID: 3852726960160987182}
   - {fileID: 559561478864890061}
   - {fileID: 4991606508881755351}
@@ -185,11 +186,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   groundCheck: {fileID: 3288695979555839484}
-  primaryWallCheck: {fileID: 1769011510828618861}
-  secondaryWallCheck: {fileID: 1769011510828618861}
+  primaryWallCheck: {fileID: 5833817369308522858}
+  secondaryWallCheck: {fileID: 5833817369308522858}
   battleMoveSpeed: 3.5
   attackDistance: 1.1
-  preAttackDuration: 0.5
+  attackWindup: 0.5
   attackCooldown: 0.5
   battleDuration: 5
   minRetreatDistance: 1.1
@@ -207,7 +208,7 @@ MonoBehaviour:
   spellPrefab: {fileID: 1909247432396528831, guid: 759eb52ddad0b47d79a31a4c08a1e28c, type: 3}
   spellStartPoint: {fileID: 4375408825574422048}
   amountToCast: 3
-  spellCastCooldown: 0.3
+  spellCastInterval: 0.3
   backCollisionCheck: {fileID: 5632103582206534976}
   backCollisionDistance: 0.2
   retreatCooldown: 5
@@ -310,7 +311,6 @@ MonoBehaviour:
   currentHP: 0
   initialMaxHP: 100
   isExecutable: 1
-  damageTakenMultiplier: 1
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
@@ -329,6 +329,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3de99d80113a4bd4924b43e88d0181e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyVFX
+  targetAlpha: 0.2
+  fadeSpeed: 2
+  fadeInterval: 0.05
   particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 2619526382332349341, guid: 382fc80bcad624108bcaa33f55906ef5, type: 3}
@@ -468,6 +471,37 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &2599697935194619188
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5833817369308522858}
+  m_Layer: 8
+  m_Name: WallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5833817369308522858
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2599697935194619188}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.8, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1769011510828618861}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2682355039989224322
 GameObject:
   m_ObjectHideFlags: 0

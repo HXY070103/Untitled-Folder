@@ -60,7 +60,7 @@ public class EnemyNecromancer : Enemy, IEnemyPhaseTransition {
     protected override void Awake() {
         base.Awake();
 
-        idleState = new EnemyIdleState(this, stateMachine, "Idle");
+        idleState = new EnemyEliteIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
         battleState = new EnemyNecromancerBattleState(this, stateMachine, "Battle");
         preAttackState = new EnemyNecromancerPreAttackState(this, stateMachine, "Battle");
