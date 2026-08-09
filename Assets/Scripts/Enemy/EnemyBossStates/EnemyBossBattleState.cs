@@ -34,7 +34,7 @@ public class EnemyBossBattleState : EnemyBattleState {
                 enemyBoss.HandleFlip(DirectionToPlayer());
             }
 
-            if (WithInAttackRange() /*|| enemyBoss.OutOfMoveRange()*/) {
+            if (WithInAttackRange() || enemyBoss.wallDetected) {
                 return;
             }
 

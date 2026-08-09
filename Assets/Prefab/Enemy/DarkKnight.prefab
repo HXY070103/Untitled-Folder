@@ -233,6 +233,37 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1 &1598652937641482653
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8664312742193009330}
+  m_Layer: 8
+  m_Name: WallCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8664312742193009330
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598652937641482653}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8366896281239408500}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2338571311221959478
 GameObject:
   m_ObjectHideFlags: 0
@@ -610,6 +641,7 @@ Transform:
   m_Children:
   - {fileID: 8340053306224404871}
   - {fileID: 3544071039566523718}
+  - {fileID: 8664312742193009330}
   - {fileID: 3182872524395658220}
   - {fileID: 1934240053963828985}
   - {fileID: 9067412755238578126}
@@ -695,7 +727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDarkKnight
   groundCheckDistance: 0.25
-  wallCheckDistance: 0.85
+  wallCheckDistance: 2.5
   whatIsGround:
     serializedVersion: 2
     m_Bits: 64
@@ -703,8 +735,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   groundCheck: {fileID: 3544071039566523718}
-  primaryWallCheck: {fileID: 8366896281239408500}
-  secondaryWallCheck: {fileID: 8366896281239408500}
+  primaryWallCheck: {fileID: 8664312742193009330}
+  secondaryWallCheck: {fileID: 8664312742193009330}
   battleMoveSpeed: 4
   attackDistance: 2.8
   attackWindup: 0.5
@@ -723,6 +755,7 @@ MonoBehaviour:
     m_Bits: 128
   playerCheck: {fileID: 8366896281239408500}
   numOfAttack: 3
+  phaseTwoHPThreshold: 0.5
   phaseTransitionDuration: 1
   comboAttackWindup:
   - 0.5
@@ -731,7 +764,6 @@ MonoBehaviour:
   - 1
   - 0.6
   comboLimit: 0200000003000000
-  phaseTwoHPThreshold: 0.5
   swordWavePrefab: {fileID: 363669544949241483, guid: f91f2d081262f48bfaabd4a96bdcbbdb, type: 3}
   swordWaveStartPoint: {fileID: 7408160521430063564}
   swordWaveSpeed: 15

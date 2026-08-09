@@ -45,7 +45,7 @@ public class EnemyDarkKnight : Enemy, IEnemyPhaseTransition {
     protected override void Awake() {
         base.Awake();
 
-        idleState = new EnemyIdleState(this, stateMachine, "Idle");
+        idleState = new EnemyEliteIdleState(this, stateMachine, "Idle");
         moveState = new EnemyMoveState(this, stateMachine, "Move");
         battleState = new EnemyDarkKnightBattleState(this, stateMachine, "Battle");
         preAttackState = new EnemyPreAttackState(this, stateMachine, "Battle");
