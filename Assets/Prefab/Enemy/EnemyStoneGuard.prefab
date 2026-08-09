@@ -268,48 +268,47 @@ MonoBehaviour:
   groundCheck: {fileID: 669522724119411681}
   primaryWallCheck: {fileID: 4952427243123888198}
   secondaryWallCheck: {fileID: 4952427243123888198}
-  battleMoveSpeed: 0
-  attackDistance: 2.5
+  battleMoveSpeed: 1
+  attackDistance: 2.3
   attackWindup: 0.5
   attackCooldown: 1.4
-  battleDuration: 5
+  battleDuration: 8
   minRetreatDistance: 0
-  quickRetreatSpeed: {x: 5, y: 3}
+  quickRetreatSpeed: {x: 0, y: 0}
   stunnedSpeed: {x: 0, y: 0}
-  stunnedDuration: 0
+  stunnedDuration: 2
   idleDurarion: 2
-  moveSpeed: 0
+  moveSpeed: 1
   moveAnimSpeedMultiplier: 1
-  playerCheckDistance: 12
+  playerCheckDistance: 15
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 128
   playerCheck: {fileID: 4418708743536626225}
-  meleeDuration: 0.78
-  meleeCounterWindowStart: 0.52
-  meleeHitTime: 0.7
-  armProjectilePrefab: {fileID: 8458615336242067235, guid: 9f36de0d0d48e457f9db860081c63094, type: 3}
-  projectileSpawnPoint: {fileID: 868258787679487546}
-  shootDuration: 0.75
-  projectileReleaseTime: 0.7
-  laserPrefab: {fileID: 7761803618604832674, guid: c7319e8c096e14bb690c92355cd8c2db, type: 3}
-  laserSpawnPoint: {fileID: 6764299457985667778}
-  laserAimDuration: 0.8
-  laserBeamDuration: 0.4
+  rangeAttackDistance: 5
+  numOfRangeAttack: 2
+  phaseTwoHPThreshold: 0.55
+  phaseTransitionDuration: 1.2
+  armProjectilePrefab: {fileID: 7023783330857497489, guid: 9f36de0d0d48e457f9db860081c63094, type: 3}
+  armProjectileStartPoint: {fileID: 868258787679487546}
+  armProjectileSpeed: 10
+  shootWindup: 0.5
+  shootCooldown: 1.5
+  shootDistance: 15
+  laserPrefab: {fileID: 6096593221069329814, guid: c7319e8c096e14bb690c92355cd8c2db, type: 3}
+  laserStartPoint: {fileID: 6764299457985667778}
+  laserDuration: 0.8
+  laserWindup: 0.5
+  laserCooldown: 1.5
+  laserDistance: 12
   comboLaserStartDelay: 0.8
   comboCooldown: 6
   shieldCheck: {fileID: 48584081994913425}
-  shieldTriggerDistance: 2
-  shieldStayDuration: 1.5
-  shieldCooldown: 7
-  shieldWindup: 0.45
-  shieldDuration: 0.5
+  shieldStayDuration: 0.5
+  shieldDistance: 2.3
   shieldPushVelocity: {x: 14, y: 2}
   shieldPushDuration: 0.5
-  phaseTwoHPThreshold: 0.55
-  phaseTransitionDuration: 0.8
-  coreExposedDuration: 1.8
-  coreRecoveryDuration: 0.35
+  shieldCooldown: 7
   coreDamageTakenMultiplier: 1.6
 --- !u!50 &7361001632944665758
 Rigidbody2D:
@@ -503,7 +502,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6764299457985667778}
   m_Layer: 8
-  m_Name: LaserSpawnPoint
+  m_Name: LaserStartPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -999,7 +998,7 @@ Animator:
   m_GameObject: {fileID: 5141179605586914836}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fb4ef9668eddf4ee59e8a516b6cbea1d, type: 2}
+  m_Controller: {fileID: 9100000, guid: 95f24a6c8a4cb4d8e8a9622148496517, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1092,7 +1091,7 @@ GameObject:
   m_Component:
   - component: {fileID: 868258787679487546}
   m_Layer: 8
-  m_Name: ProjectileSpawnPoint
+  m_Name: ArmProjectileStartPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

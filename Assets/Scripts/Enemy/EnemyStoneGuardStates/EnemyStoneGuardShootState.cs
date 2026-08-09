@@ -1,39 +1,34 @@
 using UnityEngine;
 
 public class EnemyStoneGuardShootState : EnemyState {
-    private readonly EnemyStoneGuard stoneGuard;
-
-    private float elapsedTime;
-    private bool projectileReleased;
+    private EnemyStoneGuard enemyStoneGuard;
 
     public EnemyStoneGuardShootState(EnemyStoneGuard stoneGuard, StateMachine stateMachine, string animBoolName) 
         : base(stoneGuard, stateMachine, animBoolName) {
-        this.stoneGuard = stoneGuard;
+        enemyStoneGuard = enemy as EnemyStoneGuard;
     }
 
     public override void Enter() {
         base.Enter();
-
-        elapsedTime = 0;
-        projectileReleased = false;
-
-        stoneGuard.MoveRaw(0, rb.linearVelocity.y);
-        stoneGuard.ExitAttackWindow();
-        stoneGuard.vfx.SetAttackAlert(false);
     }
 
     public override void Update() {
         base.Update();
 
-        elapsedTime += Time.deltaTime * tc.localTimeScale;
-
-        if (!projectileReleased && elapsedTime >= stoneGuard.projectileReleaseTime) {
-            projectileReleased = true;
-            stoneGuard.ReleaseArmProjectile();
+        if (triggerCalled) {
+            HandleStateExit();
         }
+    }
 
-        if (elapsedTime >= stoneGuard.shootDuration) {
-            stateMachine.ChangeState(stoneGuard.battleState);
+    public override void Exit() {
+        base.Exit();
+    }
+
+    private void HandleStateExit() {
+        if (enemyStoneGuard.isPhaseTwo) {
+            stateMachine.ChangeState(enemyStoneGuard.laserState);
+        } else {
+            stateMachine.ChangeState(enemyStoneGuard.battleState);
         }
     }
 }

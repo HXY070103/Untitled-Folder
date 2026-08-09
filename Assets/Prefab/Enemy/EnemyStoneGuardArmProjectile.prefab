@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1035445461279917369}
   - component: {fileID: 2152547765606892632}
   - component: {fileID: 4074578969217633625}
-  - component: {fileID: 8458615336242067235}
+  - component: {fileID: 7666514479592567912}
   m_Layer: 9
   m_Name: EnemyStoneGuardArmProjectile
   m_TagString: Untagged
@@ -108,7 +108,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.65, y: 0.7}
   m_EdgeRadius: 0
---- !u!114 &8458615336242067235
+--- !u!114 &7666514479592567912
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,14 +123,11 @@ MonoBehaviour:
   whatIsTarget:
     serializedVersion: 2
     m_Bits: 2176
-  whatCanCollideWith:
+  canCollideWith:
     serializedVersion: 2
-    m_Bits: 64
-  damage: 16
-  moveSpeed: 10
-  lifeTime: 2.5
-  counterVFXPrefab: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
-  counterVFXColor: {r: 0, g: 1, b: 1, a: 1}
+    m_Bits: 192
+  destroyVFXPrefab: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
+  maxDistance: 15
 --- !u!1 &7192651120022768563
 GameObject:
   m_ObjectHideFlags: 0

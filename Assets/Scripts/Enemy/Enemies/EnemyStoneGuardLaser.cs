@@ -1,119 +1,45 @@
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider2D))]
 public class EnemyStoneGuardLaser : MonoBehaviour {
-    private BoxCollider2D damageCollider;
-    private Animator chargeAnimator;
-    private Animator beamAnimator;
-    private EnemyStoneGuard owner;
 
-    [Header("Visual references")]
     [SerializeField] private GameObject aimLineObject;
     [SerializeField] private GameObject chargeObject;
     [SerializeField] private GameObject beamObject;
-
-    [Header("Damage info")]
     [SerializeField] private LayerMask whatIsTarget;
-    [SerializeField] private float damage = 12;
 
-    private bool isFired;
-    private bool hasDealtDamage;
-    private bool isFinished;
+    private Collider2D col;
+    private EnemyCombat combat;
 
-    private void Awake() {
-        damageCollider = GetComponent<BoxCollider2D>();
-        chargeAnimator = chargeObject != null ? chargeObject.GetComponent<Animator>() : null;
-        beamAnimator = beamObject != null ? beamObject.GetComponent<Animator>() : null;
-        damageCollider.enabled = false;
-    }
+    public void SetUpLaser(EnemyCombat combat, int dir) {
+        col = GetComponent<Collider2D>();
+        this.combat = combat;
 
-    public void SetUp(EnemyStoneGuard owner, int direction) {
-        this.owner = owner;
-
-        if (direction < 0) {
+        if (dir < 0) {
             transform.Rotate(0, 180, 0);
         }
 
-        int projectileLayer = LayerMask.NameToLayer("EnemyProjectile");
+        aimLineObject.SetActive(true);
+        chargeObject.SetActive(true);
+        beamObject.SetActive(false);
 
-        if (projectileLayer >= 0) {
-            gameObject.layer = projectileLayer;
-        }
-
-        aimLineObject?.SetActive(true);
-        chargeObject?.SetActive(true);
-        beamObject?.SetActive(false);
-        damageCollider.enabled = false;
-
-        owner?.RegisterLaser(this);
-    }
-
-    public void SetTimeScale(float timeScale) {
-        float clampedTimeScale = Mathf.Max(0, timeScale);
-
-        if (chargeAnimator != null) {
-            chargeAnimator.speed = clampedTimeScale;
-        }
-
-        if (beamAnimator != null) {
-            beamAnimator.speed = clampedTimeScale;
-        }
-    }
-
-    public void Fire() {
-        if (isFired || isFinished) {
-            return;
-        }
-
-        isFired = true;
-        aimLineObject?.SetActive(false);
-        chargeObject?.SetActive(false);
-        beamObject?.SetActive(true);
-        damageCollider.enabled = true;
+        col.enabled = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        TryHitTarget(collision);
-    }
-
-    private void OnTriggerStay2D(Collider2D collision) {
-        TryHitTarget(collision);
-    }
-
-    private void TryHitTarget(Collider2D collision) {
-        if (!isFired || hasDealtDamage || isFinished || !IsInLayerMask(collision.gameObject.layer, whatIsTarget)) {
-            return;
+        if (((1 << collision.gameObject.layer) & whatIsTarget) != 0) {
+            combat.PerformAttackOnTarget(collision.transform);
         }
-
-        hasDealtDamage = true;
-        owner?.sfx?.PlayAttackHit();
-
-        IDamageable damageable = collision.GetComponent<IDamageable>();
-        damageable?.TakeDamage(new Damage(damage, false), transform);
-
-        HurtCheckerController hurtChecker = collision.GetComponent<HurtCheckerController>();
-        hurtChecker?.GetHurt();
     }
 
-    private bool IsInLayerMask(int layer, LayerMask layerMask) {
-        return (layerMask.value & (1 << layer)) != 0;
+    public void StartLaser() {
+        aimLineObject.SetActive(false);
+        chargeObject.SetActive(false);
+        beamObject.SetActive(true);
+        col.enabled = true;
     }
 
-    public void Finish() {
-        if (isFinished) {
-            return;
-        }
-
-        isFinished = true;
-        damageCollider.enabled = false;
+    public void EndLaser() {
+        col.enabled = false;
         Destroy(gameObject);
-    }
-
-    public void DestroyFromOwner() {
-        Finish();
-    }
-
-    private void OnDestroy() {
-        owner?.UnregisterLaser(this);
     }
 }
