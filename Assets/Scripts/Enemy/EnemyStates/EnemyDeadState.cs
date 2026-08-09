@@ -18,6 +18,9 @@ public class EnemyDeadState : EnemyState {
         rb.gravityScale = 12; 
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, 15);
 
+        enemy.vfx.SetAttackAlert(false);
+        enemy.ExitAttackWindow();
+
         stateMachine.SwitchOff();
         tc.SwitchOff();
         //receiver.SwitchOff();
