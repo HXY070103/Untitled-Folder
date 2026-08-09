@@ -61,6 +61,10 @@ public class EnemySkeletonKing : Enemy, IEnemyPhaseTransition {
         TryStartPhaseTransition();
     }
 
+    private void OnDestroy() {
+        health.OnHealthUpdate -= TryStartPhaseTransition;
+    }
+
     public float GetPhaseTransitionDuration() {
         return phaseTransitionDuration;
     }
@@ -92,12 +96,21 @@ public class EnemySkeletonKing : Enemy, IEnemyPhaseTransition {
             return;
         }
 
+        InterruptAllAttacks();
+
         phaseTransitionTriggered = true;
         stateMachine.ChangeState(phaseTransitionState);
     }
 
     private bool IsLowHP() {
         return health.GetHPPercentage() < phaseTwoHPThreshold;
+    }
+
+    private void InterruptAllAttacks() {
+        StopSummon();
+
+        vfx.SetAttackAlert(false);
+        ExitAttackWindow();
     }
 
     public override void SpecialAttack() {
@@ -122,6 +135,13 @@ public class EnemySkeletonKing : Enemy, IEnemyPhaseTransition {
         }
 
         summonCo = StartCoroutine(SummonCo());
+    }
+
+    private void StopSummon() {
+        if (summonCo != null) {
+            StopCoroutine(summonCo);
+            summonCo = null;
+        }
     }
 
     private IEnumerator SummonCo() {
