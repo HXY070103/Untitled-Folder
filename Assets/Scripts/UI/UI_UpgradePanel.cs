@@ -9,6 +9,7 @@ public class UI_UpgradePanel : MonoBehaviour
     private const float ContentTopInset = 150f;
     private const float ContentSideInset = 20f;
     private const float ContentBottomInset = 20f;
+    private const float DescriptionContentGap = 24f;
 
     [Header("Right Detial Texts")]
     [SerializeField] private TextMeshProUGUI titleText;
@@ -242,8 +243,22 @@ public class UI_UpgradePanel : MonoBehaviour
         contentViewport.SetSiblingIndex(contentText.rectTransform.GetSiblingIndex());
         contentViewport.anchorMin = Vector2.zero;
         contentViewport.anchorMax = Vector2.one;
+
+        Canvas.ForceUpdateCanvases();
+
+        float topInset = ContentTopInset;
+        if (descriptionText != null)
+        {
+            RectTransform descriptionRect = descriptionText.rectTransform;
+            float descriptionBottom = descriptionRect.anchoredPosition.y + descriptionRect.rect.yMin;
+            topInset = Mathf.Max(
+                ContentTopInset,
+                detailPanel.rect.yMax - descriptionBottom + DescriptionContentGap
+            );
+        }
+
         contentViewport.offsetMin = new Vector2(ContentSideInset, ContentBottomInset);
-        contentViewport.offsetMax = new Vector2(-ContentSideInset, -ContentTopInset);
+        contentViewport.offsetMax = new Vector2(-ContentSideInset, -topInset);
 
         Image viewportImage = viewportObject.GetComponent<Image>();
         viewportImage.color = Color.clear;
