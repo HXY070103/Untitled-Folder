@@ -22,14 +22,21 @@ public class GameData
 
    //player health
    public float playerCurrentHP = -1;
+   public float playerTemporaryShield = 0;
+   public float playerPermanentShield = 0;
+   public float playerTemporaryShieldRemainingDuration = 0;
    
    //skill
    public int chosenSkillType;
    public int skillDecay;
+   public float skillDecayMaxHPPenalty = 0;
    public int numOfUse;
    public float remainSkillColldown;
    public List<string> unlockedSkillUpgrades = new List<string>();
    public List<string> unlockedBetterUpgrades = new List<string>();
+   public List<string> unlockedSkillPhaseUpgrades = new List<string>();
+   public int bloodGrowthMaxHPStacks;
+   public int bloodGrowthAdvancedStacks;
 
    //attribute upgrades
    public List<AttributeUpgradeSaveData> attributeUpgrades = new List<AttributeUpgradeSaveData>();

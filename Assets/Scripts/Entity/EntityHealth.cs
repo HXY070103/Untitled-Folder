@@ -1,7 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 public class EntityHealth : MonoBehaviour, IDamageable {
     public event Action OnHealthUpdate;
@@ -15,7 +15,9 @@ public class EntityHealth : MonoBehaviour, IDamageable {
     [SerializeField] protected bool isDead = false;
     [SerializeField] private float currentHP;
     [SerializeField] private float initialMaxHP = 100f;
-    [SerializeField] private bool isOnShotKillable = false;
+    [SerializeField] private bool isExecutable = false;
+    private readonly Dictionary<string, float> damageTakenMultipliers = new Dictionary<string, float>();
+    private readonly HashSet<string> damageImmunitySources = new HashSet<string>();
 
     [Header("On damage knockback info")]
     [SerializeField] private Vector2 onDamageKnockback = new Vector2(1.5f, 2.5f);
@@ -29,8 +31,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
 
     public bool miniHealthBarActive;
 
-    private Coroutine dotCo;
-
+    public bool hasRevived { get; private set; } = false;
     private bool canRevival = false;
     private float reviveHPMultiplier;
     
@@ -45,13 +46,147 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         UpdateHealthBar();
     }
 
-    public void TryApplyInstantKill() {
-        if (isOnShotKillable) {
+    public void TryToExecute(float HPThreshold, float bonusDamage) {
+        if (!isExecutable) {
+            ReduceHP(bonusDamage);
+            return;
+        }
+
+        if (GetHPPercentage() <= HPThreshold) {
             ReduceHP(currentHP);
         }
     }
+ 
+    public virtual void TakeDamage(Damage damage, Transform damageDealer) {
+        if (isDead || IsDamageImmune()) {
+            return;
+        }
+
+        float reducedHP = CalculateReducedHP(damage, damageDealer);
+        ReduceHP(reducedHP);
+
+        Vector2 knockback = CalculateKnockback(reducedHP, damageDealer);
+        float duration = CalculateDuration(reducedHP);
+        entity.ReceiveKnockback(knockback, duration);
+
+        vfx.PlayOnDamageVFX();
+    }
+
+    public void AddDamageTakenMultiplier(float multiplier, string source) {
+        if (string.IsNullOrEmpty(source)) {
+            Debug.LogWarning("Damage taken multiplier requires a source.");
+            return;
+        }
+
+        damageTakenMultipliers[source] = Mathf.Max(0, multiplier);
+    }
+
+    public void RemoveDamageTakenMultiplier(string source) {
+        if (string.IsNullOrEmpty(source)) {
+            return;
+        }
+
+        damageTakenMultipliers.Remove(source);
+    }
+
+    public float GetDamageTakenMultiplier() {
+        float finalMultiplier = 1;
+
+        foreach (float multiplier in damageTakenMultipliers.Values) {
+            finalMultiplier *= multiplier;
+        }
+
+        return finalMultiplier;
+    }
+
+    public void AddDamageImmunity(string source) {
+        if (string.IsNullOrEmpty(source)) {
+            Debug.LogWarning("Damage immunity requires a source.");
+            return;
+        }
+
+        damageImmunitySources.Add(source);
+    }
+
+    public void RemoveDamageImmunity(string source) {
+        if (string.IsNullOrEmpty(source)) {
+            return;
+        }
+
+        damageImmunitySources.Remove(source);
+    }
+
+    public bool IsDamageImmune() {
+        return damageImmunitySources.Count > 0;
+    }
+
+    protected virtual float CalculateReducedHP(Damage damage, Transform damageDealer) {
+        float mitigation = stats.GetArmorMitigation();
+        float finalDamage = damage.value * (1 - mitigation);
+        return finalDamage * GetDamageTakenMultiplier();
+    }
+
+    private Vector2 CalculateKnockback(float reducedHP, Transform damageDealer) {
+        int knockbackDir = transform.position.x > damageDealer.position.x ? 1 : -1;
+        Vector2 knockback = IsHeavyDamage(reducedHP) ? onHeavyDamageKnockback : onDamageKnockback;
+
+        return new Vector2(knockbackDir * knockback.x, knockback.y);
+    }
+
+    private float CalculateDuration(float reducedHP) {
+        return IsHeavyDamage(reducedHP) ? heavyKnockbackDuration : knockbackDuration;
+    }
+
+    private bool IsHeavyDamage(float reducedHP) {
+        float healthPercentageTaken = reducedHP / stats.GetMaxHP();
+        return healthPercentageTaken > heavyDamageThreshold;
+    }
+
+    public float Healing(float healingHP) {
+        if (isDead) {
+            return 0;
+        }
+
+        float overflowingHP = 0;
+        currentHP += healingHP;
+
+        if (currentHP > stats.GetMaxHP()) {
+            overflowingHP = currentHP - stats.GetMaxHP();
+            currentHP = stats.GetMaxHP();
+        }
+    
+        OnHealthUpdate?.Invoke();
+
+        return overflowingHP;
+    }
+
+    public virtual void ReduceHP(float reducedHP) {
+        if (isDead || IsDamageImmune()) {
+            return;
+        }
+
+        currentHP -= reducedHP;
+
+        if (currentHP <= 0.5) {
+            currentHP = 0;
+            Die();
+        }
+        
+        OnHealthUpdate?.Invoke();
+    }
+
+    private void Die() {
+        if (canRevival) {
+            Revival();
+            return;
+        }
+
+        isDead = true;
+        entity.EntityDeath();
+    }
 
     public void StartDeathPrevention(float reviveHPMultiplier) {
+        hasRevived = false;
         canRevival = true;
         this.reviveHPMultiplier = reviveHPMultiplier;
     }
@@ -60,49 +195,11 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         canRevival = false;
     }
 
-    public void StartDot(float damage, float dotInterval, float duration) {
-        if (dotCo != null) {
-            StopCoroutine(dotCo);
-        }
-
-        dotCo = StartCoroutine(DotCo(damage, dotInterval, duration));
-    }
-
-    public void StopDot() {
-        if (dotCo != null) {
-            StopCoroutine(dotCo);
-        }
-    }
-
-    private IEnumerator DotCo(float damage, float dotInterval, float duration) {
-        float timeTracker = 0;
-
-        while (timeTracker < duration) {
-            ReduceHP(damage);
-            vfx.PlayOnDamageVFX();
-            yield return new WaitForSeconds(dotInterval);
-            timeTracker += dotInterval;
-        }
-    }
- 
-    public virtual void TakeDamage(Damage damage, Transform damageDealer) {
-        if (isDead) {
-            return;
-        }
-
-        float finalDamage = CalculateFinalDamage(damage);
-        ReduceHP(finalDamage);
-
-        Vector2 knockback = CalculateKnockback(finalDamage, damageDealer);
-        float duration = CalculateDuration(finalDamage);
-        entity.ReceiveKnockback(knockback, duration);
-
-        vfx.PlayOnDamageVFX();
-    }
-
-    private float CalculateFinalDamage(Damage damage) {
-        float mitigation = stats.GetArmorMitigation();
-        return damage.value * (1 - mitigation);
+    private void Revival() {
+        currentHP = stats.GetMaxHP() * reviveHPMultiplier;
+        hasRevived = true;
+        canRevival = false;
+        OnHealthUpdate?.Invoke();
     }
 
     public void IncreaseMaxHP(float bonusMaxHP, string source) {
@@ -114,8 +211,8 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         OnHealthUpdate?.Invoke();
     }
 
-    public void DecreaseMaxHP(float reduceMaxHP, string source) {
-        stats.maxHP.AddModifier(-reduceMaxHP, source);
+    public void DecreaseMaxHP(float reducedMaxHP, string source) {
+        stats.maxHP.AddModifier(-reducedMaxHP, source);
         if (currentHP > stats.GetMaxHP()) {
             currentHP = stats.GetMaxHP();
         }
@@ -123,39 +220,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
             currentHP = 0;
         }
         OnHealthUpdate?.Invoke();
-    }
-
-    public void Healing(float healingHP) {
-        currentHP += healingHP;
-
-        if (currentHP > stats.GetMaxHP()) {
-            currentHP = stats.GetMaxHP();
-        }
-
-        OnHealthUpdate?.Invoke();
-    }
-
-    protected void ReduceHP(float damage) {
-        currentHP -= damage;
-
-        if (currentHP <= 0) {
-            currentHP = 0;
-            Die();
-        }
-        
-        OnHealthUpdate?.Invoke();
-    }
-
-    private void Die() {
-        if (canRevival) {
-            float reviveHP = stats.GetMaxHP() * reviveHPMultiplier;
-            Healing(reviveHP);
-            canRevival = false;
-            return;
-        }
-
-        isDead = true;
-        entity.EntityDeath();
     }
 
     private void UpdateHealthBar() {
@@ -170,22 +234,6 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         healthBar?.gameObject.SetActive(enable);
     }
 
-    private Vector2 CalculateKnockback(float damage, Transform damageDealer) {
-        int knockbackDir = transform.position.x > damageDealer.position.x ? 1 : -1;
-        Vector2 knockback = IsHeavyDamage(damage) ? onHeavyDamageKnockback : onDamageKnockback;
-
-        return new Vector2(knockbackDir * knockback.x, knockback.y);
-    }
-
-    private float CalculateDuration(float damage) {
-        return IsHeavyDamage(damage) ? heavyKnockbackDuration : knockbackDuration;
-    }
-
-    private bool IsHeavyDamage(float damage) {
-        float healthPercentageTaken = damage / stats.GetMaxHP();
-        return healthPercentageTaken > heavyDamageThreshold;
-    }
-
     public float GetCurrentHP() {
         return currentHP;
     }
@@ -198,8 +246,7 @@ public class EntityHealth : MonoBehaviour, IDamageable {
         return initialMaxHP;
     }
 
-    public void SetCurrentHP(float HP)
-    {
+    public void SetCurrentHP(float HP) {
         currentHP = Mathf.Clamp(HP, 0, stats.GetMaxHP());
         isDead = currentHP <= 0;
         OnHealthUpdate?.Invoke();

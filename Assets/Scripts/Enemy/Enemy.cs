@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-public class Enemy : Entity, ISlowable, ICounterable {
+public class Enemy : Entity, ICounterable {
     public EntityStats stats { get; private set; }
     public EnemyHealth health { get; private set; }
     public EnemyCombat combat { get; private set; }
     public EnemyVFX vfx { get; private set; }
+    public EnemySFX sfx { get; private set; }
 
     public EnemyIdleState idleState;
     public EnemyMoveState moveState;
@@ -18,11 +19,15 @@ public class Enemy : Entity, ISlowable, ICounterable {
     [Header("Battle info")]
     public float battleMoveSpeed = 3;
     public float attackDistance = 2;
-    public float preAttackDuration = 0.5f;
+    public float attackWindup = 0.5f;
     public float attackCooldown = 0.5f;
     public float battleDuration = 5;
     public float minRetreatDistance = 1;
     public Vector2 quickRetreatSpeed = new Vector2(5, 3);
+
+    public float currentWindup { get; private set; }
+    public float currentCooldown { get; private set; }
+    public EnemyState currentAttack { get; private set; }
 
     [Header("Stunned info")]
     public Vector2 stunnedSpeed = new Vector2(7, 7);
@@ -44,9 +49,6 @@ public class Enemy : Entity, ISlowable, ICounterable {
     private bool inAttackWindow = false;
     public bool InAttackWindow => inAttackWindow;
 
-    private bool onPhaseDebuff = false;
-    private Coroutine phaseDebuffCo;
-
     private Coroutine enterBattleStateWithDelayCo;
 
     protected override void Awake() {
@@ -56,6 +58,7 @@ public class Enemy : Entity, ISlowable, ICounterable {
         health = GetComponent<EnemyHealth>();
         combat = GetComponent<EnemyCombat>();
         vfx = GetComponent<EnemyVFX>();
+        sfx = GetComponent<EnemySFX>();
     }
 
     protected override void Start() {
@@ -70,56 +73,21 @@ public class Enemy : Entity, ISlowable, ICounterable {
         base.Update();
     }
 
-    public virtual void SpecialAttack() {}
-
-    public void 
-        ApplyPhaseDebuff(float debuffDuration, float damageReduction, float armorReduction) {
-        if (onPhaseDebuff) {
-            return;
-        }
-
-        if (phaseDebuffCo != null) {
-            StopCoroutine(phaseDebuffCo);
-        }
-
-        phaseDebuffCo = 
-            StartCoroutine(PhaseDebuffCo(debuffDuration, damageReduction, armorReduction));
+    public void SetAttack(float windup, float cooldown, EnemyState attack) {
+        currentWindup = windup;
+        currentCooldown = cooldown;
+        currentAttack = attack;
     }
 
-    private IEnumerator 
-        PhaseDebuffCo(float debuffDuration, float damageReduction, float armorReduction) {
-        StartPhaseDebuff(damageReduction, armorReduction);
-        yield return new WaitForSeconds(debuffDuration);
-        EndPhaseDebuff();
+    public virtual void SpecialAttack() {
+        sfx?.PlaySpecialAttack1();
     }
 
-    private void StartPhaseDebuff(float damageReduction, float armorReduction) {
-        onPhaseDebuff = true;
-        stats.damage.AddModifier(-damageReduction, "WeaknessMarking");
-        stats.armor.AddModifier(-armorReduction, "WeaknessMarking");
-    }
-
-    private void EndPhaseDebuff() {
-        onPhaseDebuff = false;
-        stats.damage.RemoveModifier("WeaknessMarking");
-        stats.armor.RemoveModifier("WeaknessMarking");
-    }
-
-    public void SlowDown(float slowDownPercentage) {
-        tc.SetLocalTimeScale(1 - slowDownPercentage);
-        anim.speed = 1 - slowDownPercentage;
-    }
-
-    public void RecoverSpeed() {
-        tc.ResetLocalTimeScale();
-        anim.speed = 1;
-    }
-
-    public bool CanBeCountered() {
+    public virtual bool CanBeCountered() {
         return InAttackWindow;
     }
     
-    public void HandleCounter() {
+    public virtual void HandleCounter() {
         stateMachine.ChangeState(stunnedState);
     }
 
@@ -143,21 +111,21 @@ public class Enemy : Entity, ISlowable, ICounterable {
 
     public void TryToEnterBattleState(Transform player) {
         if (stateMachine.currentState == idleState || stateMachine.currentState == moveState) {
-            EnterBattleStateWithDelay(player);
+            this.player = player;
+            EnterBattleStateWithDelay();
         }
     }
 
-    private void EnterBattleStateWithDelay(Transform player) {
+    private void EnterBattleStateWithDelay() {
         if (enterBattleStateWithDelayCo != null) {
             StopCoroutine(enterBattleStateWithDelayCo);
         }
 
-        enterBattleStateWithDelayCo = StartCoroutine(EnterBattleStateWithDelayCo(player));
+        enterBattleStateWithDelayCo = StartCoroutine(EnterBattleStateWithDelayCo());
     }
 
-    private IEnumerator EnterBattleStateWithDelayCo(Transform player) {
+    private IEnumerator EnterBattleStateWithDelayCo() {
         yield return new WaitForEndOfFrame();
-        this.player = player;
         stateMachine.ChangeState(battleState);
     }
 

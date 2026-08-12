@@ -8,10 +8,17 @@ public class UI_StatSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI statName;
     [SerializeField] private TextMeshProUGUI statValue;
 
-    [SerializeField] private EntityStats entityStats;
+    private PlayerStats playerStats;
 
     private void Start() 
     {
+        FindPlayerStat();
+        UpdateStatValue();
+    }
+
+    private void OnEnable()
+    {
+        FindPlayerStat();
         UpdateStatValue();
     }
 
@@ -21,30 +28,38 @@ public class UI_StatSlot : MonoBehaviour
         statName.text = GetStatNameByType(statType);
     }
 
+    private void FindPlayerStat()
+    {
+        if (Player.instance != null)
+        {
+            playerStats = Player.instance.stats;
+        }
+    }
+
     public void UpdateStatValue() 
     {
-        if (entityStats == null) return;
+        if (playerStats == null) return;
 
         float value = 0f;
         switch (statType) 
         {
             case StatType.MaxHealth:
-                value = entityStats.maxHP.GetValue();
+                value = playerStats.GetMaxHP();
                 break;
             case StatType.Damage:
-                value = entityStats.damage.GetValue(); // Get base damage without crit
+                value = playerStats.damage.GetValue(); // Get base damage without crit
                 break;
             case StatType.CritChance:
-                value = entityStats.critChance.GetValue();
+                value = Mathf.Clamp(playerStats.critChance.GetValue(), 0, 100);
                 break;
             case StatType.CritPower:
-                value = entityStats.critPower.GetValue() * 100;
+                value = playerStats.critPower.GetValue() * 100;
                 break;
             case StatType.ArmorReduction:
-                value = entityStats.GetArmorMitigation() * 100; // Convert to percentage
+                value = playerStats.GetArmorMitigation() * 100; // Convert to percentage
                 break;
             case StatType.Armor:
-                value = entityStats.armor.GetValue();
+                value = playerStats.armor.GetValue();
                 break;
         }
         statValue.text = value.ToString("F1"); // Format to 1 decimal place

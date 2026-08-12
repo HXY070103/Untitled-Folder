@@ -46,54 +46,78 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb984b9659922422289d138524dd1324, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillTimeControl
-  skillName: TimeControl
+  skillName: Time Control
   skillType: 0
   description: Creates a domain that slows down enemies and enemy projectiles within
     its area.
   upgrades:
-  - upgradeName: Temporal Freeze
-    description: Enemies within the field are immobilized
+  - upgradeName: Temporal Corrosion
+    description: Enemies within the field take continuous damage over time
     unlocked: 0
-  - upgradeName: Hunting Time
-    description: Killing enemies during the skill extends its duration
+  - upgradeName: Vulnerable Field
+    description: Enemies within the field gain vulnerable effect.
     unlocked: 0
   - upgradeName: Synchronized Field
     description: "The field follows the player\u2019s movement"
     unlocked: 0
-  - upgradeName: Temporal Corrosion
-    description: Enemies within the field take continuous damage over time
-    unlocked: 0
-  - upgradeName: Precision Targeting
-    description: The first attack against each enemy during the skill deals increased
-      damage
+  - upgradeName: Hunting Time
+    description: Killing enemies during the skill extends its duration
     unlocked: 0
   betterUpgrades:
-  - upgradeName: Stable
-    description: use 2 times of skill will increase 1 skill decay
+  - upgradeName: Temporal Corrosion+
+    description: Enemies take a burst of damage when entering the field, but no longer
+      take continuous damage afterward.
     unlocked: 0
-  - upgradeName: Calm Fight
-    description: 'if player is not injured during the skill duration, then this skill
-      will not increase skill decay '
+  - upgradeName: Vulnerable Field+
+    description: Enemies inside the field have their armor reduced to zero and gain
+      vulnerable effect.
     unlocked: 0
-  - upgradeName: Fixed Rate
-    description: (manual exclusive with Fixed Time) skill decay will not decrease
-      the rate of slow
+  - upgradeName: Synchronized Field+
+    description: "The field follows the player\u2019s movement, after the domain
+      is moved, its effect will still persist in the original location for a short
+      period of time."
     unlocked: 0
-  - upgradeName: Fixed Time
-    description: (manual exclusive with Fixed Rate) skill decay will not decrease
-      the skill dutation
+  - upgradeName: Hunting Time+
+    description: Killing enemies during the skill extends its duration and releases
+      a small time shockwave from the dead enemy, damaging nearby enemies.
+    unlocked: 0
+  - upgradeName: Stasis Field
+    description: Enemies inside the field stop moving and acting.
+    unlocked: 0
+  skillPhaseUpgrades:
+  - upgradeName: 2 Upgrades
+    description: Increase 20% of skill effect
+    unlocked: 0
+  - upgradeName: 4 Upgrades
+    description: Using 2 times of skill will only increase 1 skill decay
+    unlocked: 0
+  - upgradeName: 6 Upgrades
+    description: All major attribute (except skill effect) increase 10%
+    unlocked: 0
+  - upgradeName: Full Upgrades
+    description: All major attribute (except skill effect) increase 20%
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 6596648338181236841}
+  numOfUpgradesGet: 0
   cooldown: 3
   skillDuration: 3
   domainPrefab: {fileID: 8066122577892052930, guid: df04f63a1809d442482117ff6dbc340b, type: 3}
   maxSize: 20
   slowDownPercentage: 0.8
-  bonusDuration: 1
+  expandSpeed: 2
+  damage: 5
+  damageInterval: 0.5
   damageMultiplier: 2
-  playerHealth: {fileID: 647535936263750144}
+  reducedMaxSize: 10
+  increasedSkillDuration: 4
+  recoverSpeedDelay: 1
+  bonusDuration: 1
+  shockwavePrefab: {fileID: 6733579660901800008, guid: 591a11b8c1d1140baa78a5a3c65a488e, type: 3}
+  shockwaveDamage: 20
+  shockwaveDamageRange: 3
+  shockwaveDestoryDelay: 1
 --- !u!114 &227365949848170611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -106,68 +130,84 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f9a7963389fc4c7d93ef5f322651f4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SkillLifeSteal
-  skillName: life steal
+  skillName: Life steal
   skillType: 1
   description: heal yourself after the skill end. The more damage you make, the higher
     healing amount you have.
   upgrades:
-  - upgradeName: Unshakable Resolve
-    description: If the player takes fatal damage during the skill, instantly restore
-      20% max HP, but cannot heal after the skill ends
-    unlocked: 0
   - upgradeName: Stable Gain
-    description: Restores HP over time during the skill, but cannot heal after the
-      skill ends
+    description: 'Restores HP over time during the skill instead of after skill.
+      (the amount is still related to damage) '
     unlocked: 0
   - upgradeName: Desperate Gambit
-    description: Damage conversion ratio increases as HP decreases during the skill
+    description: During the skill, the lower the HP, the higher the conversion rate.
     unlocked: 0
   - upgradeName: Blood Growth
     description: If post-skill healing exceeds 20% max HP, permanently increases
       max HP
     unlocked: 0
-  - upgradeName: Blood Frenzy
-    description: Increases damage taken during the skill, but also increases damage
-      and attack speed
+  - upgradeName: Overflowing Aegis
+    description: "During the skill, part of the player\u2019s excess healing is converted
+      into a shield."
     unlocked: 0
   betterUpgrades:
-  - upgradeName: Stable
-    description: use 2 times of skill will increase 1 skill decay
+  - upgradeName: Stable Gain+
+    description: 'Restores HP over time during the skill instead of after skill and
+      gains a shield when the skill starts. (the amount is still related to damage) '
     unlocked: 0
-  - upgradeName: Blood Back
-    description: if you heal enough amount of HP by this skill during skill duration,
-      then this skill will not increase skill decay
+  - upgradeName: Desperate Gambit+
+    description: "During the skill, the lower the player\u2019s health, the higher
+      the conversion rate, damage, and attack speed."
     unlocked: 0
-  - upgradeName: Fixed Time
-    description: '(mutual exclusive with Fixed Blood)
-
-      skill decay will not
-      decrease the skill duration'
+  - upgradeName: Blood Growth+
+    description: If the healing amount exceeds 20% of max health, increase max health,
+      armor, and attack.
     unlocked: 0
-  - upgradeName: Fixed Blood
-    description: '(mutual exclusive with Fixed Time)
-
-      skill decay will not
-      decrease the ratio of healing by making damage '
+  - upgradeName: Overflowing Aegis+
+    description: During the skill, part of excess healing becomes a shield. While
+      the shield exists, the player gains increased damage and attack speed.
+    unlocked: 0
+  - upgradeName: Deathbound Bargain
+    description: If the player takes fatal damage while the skill is active, they
+      immediately recover to 20% max health, but lose the ability to recover health
+      after the skill ends.
+    unlocked: 0
+  skillPhaseUpgrades:
+  - upgradeName: 2 Upgrades
+    description: Increase 20% of skill effect
+    unlocked: 0
+  - upgradeName: 4 Upgrades
+    description: Using 2 times of skill will only increase 1 skill decay
+    unlocked: 0
+  - upgradeName: 6 Upgrades
+    description: All major attribute (except skill effect) increase 10%
+    unlocked: 0
+  - upgradeName: Full Upgrades
+    description: All major attribute (except skill effect) increase 20%
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 6596648338181236841}
+  numOfUpgradesGet: 0
   cooldown: 3
   skillDuration: 3
+  conversionRate: 0.3
   fireVFXPrefab: {fileID: 542231612166665799, guid: c12cd4a7ea7a9484390840497b37ed0c, type: 3}
   fireballPrefab: {fileID: 3718646501417209727, guid: 6b278988086d54af5bd66d7117ea45ea, type: 3}
-  conversionRate: 0.3
   minFireballGenerationRadius: 1.5
   maxFireballGenerationRadius: 2
   fireballAmount: 5
-  reviveHPMultiplier: 0.2
+  temporaryShield: 50
   maxConversionRate: 2
+  maxDamageMultiplier: 2
+  maxAttackSpeedMultiplier: 2
   healingHPThreshold: 0.2
   bonusMaxHP: 10
-  damageTakenMultiplier: 2
-  damageApplyMultiplier: 2
-  attackAnimSpeedMultiplier: 1.5
+  bonusArmor: 30
+  bonusDamage: 15
+  damageMultiplier: 2
+  attackSpeedMultiplier: 1.5
+  reviveHPMultiplier: 0.2
   amountOfBloodBack: 10
 --- !u!114 &3761224169217502582
 MonoBehaviour:
@@ -188,53 +228,80 @@ MonoBehaviour:
     speed. If the player attacks, the phase state ends immediately. If the player
     times the phase just before an enemy attack, a perfect phase is triggered.
   upgrades:
-  - upgradeName: Shadow Assassination
-    description: Converts heavy strike into a lethal strike
-    unlocked: 0
-  - upgradeName: Weakness Marking
-    description: Passing through enemies during phase reduces their damage and armor
-    unlocked: 0
-  - upgradeName: Shadow Execution
-    description: After killing an enemy with a heavy strike, briefly re-enter phase
+  - upgradeName: Perfect Echo
+    description: Restores a portion of HP when Perfect Phase is triggered
     unlocked: 0
   - upgradeName: Chain Strikes
     description: After triggering Perfect Phase, the next 3 attacks become heavy
       strikes
     unlocked: 0
-  - upgradeName: Perfect Echo
-    description: Restores a portion of HP when Perfect Phase is triggered
+  - upgradeName: Weakness Marking
+    description: Passing through enemies during phase reduces their damage and armor
+    unlocked: 0
+  - upgradeName: Shadow Assassination
+    description: Heavy strikes after phasing execute normal enemies below 50% health.
+      If a perfect phase was triggered, the threshold increases by 10%. Deals bonus
+      damage to elites and bosses.
     unlocked: 0
   betterUpgrades:
-  - upgradeName: Stable
-    description: use 2 times of skill will increase 1 skill decay
+  - upgradeName: Perfect Echo+
+    description: "Restore part of the player\u2019s health when the skill ends, even
+      without triggering a perfect phase."
     unlocked: 0
-  - upgradeName: Perfect Timing
-    description: If you make perfect phase, then this skill will not increase skill
-      decay
+  - upgradeName: Chain Strikes+
+    description: When the skill ends, the next three attacks become heavy strikes,
+      even without triggering a perfect phase.
     unlocked: 0
-  - upgradeName: Fixed Time
-    description: (manual exclusive with Fixed Attack) skill decay will not decrease
-      the skill duration
+  - upgradeName: Weakness Marking+
+    description: Passing through enemies while phased reduces their damage and armor
+      and also deals damage to them.
     unlocked: 0
-  - upgradeName: Fixed Attack
-    description: (manual exclusive with Fixed Time) skill decay will not decrease
-      the rate of heavy attack
+  - upgradeName: Shadow Assassination+
+    description: Heavy strikes after phasing execute normal enemies below 75% health.
+      If a perfect phase was triggered, the threshold increases by 10%. Deals increased
+      damage to elites and bosses.
+    unlocked: 0
+  - upgradeName: Chain Phantasm
+    description: Killing an enemy with a heavy strike makes the player enter a short
+      phase again.
+    unlocked: 0
+  skillPhaseUpgrades:
+  - upgradeName: 2 Upgrades
+    description: Increase 20% of skill effect
+    unlocked: 0
+  - upgradeName: 4 Upgrades
+    description: Using 2 times of skill will only increase 1 skill decay
+    unlocked: 0
+  - upgradeName: 6 Upgrades
+    description: All major attribute (except skill effect) increase 10%
+    unlocked: 0
+  - upgradeName: Full Upgrades
+    description: All major attribute (except skill effect) increase 20%
     unlocked: 0
   decreaseRate: []
   decreaseIndex: 0
   playerSkillManager: {fileID: 6596648338181236841}
+  numOfUpgradesGet: 0
   cooldown: 3
   skillDuration: 3
   hurtCheckerPrefab: {fileID: 5438744945553926496, guid: 2ecd1dda1b74f4093bb4e3002ce09fa7, type: 3}
-  damageMultiplier: 3
+  damageMultiplier: 2
   speedUpPercentage: 1.5
   perfectPhaseWindow: 0.2
   lockAttackDuration: 0.5
   heavyAttackExpiryTime: 10
-  phaseTrackerPrefab: {fileID: 6660558275766549021, guid: 91ac758a1168f48fbbc4f2bdde2f770c, type: 3}
-  bonusPhaseDuration: 1
+  heavyAttackSpeed: 15
+  bonusHP: 15
   bonusNumOfHeavyAttack: 3
-  bonusHP: 10
+  phaseTrackerPrefab: {fileID: 6660558275766549021, guid: 91ac758a1168f48fbbc4f2bdde2f770c, type: 3}
+  damageReduction: 10
+  armorReduction: 50
+  damage: 15
+  HPThreshold: 0.5
+  bonusDamage: 50
+  betterHPThreshold: 0.75
+  betterBonusDamage: 75
+  bonusPhaseDuration: 1.5
 --- !u!1 &1778650543145547617
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,6 +454,135 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!1 &3385876081435240952
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5021924509808447512}
+  - component: {fileID: 4155842146509722893}
+  m_Layer: 7
+  m_Name: Player_AudioSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5021924509808447512
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3385876081435240952}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 992911486667862172}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &4155842146509722893
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3385876081435240952}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 7484521714579760495, guid: 5cdfaddeea5ae4026ab21e51d06a6e31, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &3941252506544845199
 GameObject:
   m_ObjectHideFlags: 0
@@ -682,7 +878,7 @@ Transform:
   m_GameObject: {fileID: 6697198589784538443}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -706,6 +902,7 @@ GameObject:
   - component: {fileID: 6596648338181236841}
   - component: {fileID: 1461506367493400771}
   - component: {fileID: 349123701873148730}
+  - component: {fileID: 1272073264569645138}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -732,6 +929,7 @@ Transform:
   - {fileID: 8405379681717362425}
   - {fileID: 3571270377476917474}
   - {fileID: 1720185024856158765}
+  - {fileID: 5021924509808447512}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4431231088022951373
@@ -769,7 +967,6 @@ MonoBehaviour:
   groundCheck: {fileID: 992911486667862172}
   primaryWallCheck: {fileID: 2669218348541001370}
   secondaryWallCheck: {fileID: 2602347302397761122}
-  heavyAttackSpeed: {x: 10, y: 1.5}
   jumpAttackSpeed: {x: 5, y: -6}
   attackSpeed:
   - {x: 3, y: 1.5}
@@ -777,10 +974,10 @@ MonoBehaviour:
   - {x: 4, y: 5}
   attackMovementDuration: 0.1
   comboResetTime: 0.5
-  attackAnimSpeedMultiplier: 1
   moveSpeed: 8
   jumpSpeed: 12
-  wallJumpSpeed: {x: 6, y: 12}
+  wallJumpDuration: 0.2
+  wallJumpSpeed: {x: 6, y: 15}
   inAirMoveMultiplier: 0.8
   wallSlideMultiplier: 0.7
   dashDuration: 0.25
@@ -798,15 +995,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6397b8be5204d4ebedd89e2829aa4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
+  targetCheck: {fileID: 8405379681717362425}
   targetCheckRadius: 1.39
   whatIsTarget:
     serializedVersion: 2
     m_Bits: 256
-  targetCheck: {fileID: 8405379681717362425}
   counterRecoveryDuration: 0.25
   whatIsCounterable:
     serializedVersion: 2
     m_Bits: 768
+  bossCounterCheckRadius: 3.5
 --- !u!114 &647535936263750144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -822,14 +1020,18 @@ MonoBehaviour:
   isDead: 0
   currentHP: 0
   initialMaxHP: 100
-  isOnShotKillable: 1
+  isExecutable: 0
   onDamageKnockback: {x: 1.5, y: 2.5}
   knockbackDuration: 0.2
   heavyDamageThreshold: 0.3
   onHeavyDamageKnockback: {x: 7, y: 7}
   heavyKnockbackDuration: 0.5
   miniHealthBarActive: 0
-  isAttacked: 0
+  shieldManager:
+    temporaryShield: 0
+    hasTemporaryShield: 0
+    permanentShield: 0
+    hasPermanentShield: 0
 --- !u!114 &3170532416984032037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -842,6 +1044,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1597de2df00e64cbdbd721dea216c5d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerVFX
+  targetAlpha: 0.2
+  fadeSpeed: 2
+  fadeInterval: 0.05
   particleEffectPrefab: {fileID: 3610103665276591283, guid: 8cbceace5e693410a8204f97d5b1f78b, type: 3}
   imageEchoInterval: 0.05
   imageEchoVFXPrefab: {fileID: 2270825432934318720, guid: 4f1f4f8826d734b10b1ba186c9e19441, type: 3}
@@ -850,9 +1055,8 @@ MonoBehaviour:
   onHitVFXColor: {r: 1, g: 1, b: 1, a: 1}
   onHitVFX: {fileID: 5953624181700168470, guid: fbf7736ac8b544e21a520ca06cb4b23a, type: 3}
   onCritHitVFX: {fileID: 1321752846314756928, guid: b9426da7f34ab4e6dac992440f1c4583, type: 3}
-  targetAlpha: 0.2
-  fadeSpeed: 2
-  fadeInterval: 0.05
+  globalPauseScale: 0.1
+  globalPauseDuration: 0.5
 --- !u!114 &3690069604150053797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -865,31 +1069,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c689b46d32aa4fef876888f6c08311f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
-  defaultStatSetup: {fileID: 11400000, guid: b970993ca290b4cf4a0ece4687e71472, type: 2}
   maxHP:
     baseValue: 100
     modifiers: []
+    multipliers: []
   damage:
-    baseValue: 50
+    baseValue: 20
     modifiers: []
+    multipliers: []
   critPower:
     baseValue: 2
     modifiers: []
+    multipliers: []
   critChance:
-    baseValue: 20
+    baseValue: 10
     modifiers: []
+    multipliers: []
   armor:
     baseValue: 0
     modifiers: []
+    multipliers: []
   skillEffect:
     baseValue: 1
     modifiers: []
+    multipliers: []
+  attackSpeed:
+    baseValue: 1
+    modifiers: []
+    multipliers: []
   bonusMaxHP: 20
   bonusDamage: 30
   bonusCritPower: 0.5
   bonusCritChance: 10
   bonusArmor: 40
   bonusSkillEffect: 0.4
+  level2Skill: 1.2
+  level6Skill: 1.1
+  levelFullSkill: 1.2
 --- !u!114 &6596648338181236841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -969,6 +1185,29 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.33}
   m_Size: {x: 0.77, y: 1.95}
   m_Direction: 0
+--- !u!114 &1272073264569645138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6844751359712701909}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cce91f91697054a46a1469af6e4d834a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSFX
+  showDraw: 0
+  attackHit: Player_AttackHit
+  attackMiss: Player_AttackMiss
+  move: Player_Move
+  death: Player_Death
+  soundDistacne: 15
+  moveSFXInterval: 0.35
+  dash: Player_Dash
+  jump: Player_Jump
+  jumpland: Player_JumpLand
+  conterAttack: Player_CounterAttack
 --- !u!1 &7984176650190143286
 GameObject:
   m_ObjectHideFlags: 0

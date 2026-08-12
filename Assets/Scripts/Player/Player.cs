@@ -8,6 +8,7 @@ public class Player : Entity {
 
     public PlayerInputSet input { get; private set; }
     public PlayerVFX vfx { get; private set; }
+    public PlayerSFX sfx { get; private set; }
     public PlayerSkillManager skillManager { get; private set; }
     public PlayerStats stats { get; private set; }
     public PlayerHealth health { get; private set; }
@@ -27,27 +28,22 @@ public class Player : Entity {
     public PlayerHeavyAttackState heavyAttackState { get; private set; }
 
     [Header("Attack info")]
-    public Vector2 heavyAttackSpeed = new Vector2(5, 1.5f);
     public Vector2 jumpAttackSpeed = new Vector2(5, -6);
     public Vector2[] attackSpeed;
     public float attackMovementDuration = 0.1f;
     public float comboResetTime = 0.5f;
-    public float attackAnimSpeedMultiplier = 1;
     
     private Coroutine queueAttackCo;
     private Coroutine setHeavyAttackCo;
-    private bool isHeavyAttack = false;
+
+    public bool isHeavyAttack { get; private set; } = false;
+    public bool canAttack {get; private set; } = true;
     private int numOfHeavyAttack = 0;
-    private bool canAttack = true;
-
-    public bool IsHeavyAttack => isHeavyAttack;
-    public int NumOfHeavyAttack => numOfHeavyAttack;
-    public bool CanAttack => canAttack;
-
 
     [Header("Movement info")]
     public float moveSpeed = 8;
     public float jumpSpeed = 12;
+    public float wallJumpDuration = 0.2f;
     public Vector2 wallJumpSpeed = new Vector2(6, 12);
     [Range(0, 1)]
     public float inAirMoveMultiplier = 0.8f;
@@ -70,6 +66,7 @@ public class Player : Entity {
         health = GetComponent<PlayerHealth>();
         combat = GetComponent<PlayerCombat>();
         vfx = GetComponent<PlayerVFX>();
+        sfx = GetComponent<PlayerSFX>();
         skillManager = GetComponent<PlayerSkillManager>();
 
         idleState = new PlayerIdleState(this, stateMachine, "Idle");
@@ -100,6 +97,19 @@ public class Player : Entity {
         return Time.time < lastTimeDashed + dashCooldown;
     }
 
+    private float GetCurrentCooldown() {
+        if (Time.time < lastTimeDashed)
+        {
+            return dashCooldown;
+        }
+        return Mathf.Max(0, dashCooldown - (Time.time - lastTimeDashed));
+    }
+
+    public float GetReaminCooldown()
+    {
+        return GetCurrentCooldown();
+    }
+
     public override void EntityDeath() {
         base.EntityDeath();
 
@@ -110,17 +120,8 @@ public class Player : Entity {
         stateMachine.ChangeState(deadState);
     }
 
-    public void TeleportPlayer(Vector3 position)
-    {
+    public void TeleportPlayer(Vector3 position) {
         transform.position = position;
-    }
-
-    public void IncreaseAttackSpeed(float attackAnimSpeedMultiplier) {
-        this.attackAnimSpeedMultiplier = attackAnimSpeedMultiplier;
-    }
-
-    public void ResetAttackSpeed() {
-        attackAnimSpeedMultiplier = 1;
     }
 
     public void SpeedUp(float speedUpPercentage) {

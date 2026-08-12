@@ -12,13 +12,6 @@ public class PlayerJumpAttackState : PlayerState {
     public override void Enter() {
         base.Enter();
 
-        if (player.IsHeavyAttack) {
-            phase.InterruptSkill();
-            IncreaseDamage();
-            HandleInstantKill();
-            StartHandleBonusPhase();
-        }
-
         touchedGround = false;
         player.Move(player.facingDir * player.jumpAttackSpeed.x, player.jumpAttackSpeed.y);
     }
@@ -39,41 +32,6 @@ public class PlayerJumpAttackState : PlayerState {
 
     public override void Exit() {
         base.Exit(); 
-
-        if (player.IsHeavyAttack) {
-            ResetDamage();
-            player.UpdateHeavyAttack();
-            EndHandleBonusPhase();
-        }
-    }
-
-    private void StartHandleBonusPhase() {
-        if (phase.UnLocked("Shadow Execution")) {
-            phase.EnableBonusPhase();
-        }
-    }
-
-    private void EndHandleBonusPhase() {
-        if (phase.UnLocked("Shadow Execution")) {
-            phase.DisableBonusPhase();
-            phase.TryToEnterBonusPhase();
-        }
-    }
-
-    private void HandleInstantKill() {
-        if (phase.UnLocked("Shadow Assassination")) {
-            player.combat.SetNextAttackToInstantKill();
-        }
-    }
-
-    private void IncreaseDamage() {
-        float baseDamage = player.stats.damage.GetValue();
-        float bonusDamage = baseDamage * (phase.GetDamageMultiplier() - 1);
-        player.stats.damage.AddModifier(bonusDamage, "HeavyAttack");
-    }
-
-    private void ResetDamage() {
-        player.stats.damage.RemoveModifier("HeavyAttack");
     }
 }
  

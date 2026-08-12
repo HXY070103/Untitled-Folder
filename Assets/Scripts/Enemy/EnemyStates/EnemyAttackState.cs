@@ -6,17 +6,24 @@ public class EnemyAttackState : EnemyState {
 
     public override void Enter() {
         base.Enter();
+
+        enemy.MoveRaw(0, 0);
     }
 
     public override void Update() {
         base.Update();
 
         if (triggerCalled) {
-            stateMachine.ChangeState(enemy.battleState);
+            HandleStateExit();
         }
     }
 
     public override void Exit() {
         base.Exit();
+    }
+
+
+    protected virtual void HandleStateExit() {
+        stateMachine.ChangeState(enemy.battleState);
     }
 }

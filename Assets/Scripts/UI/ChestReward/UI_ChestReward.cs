@@ -28,6 +28,8 @@ public class UI_ChestReward : MonoBehaviour
     private PlayerSkillManager skillManager;
     private Chest currentChest;
     private bool isBetter;
+    private bool mainChoiceCommitted;
+    private bool rewardClaimInProgress;
 
     private void Awake()
     {
@@ -44,6 +46,8 @@ public class UI_ChestReward : MonoBehaviour
         player = playerObj;
         currentChest = chest;
         isBetter = better;
+        mainChoiceCommitted = false;
+        rewardClaimInProgress = false;
 
         vfx = player.GetComponent<PlayerVFX>();
         playerStats = player.GetComponent<PlayerStats>();
@@ -60,6 +64,12 @@ public class UI_ChestReward : MonoBehaviour
         if (skillManager == null)
         {
             Debug.LogError("ChestRewardUI: PlayerSkillManager not found on player.");
+            return;
+        }
+
+        if (playerHealth == null)
+        {
+            Debug.LogError("ChestRewardUI: PlayerHealth not found on player.");
             return;
         }
 
@@ -85,6 +95,12 @@ public class UI_ChestReward : MonoBehaviour
 
     public void ShowUpgrades()
     {
+        if (mainChoiceCommitted || rewardClaimInProgress)
+        {
+            return;
+        }
+        mainChoiceCommitted = true;
+
         mainChoicePanel.SetActive(false);
         purificationPanel.SetActive(false);
         upgradePanel.SetActive(true);
@@ -98,6 +114,17 @@ public class UI_ChestReward : MonoBehaviour
         else
         {
             options = GetRandomUpgradeOptions(3);
+        }
+
+        if (options.Count == 0)
+        {
+            mainChoiceCommitted = false;
+            mainChoicePanel.SetActive(true);
+            upgradePanel.SetActive(false);
+            upgradeChoiceButton.Setup(ShowUpgrades);
+            purificationChoiceButton.Setup(ShowPurification);
+            Debug.LogWarning("ChestRewardUI: No upgrade is currently available; returning to reward choice.");
+            return;
         }
 
         for (int i = 0; i < upgradeOptionUIs.Length; i++)
@@ -116,11 +143,32 @@ public class UI_ChestReward : MonoBehaviour
 
     public void ShowPurification()
     {
+        if (mainChoiceCommitted || rewardClaimInProgress)
+        {
+            return;
+        }
+        mainChoiceCommitted = true;
+        rewardClaimInProgress = true;
+
         mainChoicePanel.SetActive(false);
         upgradePanel.SetActive(false);
         purificationPanel.SetActive(true);
 
         vfx.GenerateParticleEffect(Color.blue);
+        if (skillManager == null)
+        {
+            rewardClaimInProgress = false;
+            mainChoiceCommitted = false;
+            return;
+        }
+        SkillBase skill = skillManager.GetCurrentSkill();
+        if (skill == null)
+        {
+            rewardClaimInProgress = false;
+            mainChoiceCommitted = false;
+            return;
+        }
+        int decayBefore = skill.GetDecayLevel();
         if (isBetter)
         {
             skillManager.GetCurrentSkill().DecreaseDecay(3);
@@ -128,7 +176,8 @@ public class UI_ChestReward : MonoBehaviour
         {
             skillManager.GetCurrentSkill().DecreaseDecay(2);
         }
-
+        int actualDecay = Mathf.Max(decayBefore - skill.GetDecayLevel(), 0);
+        RecordPurficationHistory(actualDecay);
         if (currentChest != null)
         {
             currentChest.ClaimReward();
@@ -146,7 +195,14 @@ public class UI_ChestReward : MonoBehaviour
 
     public void SelectUpgrade(ChestUpgradeOption option)
     {
+        if (option == null || rewardClaimInProgress)
+        {
+            return;
+        }
+        rewardClaimInProgress = true;
+
         option.Apply();
+        RecordUpgradeHistory(option);
         if (currentChest != null)
         {
             currentChest.ClaimReward();
@@ -171,6 +227,7 @@ public class UI_ChestReward : MonoBehaviour
         upgradePanel.SetActive(false);
         purificationPanel.SetActive(false);
         currentChest = null;
+        mainChoiceCommitted = false;
 
         GamePauseManager.Instance.Resume("ChestReward");
     }
@@ -185,6 +242,11 @@ public class UI_ChestReward : MonoBehaviour
 
         List<ChestUpgradeOption> result = new List<ChestUpgradeOption>();
 
+        if (pool.Count == 0 || count <= 0)
+        {
+            return result;
+        }
+
         //for the first one
         int randomIndex = Random.Range(0, pool.Count + playerStats.GetAttributeUpgrades().Length);
         if (randomIndex < 2 * playerStats.GetAttributeUpgrades().Length)
@@ -197,14 +259,28 @@ public class UI_ChestReward : MonoBehaviour
             pool.RemoveAt(randomIndex - playerStats.GetAttributeUpgrades().Length);
         }
         
+        if (result.Count >= count || pool.Count == 0)
+        {
+            return result;
+        }
+
         //for the second one
         randomIndex = Random.Range(0, pool.Count);
         result.Add(pool[randomIndex]);
         pool.RemoveAt(randomIndex);
 
+        if (result.Count >= count || pool.Count == 0)
+        {
+            return result;
+        }
+
         //for the third one
-        while (pool[pool.Count - 1].optionType == ChestUpgradeOptionType.Skill) {
+        while (pool.Count > 0 && pool[pool.Count - 1].optionType == ChestUpgradeOptionType.Skill) {
             pool.RemoveAt(pool.Count - 1);
+        }
+        if (pool.Count == 0)
+        {
+            return result;
         }
         randomIndex = Random.Range(0, pool.Count);
         result.Add(pool[randomIndex]);
@@ -246,6 +322,7 @@ public class UI_ChestReward : MonoBehaviour
             option.attributeUpgrade = upgrade;
             option.playerStats = playerStats;
             option.vfx = vfx;
+            option.isBetter = false;
 
             pool.Add(option);
         }
@@ -271,6 +348,7 @@ public class UI_ChestReward : MonoBehaviour
             option.skill = currentSkill;
             option.skillUpgrade = skillUpgrade;
             option.vfx = vfx;
+            option.isBetter = false;
 
             pool.Add(option);
         }
@@ -299,6 +377,7 @@ public class UI_ChestReward : MonoBehaviour
             option.skill = currentSkill;
             option.skillUpgrade = skillUpgrade;
             option.vfx = vfx;
+            option.isBetter = true;
 
             pool.Add(option);
         }
@@ -306,39 +385,56 @@ public class UI_ChestReward : MonoBehaviour
 
     private bool check(SkillBase skill, SkillUpgradeDisplayData upgrade)
     {
-        if (skill.SkillType == SkillType.LifeSteal)
+        if (!upgrade.upgradeName.Contains("+"))
+            return false;
+        string name = upgrade.upgradeName.Substring(0, upgrade.upgradeName.Length - 1);
+        name = name.TrimEnd();
+        return !skill.Unlocked(name);
+    }
+
+    private void RecordUpgradeHistory(ChestUpgradeOption option)
+    {
+        if (option == null)
         {
-            if (upgrade.upgradeName == "Fixed Time")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Blood");
-            }
-            if (upgrade.upgradeName == "Fixed Blood")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Time");
-            }
+            return;
         }
-        if (skill.SkillType == SkillType.TimeControl)
+        if (HistoryManager.instance == null)
         {
-            if (upgrade.upgradeName == "Fixed Rate")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Time");
-            }
-            if (upgrade.upgradeName == "Fixed Time")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Rate");
-            }
+            return;
         }
-        if (skill.SkillType == SkillType.Phase)
+        if (!HistoryManager.instance.HasActiveRun())
         {
-            if (upgrade.upgradeName == "Fixed Time")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Attack");
-            }
-            if (upgrade.upgradeName == "Fixed Attack")
-            {
-                return skill.UnlockedForBetterUpgrade("Fixed Time");
-            }
+            return;
         }
-        return true;
+        HistoryUpgradeType type;
+        if (option.optionType == ChestUpgradeOptionType.Skill)
+        {
+            type = HistoryUpgradeType.Skill;
+        } else
+        {
+            type = HistoryUpgradeType.Attribute;
+        }
+        bool isSucceed = HistoryManager.instance.RecordUpgrade(option.GetTitle(), option.GetDescription(), type);
+        if (!isSucceed)
+        {
+            Debug.LogWarning("Cannot record upgrade in history");
+        }
+    }
+
+    private void RecordPurficationHistory(int actualDecay)
+    {
+        if (HistoryManager.instance == null)
+        {
+            return;
+        }
+        if (!HistoryManager.instance.HasActiveRun())
+        {
+            return;
+        }
+        bool isSucceed =  HistoryManager.instance.RecordPurification(actualDecay);
+        if (!isSucceed)
+        {
+            Debug.LogWarning("Cannot record purfication in history");
+        }
     }
 }

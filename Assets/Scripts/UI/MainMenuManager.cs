@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,9 +14,14 @@ public class MainMenuManager : MonoBehaviour
     [Header("Panels")]
     [SerializeField] private GameObject confirmNewGamePanel;
     [SerializeField] private GameObject settingPanel;
+    [SerializeField] private UI_Options uI_Options;
 
     [Header("Save")]
     [SerializeField] private string saveFileName = "saveData.json";
+
+    [Header("History")]
+    [SerializeField] private GameObject historyPanel;
+    [SerializeField] private UI_HistoryPanel uI_HistoryPanel;   
 
     private FileDataHandler dataHandler;
 
@@ -36,6 +42,7 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
+        uI_Options.LoadUpVolume();
         RefreshContinueButton();
     }
 
@@ -53,8 +60,26 @@ public class MainMenuManager : MonoBehaviour
         continueButton.interactable = canContinue;
     }
 
+    public void OpenHistoryPanel()
+    {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
+        if (historyPanel == null)
+        {
+            Debug.LogWarning("Not assign history panel");
+            return;
+        }
+        historyPanel.SetActive(true);
+        if (uI_HistoryPanel == null)
+        {
+            Debug.LogWarning("Not assign history UI panel");
+            return;
+        }
+        uI_HistoryPanel.Open();
+    }
+
     public void OnNewGameButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         GameData data = dataHandler.LoadData();
 
         bool hasUnfinishedGame = data != null && data.isGameInProgess;
@@ -74,11 +99,13 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnConfirmNewGameButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         StartNewGame();
     }
 
     public void OnCancelNewGameButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (confirmNewGamePanel != null)
         {
             confirmNewGamePanel.SetActive(false);
@@ -87,6 +114,8 @@ public class MainMenuManager : MonoBehaviour
 
     private void StartNewGame()
     {
+        PrepareHistoryForNewGame();
+
         if (SaveManager.instance != null)
         {
             SaveManager.instance.CreateNewGame(newGameSceneName);
@@ -98,6 +127,9 @@ public class MainMenuManager : MonoBehaviour
             newData.hasChosenSkill = false;
             newData.currentSceneName = newGameSceneName;
             newData.playerCurrentHP = -1;
+            newData.playerTemporaryShield = 0;
+            newData.playerPermanentShield = 0;
+            newData.playerTemporaryShieldRemainingDuration = 0;
             newData.numOfLevel = 0;
             newData.numOfUse = 0;
             newData.hasPlayerPosition = false;
@@ -114,8 +146,31 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    private void PrepareHistoryForNewGame()
+    {
+        if (HistoryManager.instance == null)
+        {
+            Debug.LogWarning("No History Manager");
+            return;
+        }
+        if (HistoryManager.instance.HasActiveRun())
+        {
+            bool finizeSucceed = HistoryManager.instance.FinalizeLose(null);
+            if (!finizeSucceed)
+            {
+                Debug.LogWarning("Fail to finalize the previous history run");
+            }
+        }
+        bool startSucceed = HistoryManager.instance.StartNewRun();
+        if (!startSucceed)
+        {
+            Debug.LogWarning("Fail to creat a new history run");
+        }
+    }
+
     public void OnContinueGameButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         GameData data = dataHandler.LoadData();
 
         if (data == null)
@@ -141,7 +196,7 @@ public class MainMenuManager : MonoBehaviour
 
         if (GameManager.instance != null)
         {
-            GameManager.instance.LoadScene(data.currentSceneName);
+            GameManager.instance.LoadSavedScene(data.currentSceneName);
         }
         else
         {
@@ -151,6 +206,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnTutorialButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (GameManager.instance != null)
         {
             GameManager.instance.LoadScene(tutorialSceneName);
@@ -163,6 +219,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnSettingButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (settingPanel != null)
         {
             settingPanel.SetActive(true);
@@ -171,6 +228,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnCloseSettingButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (settingPanel != null)
         {
             settingPanel.SetActive(false);
@@ -179,6 +237,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void OnExitButton()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

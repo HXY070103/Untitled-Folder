@@ -1,8 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using System;
-using NUnit.Framework;
 
 public class SkillBase : MonoBehaviour{
     protected PlayerStats stats;
@@ -16,15 +14,19 @@ public class SkillBase : MonoBehaviour{
     [Header("Skill Upgrades")]
     [SerializeField] protected List<SkillUpgradeDisplayData> upgrades = new List<SkillUpgradeDisplayData>();
     [SerializeField] protected List<SkillUpgradeDisplayData> betterUpgrades = new List<SkillUpgradeDisplayData>();
+    [SerializeField] protected List<SkillUpgradeDisplayData> skillPhaseUpgrades = new List<SkillUpgradeDisplayData>();
     [SerializeField] protected float[] decreaseRate;
     [SerializeField] protected int decreaseIndex;
     [SerializeField] protected PlayerSkillManager playerSkillManager;
 
+    public int numOfUpgradesGet;
+    private bool level4Skill = false;
     public string SkillName => skillName;
     public SkillType SkillType => skillType;
     public string Description => description;
     public List<SkillUpgradeDisplayData> Upgrades => upgrades;
     public List<SkillUpgradeDisplayData> BetterUpgrades => betterUpgrades;
+    public List<SkillUpgradeDisplayData> SkillPhaseUpgrades => skillPhaseUpgrades;
 
     [Header("Basic skill info")]
     [SerializeField] private float cooldown = 3;
@@ -43,11 +45,12 @@ public class SkillBase : MonoBehaviour{
         stats = GetComponentInParent<PlayerStats>();
     
         lastTimeEnd = float.MinValue;
-        remainingDuration = 0;
-        isSkillActive = false;
+        ResetRuntimeState();
+
         decreaseRate = new float[6] {1f, 1f, 0.8f, 0.7f, 0.6f, 0.5f}; // normal, 1decay, 2decay, 3decay, 4decay, 5decay
         decreaseIndex = 0;
         numOfUse = 0;
+        numOfUpgradesGet = 0;
     }
 
     public void ApplySkill() {
@@ -55,75 +58,108 @@ public class SkillBase : MonoBehaviour{
             StopCoroutine(handleSkillCo);
         }
 
-        handleSkillCo = StartCoroutine(HanldeSkill());
+        handleSkillCo = StartCoroutine(HanldeSkillCo());
     }
 
-    public IEnumerator HanldeSkill() {
+    public IEnumerator HanldeSkillCo() {
         StartSkill();
         while(remainingDuration > 0) {
             remainingDuration -= Time.deltaTime;
             yield return null;
         }
-        EndSkill();
+        EndSkill(true);
     }
 
     protected virtual void StartSkill() {
         isSkillActive = true;
         remainingDuration = GetSkillDuration();
-        lastTimeEnd = Time.time + GetSkillDuration();
         numOfUse++;
-        //IncreaseSkillDecay();
+        IncreaseSkillDecay();
         playerSkillManager.UpdateSkillDecay(decreaseIndex);
     }
-    
-    protected void IncreaseSkillDecay()
+
+    protected virtual void EndSkill(bool endNormally) {
+        ResetRuntimeState();
+        UpdateSkillTimer();
+    }
+
+    public void ClearRuntimeSkillState() {
+        StopSkillCoroutine();
+        ResetRuntimeState();
+    }
+
+    public void CancelSkill() {
+        if (!isSkillActive) {
+            return;
+        }
+
+        StopSkillCoroutine();
+        EndSkill(false);
+    }
+
+    private void StopSkillCoroutine() {
+        if (handleSkillCo != null) {
+            StopCoroutine(handleSkillCo);
+            handleSkillCo = null;
+        }
+    }
+
+    private void ResetRuntimeState() {
+        isSkillActive = false;
+        remainingDuration = 0;
+    }
+
+    private void UpdateSkillTimer() {
+        lastTimeEnd = Time.time;
+    }
+
+    protected virtual void IncreaseSkillDecay()
     {
         //if (unlock 磨损1 && numOfUse % 2 == 0  ||  !unlock 磨损1)
-        if ((UnlockedForBetterUpgrade("Stable") && numOfUse % 2 == 0) || !UnlockedForBetterUpgrade("Stable"))
+        if ((level4Skill && numOfUse % 2 == 0) || !level4Skill)
         {
             if (decreaseIndex == decreaseRate.Length - 1) {
                 PlayerHealth playerHealth = GetComponentInParent<PlayerHealth>();
-                if (stats.GetMaxHP() >= 0.3 * playerHealth.GetInitialMaxHP())
+                float currentMaxHP = stats.GetMaxHP();
+                float minimumMaxHP = 0.3f * playerHealth.GetInitialMaxHP();
+                float requestedReduction = currentMaxHP * 0.2f;
+                float allowedReduction = Mathf.Max(currentMaxHP - minimumMaxHP, 0);
+                float actualReduction = Mathf.Min(requestedReduction, allowedReduction);
+                float maxHPMultiplier = stats.maxHP.GetCombinedMultiplier();
+
+                if (actualReduction > 0 && maxHPMultiplier > 0)
                 {
-                    playerHealth.DecreaseMaxHP(stats.GetMaxHP() * 0.2f, "Skill Decay");
+                    float additivePenalty = actualReduction / maxHPMultiplier;
+                    playerSkillManager.ApplySkillDecayMaxHPPenalty(additivePenalty);
                 }
             }
             decreaseIndex = Mathf.Min(decreaseIndex + 1, decreaseRate.Length - 1);
         }
     }
 
-    protected virtual void EndSkill() {
-        isSkillActive = false;
-        remainingDuration = 0;
-    }
-
     public virtual float GetSkillDuration() {
-        if (UnlockedForBetterUpgrade("Fixed Time"))
-        {
-            return skillDuration * stats.GetSkillEffect();
-        }
         return skillDuration * stats.GetSkillEffect() * decreaseRate[decreaseIndex];
     }
 
-    public bool UnLocked(string upgradeName) {
+    public bool Unlocked(string upgradeName) {
         foreach (var upgrade in upgrades) {
             if (upgrade.upgradeName.Equals(upgradeName)) {
                 return upgrade.unlocked;
             }
         }
 
-        return false;
-    }
-
-    public bool UnlockedForBetterUpgrade(string upgradeName)
-    {
-        foreach(var upgrade in betterUpgrades)
-        {
-            if (upgrade.upgradeName.Equals(upgradeName))
-            {
+        foreach(var upgrade in betterUpgrades) {
+            if (upgrade.upgradeName.Equals(upgradeName)) {
                 return upgrade.unlocked;
             }
         }
+
+        foreach (var upgrade in skillPhaseUpgrades) {
+            if (upgrade.upgradeName.Equals(upgradeName)) {
+                return upgrade.unlocked;
+            }
+        }
+
         return false;
     }
 
@@ -185,7 +221,13 @@ public class SkillBase : MonoBehaviour{
         {
             if (upgrade.upgradeName == upgradeName)
             {
+                if (upgrade.unlocked)
+                {
+                    return;
+                }
                 upgrade.unlocked = true;
+                numOfUpgradesGet++;
+                CheckIfNextPhase();
                 return;
             }
         }
@@ -193,11 +235,53 @@ public class SkillBase : MonoBehaviour{
         {
             if (upgrade.upgradeName == upgradeName)
             {
+                if (upgrade.unlocked)
+                {
+                    return;
+                }
                 upgrade.unlocked = true;
+                numOfUpgradesGet++;
+                CheckIfNextPhase();
                 return;
             }
         }
         Debug.Log("there is no upgrade");
+    }
+
+    private void UnlockedSkillPhaseUpgrade(string upgradeName)
+    {
+        foreach (var upgrade in skillPhaseUpgrades)
+        {
+            if (upgrade.upgradeName.Equals(upgradeName))
+            {
+                upgrade.unlocked = true;
+                return;
+            }
+        }
+    }
+
+    private void CheckIfNextPhase()
+    {
+        if (numOfUpgradesGet == 2)
+        {
+            stats.ReachLevel2Skill();
+            UnlockedSkillPhaseUpgrade("2 Upgrades");
+        }
+        if (numOfUpgradesGet == 4)
+        {
+            level4Skill = true;
+            UnlockedSkillPhaseUpgrade("4 Upgrades");
+        }
+        if (numOfUpgradesGet == 6)
+        {
+            stats.ReachLevel6Skill();
+            UnlockedSkillPhaseUpgrade("6 Upgrades");
+        }
+        if (numOfUpgradesGet == upgrades.Count + betterUpgrades.Count)
+        {
+            stats.ReachFullLevel();
+            UnlockedSkillPhaseUpgrade("Full Upgrades");
+        }
     }
 
     public List<string> GetUnlockedUpgrades()
@@ -214,7 +298,7 @@ public class SkillBase : MonoBehaviour{
         return result;
     }
 
-    public List<string> GetUnLockedBetterUpgrades()
+    public List<string> GetUnlockedBetterUpgrades()
     {
         List<string> result = new List<string>();
 
@@ -228,8 +312,22 @@ public class SkillBase : MonoBehaviour{
         return result;
     }
 
+    public List<string> GetUnlockedSkillPhaseUpgrades()
+    {
+        List<string> result = new List<string>();
+        foreach (var upgrade in skillPhaseUpgrades)
+        {
+            if (upgrade != null && upgrade.unlocked)
+            {
+                result.Add(upgrade.upgradeName);
+            }
+        }
+        return result;
+    }
+
     public void LoadUnlockedUpgrades(List<string> unlocked)
     {
+        unlocked ??= new List<string>();
         foreach (var upgrade in upgrades)
         {
             if (upgrade != null && unlocked.Contains(upgrade.upgradeName))
@@ -244,9 +342,10 @@ public class SkillBase : MonoBehaviour{
 
     public void LoadUnlockedBetterUpgrades(List<string> unlocked)
     {
+        unlocked ??= new List<string>();
         foreach (var upgrade in betterUpgrades)
         {
-            if (upgrade != null && unlocked.Contains(upgrade.upgradeName))
+            if (upgrade != null && IsSavedUpgradeUnlocked(unlocked, upgrade.upgradeName))
             {
                 upgrade.unlocked = true;
             } else
@@ -256,21 +355,85 @@ public class SkillBase : MonoBehaviour{
         }
     }
 
+    private bool IsSavedUpgradeUnlocked(List<string> unlocked, string upgradeName)
+    {
+        if (unlocked.Contains(upgradeName))
+        {
+            return true;
+        }
+
+        // Preserve compatibility with saves created before these upgrades were renamed.
+        if (upgradeName == "Stasis Field")
+        {
+            return unlocked.Contains("Temporal Freeze");
+        }
+        if (upgradeName == "Deathbound Bargain")
+        {
+            return unlocked.Contains("Unshakable Resolve");
+        }
+
+        return false;
+    }
+
+    public void LoadUnlockedSkillPhaseUpgrades(List<string> unlocked)
+    {
+        numOfUpgradesGet = 0;
+        foreach (var upgrade in upgrades)
+        {
+            if (upgrade != null && upgrade.unlocked)
+            {
+                numOfUpgradesGet++;
+            }
+        }
+        foreach (var upgrade in betterUpgrades)
+        {
+            if (upgrade != null && upgrade.unlocked)
+            {
+                numOfUpgradesGet++;
+            }
+        }
+
+        // Rebuild phase data for save files created before phase upgrades were saved.
+        if (unlocked == null || unlocked.Count == 0)
+        {
+            unlocked = new List<string>();
+            if (numOfUpgradesGet >= 2)
+            {
+                unlocked.Add("2 Upgrades");
+            }
+            if (numOfUpgradesGet >= 4)
+            {
+                unlocked.Add("4 Upgrades");
+            }
+            if (numOfUpgradesGet >= 6)
+            {
+                unlocked.Add("6 Upgrades");
+            }
+            if (numOfUpgradesGet == upgrades.Count + betterUpgrades.Count)
+            {
+                unlocked.Add("Full Upgrades");
+            }
+        }
+
+        foreach (var upgrade in skillPhaseUpgrades)
+        {
+            if (upgrade != null)
+            {
+                upgrade.unlocked = unlocked.Contains(upgrade.upgradeName);
+            }
+        }
+
+        level4Skill = Unlocked("4 Upgrades");
+        stats.RestoreSkillPhaseBonuses(
+            Unlocked("2 Upgrades"),
+            Unlocked("6 Upgrades"),
+            Unlocked("Full Upgrades"));
+    }
+
     public void SetDecayLevel(int level)
     {
         decreaseIndex = Mathf.Clamp(level, 0, decreaseRate.Length - 1);
         playerSkillManager.UpdateSkillDecay(decreaseIndex);
-    }
-
-    public void ClearRuntimeSkillState()
-    {
-        if (handleSkillCo != null)
-        {
-            StopCoroutine(handleSkillCo);
-            handleSkillCo = null;
-        }
-        isSkillActive = false;
-        remainingDuration = 0;
     }
 
     public void SetNumOfUse(int num)
@@ -281,5 +444,9 @@ public class SkillBase : MonoBehaviour{
     public int GetNumOfUse()
     {
         return numOfUse;
+    }
+
+    private void OnDisable() {
+        CancelSkill();
     }
 }

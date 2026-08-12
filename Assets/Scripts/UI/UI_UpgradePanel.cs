@@ -6,6 +6,10 @@ using UnityEngine.UI;
 
 public class UI_UpgradePanel : MonoBehaviour
 {
+    private const float ContentTopInset = 150f;
+    private const float ContentSideInset = 20f;
+    private const float ContentBottomInset = 20f;
+
     [Header("Right Detial Texts")]
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI descriptionText;
@@ -18,8 +22,21 @@ public class UI_UpgradePanel : MonoBehaviour
 
     [SerializeField] private PlayerSkillManager skillManager;
 
+    private ScrollRect contentScrollRect;
+    private RectTransform contentViewport;
+
+    private void Awake()
+    {
+        SetupScrollableContent();
+    }
+
     private void OnEnable()
     {
+        if (Player.instance != null)
+        {
+            playerStats = Player.instance.stats;
+            skillManager = Player.instance.skillManager;
+        }
         if (skillManager != null)
         {
             SetCurrentSkill(skillManager.GetCurrentSkill());
@@ -35,6 +52,7 @@ public class UI_UpgradePanel : MonoBehaviour
 
     public void ShowSkillDetails()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         titleText.text = "Skill Details";
         descriptionText.text = "Current skill and its Evolutions:";
 
@@ -43,18 +61,19 @@ public class UI_UpgradePanel : MonoBehaviour
         if (currentSkill == null)
         {
             sb.AppendLine("No skill selected.");
-            contentText.text = sb.ToString();
+            SetContent(sb.ToString());
             return;
         }
         sb.AppendLine($"[{currentSkill.skillName}]");
         sb.AppendLine(currentSkill.description);
         sb.AppendLine();
 
-        contentText.text = sb.ToString();
+        SetContent(sb.ToString());
     }
 
     public void ShowSkillUpgrades()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         titleText.text = "Skill Upgrades";
         descriptionText.text = "Current skill upgrades:";
 
@@ -62,17 +81,28 @@ public class UI_UpgradePanel : MonoBehaviour
         if (currentSkill == null)
         {
             sb.AppendLine("No skill selected.");
-            contentText.text = sb.ToString();
+            SetContent(sb.ToString());
             return;
         }
         if ((currentSkill.upgrades == null || currentSkill.upgrades.Count == 0) 
             && (currentSkill.betterUpgrades == null || currentSkill.betterUpgrades.Count == 0))
         {
             sb.AppendLine("No skill upgrades available.");
-            contentText.text = sb.ToString();
+            SetContent(sb.ToString());
             return;
         }
         bool hasUnlockedUpgrade = false;
+
+        foreach (var upgrade in currentSkill.skillPhaseUpgrades)
+        {
+            if (upgrade.upgradeName.Equals("4 Upgrades") && upgrade.unlocked)
+            {
+                hasUnlockedUpgrade = true;
+                sb.AppendLine($"[{upgrade.upgradeName}]");
+                sb.AppendLine(upgrade.description);
+                sb.AppendLine();
+            }
+        }
 
         foreach (var upgrade in currentSkill.betterUpgrades)
         {
@@ -86,7 +116,7 @@ public class UI_UpgradePanel : MonoBehaviour
         }
         foreach (var upgrade in currentSkill.upgrades)
         {
-            if (upgrade.unlocked)
+            if (upgrade.unlocked && !checkIfBetterUnlocked(upgrade.upgradeName + "+"))
             {
                 hasUnlockedUpgrade = true;
                 sb.AppendLine($"[{upgrade.upgradeName}]");
@@ -99,20 +129,50 @@ public class UI_UpgradePanel : MonoBehaviour
         {
             sb.AppendLine("No skill upgrades yet");
         }
-        contentText.text = sb.ToString();
+        SetContent(sb.ToString());
+    }
+
+    private bool checkIfBetterUnlocked(string name)
+    {
+        foreach(var upgrade in currentSkill.betterUpgrades)
+        {
+            if (upgrade.upgradeName.Equals(name))
+            {
+                return upgrade.unlocked;
+            }
+        }
+        return false;
     }
 
     public void ShowAttributeUpgrades()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         titleText.text = "Attribute Upgrades";
         descriptionText.text = "Current attribute upgrades:";
 
         StringBuilder sb = new StringBuilder();
 
+        if (currentSkill == null)
+        {
+            sb.AppendLine("No skill selected.");
+            SetContent(sb.ToString());
+            return;
+        }
+
+        foreach (var upgrade in currentSkill.skillPhaseUpgrades)
+        {
+            if (!upgrade.upgradeName.Equals("4 Upgrades") && upgrade.unlocked)
+            {
+                sb.AppendLine($"[{upgrade.upgradeName}]");
+                sb.AppendLine(upgrade.description);
+                sb.AppendLine();
+            }
+        }
+
         if (attributeUpgrades == null || attributeUpgrades.Count == 0)
         {
             sb.AppendLine("No attribute upgrades yet.");
-            contentText.text = sb.ToString();
+            SetContent(sb.ToString());
             return;
         }
 
@@ -152,7 +212,97 @@ public class UI_UpgradePanel : MonoBehaviour
             }
         }
 
-        contentText.text = sb.ToString();
+        SetContent(sb.ToString());
+    }
+
+    private void SetupScrollableContent()
+    {
+        if (contentText == null || contentScrollRect != null)
+        {
+            return;
+        }
+
+        RectTransform detailPanel = contentText.rectTransform.parent as RectTransform;
+        if (detailPanel == null)
+        {
+            return;
+        }
+
+        GameObject viewportObject = new GameObject(
+            "ContentViewport",
+            typeof(RectTransform),
+            typeof(CanvasRenderer),
+            typeof(Image),
+            typeof(RectMask2D),
+            typeof(ScrollRect)
+        );
+
+        contentViewport = viewportObject.GetComponent<RectTransform>();
+        contentViewport.SetParent(detailPanel, false);
+        contentViewport.SetSiblingIndex(contentText.rectTransform.GetSiblingIndex());
+        contentViewport.anchorMin = Vector2.zero;
+        contentViewport.anchorMax = Vector2.one;
+        contentViewport.offsetMin = new Vector2(ContentSideInset, ContentBottomInset);
+        contentViewport.offsetMax = new Vector2(-ContentSideInset, -ContentTopInset);
+
+        Image viewportImage = viewportObject.GetComponent<Image>();
+        viewportImage.color = Color.clear;
+        viewportImage.raycastTarget = true;
+
+        RectTransform contentRect = contentText.rectTransform;
+        contentRect.SetParent(contentViewport, false);
+        contentRect.anchorMin = new Vector2(0f, 1f);
+        contentRect.anchorMax = new Vector2(1f, 1f);
+        contentRect.pivot = new Vector2(0.5f, 1f);
+        contentRect.anchoredPosition = Vector2.zero;
+        contentRect.sizeDelta = Vector2.zero;
+
+        contentText.alignment = TextAlignmentOptions.TopLeft;
+        contentText.margin = new Vector4(8f, 8f, 8f, 8f);
+
+        contentScrollRect = viewportObject.GetComponent<ScrollRect>();
+        contentScrollRect.content = contentRect;
+        contentScrollRect.viewport = contentViewport;
+        contentScrollRect.horizontal = false;
+        contentScrollRect.vertical = true;
+        contentScrollRect.movementType = ScrollRect.MovementType.Clamped;
+        contentScrollRect.inertia = true;
+        contentScrollRect.scrollSensitivity = 30f;
+    }
+
+    private void SetContent(string value)
+    {
+        contentText.text = value;
+        RefreshContentLayout();
+    }
+
+    private void RefreshContentLayout()
+    {
+        if (contentScrollRect == null || contentViewport == null)
+        {
+            return;
+        }
+
+        Canvas.ForceUpdateCanvases();
+
+        RectTransform contentRect = contentText.rectTransform;
+        float availableWidth = Mathf.Max(
+            0f,
+            contentViewport.rect.width - contentText.margin.x - contentText.margin.z
+        );
+        float preferredHeight = contentText.GetPreferredValues(
+            contentText.text,
+            availableWidth,
+            Mathf.Infinity
+        ).y + contentText.margin.y + contentText.margin.w;
+
+        contentRect.SetSizeWithCurrentAnchors(
+            RectTransform.Axis.Vertical,
+            Mathf.Max(contentViewport.rect.height, preferredHeight)
+        );
+        contentRect.anchoredPosition = Vector2.zero;
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+        contentScrollRect.verticalNormalizedPosition = 1f;
     }
 
     public void SetCurrentSkill(SkillBase skill)
@@ -174,6 +324,10 @@ public class UI_UpgradePanel : MonoBehaviour
 
             betterUpgrades = skill.BetterUpgrades != null
                 ? new List<SkillUpgradeDisplayData>(skill.BetterUpgrades)
+                : new List<SkillUpgradeDisplayData>(),
+
+            skillPhaseUpgrades = skill.SkillPhaseUpgrades != null
+                ? new List<SkillUpgradeDisplayData>(skill.SkillPhaseUpgrades)
                 : new List<SkillUpgradeDisplayData>()
         };
         

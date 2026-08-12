@@ -23,6 +23,8 @@ public class Chest : MonoBehaviour, IDamageable, ISaveable {
         OpenChestForChoosing();
     }
 
+    public void TryToExecute(float hpThreshold, float bonusDamage) {}
+
     private void OpenChestForChoosing()
     {
         isChoosing = true;
@@ -75,8 +77,6 @@ public class Chest : MonoBehaviour, IDamageable, ISaveable {
             anim.SetBool("Open", true);
         }
     }
-
-    public void TryApplyInstantKill() {}
 
     public void LoadData(GameData data)
     {

@@ -6,6 +6,7 @@ using UnityEngine;
 public class Stat {
     [SerializeField] private float baseValue;
     [SerializeField] private List<StatModifier> modifiers = new List<StatModifier>();
+    [SerializeField] private List<StatModifier> multipliers = new List<StatModifier>();
 
     private bool needToCalculate = true;
     private float finalValue;
@@ -34,12 +35,35 @@ public class Stat {
         needToCalculate = true;
     }
 
+    public void AddMultiplier(float value, string source) {
+        StatModifier mulToAdd = new StatModifier(value, source);
+        multipliers.Add(mulToAdd);
+        needToCalculate = true;
+    }
+
+    public void RemoveMultiplier(string source) {
+        multipliers.RemoveAll(mul => mul.GetSource().Equals(source));
+        needToCalculate = true;
+    }
+
+    public float GetCombinedMultiplier() {
+        float combinedMultiplier = 1f;
+
+        foreach (var multiplier in multipliers) {
+            combinedMultiplier *= multiplier.GetValue();
+        }
+
+        return combinedMultiplier;
+    }
+
     private float GetFinalValue() {
         float finalValue = baseValue;
 
         foreach (var mod in modifiers) {
             finalValue += mod.GetValue() ;
         }
+
+        finalValue *= GetCombinedMultiplier();
 
         return finalValue;
     }

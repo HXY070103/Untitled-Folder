@@ -7,7 +7,7 @@ public class Entity : MonoBehaviour {
 
     public Animator anim { get; private set; }
     public Rigidbody2D rb { get; private set; }
-    public TimeController tc;
+    public TimeController tc {get; private set; }
     protected StateMachine stateMachine;
 
     private bool facingRight = true;
@@ -66,16 +66,20 @@ public class Entity : MonoBehaviour {
     }
 
     public void Move(float xVelocity, float yVelocity) {
-        MoveRaw(xVelocity, yVelocity);
-        HandleFlip(xVelocity);
-    }
-
-    public void MoveRaw(float xVelocity, float yVelocity) {
         if (isKnocked) {
             return;
         }
 
-        rb.linearVelocity = new Vector2(xVelocity, yVelocity) * tc.localTimeScale;
+        MoveRaw(xVelocity, yVelocity);
+        HandleFlip(xVelocity);
+    }
+
+    public virtual void MoveRaw(float xVelocity, float yVelocity) {
+        if (isKnocked) {
+            return;
+        }
+
+        rb.linearVelocity = new Vector2(xVelocity * tc.localTimeScale, yVelocity);
     }
 
     public void HandleFlip(float xVelocity) {

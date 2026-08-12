@@ -9,6 +9,7 @@ public class PlayerDeadState : PlayerState {
 
         input.Disable();
         stateMachine.SwitchOff();
+        player.sfx?.PlayDeath();
     }
 
     public override void Update() {

@@ -7,13 +7,18 @@ public class PlayerWallJumpState : PlayerState {
     public override void Enter() {
         base.Enter();
 
-        player.Move(-player.facingDir * player.wallJumpSpeed.x, player.wallJumpSpeed.y);
+        stateTimer = player.wallJumpDuration;
+
+        float xVelocity = -player.facingDir * player.wallJumpSpeed.x;
+        float yVelocity = player.wallJumpSpeed.y;
+        player.Move(xVelocity, yVelocity);
+        player.sfx?.PlayJump();
     }
 
     public override void Update() {
         base.Update();
 
-        if (rb.linearVelocity.y < 0) {
+        if (stateTimer < 0) {
             stateMachine.ChangeState(player.fallState);
         }
 
@@ -25,5 +30,6 @@ public class PlayerWallJumpState : PlayerState {
     public override void Exit() {
         base.Exit();
     }
+
 }
  

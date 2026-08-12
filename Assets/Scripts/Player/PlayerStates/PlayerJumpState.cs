@@ -8,6 +8,7 @@ public class PlayerJumpState : PlayerAirState {
         base.Enter();
 
         player.Move(rb.linearVelocity.x, player.jumpSpeed);
+        player.sfx?.PlayJump();
     }
 
     public override void Update() {

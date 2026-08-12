@@ -59,6 +59,7 @@ public class SkillChoosePanel : MonoBehaviour
 
     private void ChooseSkill(SkillType skillType)
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         PlayerSkillManager skillManager = FindFirstObjectByType<PlayerSkillManager>();
 
         if (skillManager == null)
@@ -71,6 +72,7 @@ public class SkillChoosePanel : MonoBehaviour
 
         if (skillChooseMode == SkillChooseMode.InitialChoose)
         {
+            RecordInitialSkill(skillManager);
             if (SaveManager.instance != null)
             {
                 SaveManager.instance.MarkInitialSkillChosen();
@@ -83,6 +85,27 @@ public class SkillChoosePanel : MonoBehaviour
             }
         }
         ClosePanel();
+    }
+
+    private void RecordInitialSkill(PlayerSkillManager skillManager)
+    {
+        if (HistoryManager.instance == null)
+        {
+            Debug.LogWarning("No History Manager");
+            return;
+        }
+        SkillBase selectedSkill = skillManager.GetCurrentSkill();
+        if (selectedSkill == null)
+        {
+            Debug.LogWarning("Cannot record initial skill");
+            return;
+        }
+
+        bool recordSucceed = HistoryManager.instance.RecordInitialSkill(selectedSkill.SkillName, selectedSkill.Description);
+        if (!recordSucceed)
+        {
+            Debug.LogWarning("Fail to record initial skill");
+        }
     }
 
     public void ClosePanel()

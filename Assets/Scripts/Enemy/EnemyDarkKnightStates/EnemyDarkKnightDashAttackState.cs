@@ -45,7 +45,7 @@ public class EnemyDarkKnightDashAttackState : EnemyState {
         enemyDarkKnight.Move(xVelocity, rb.linearVelocity.y);
 
         if (ReachedPlayer() || ReachedMaxDistance() || enemyDarkKnight.wallDetected) {
-            enemyDarkKnight.Move(0, 0);
+            enemyDarkKnight.MoveRaw(0, 0);
             enemyDarkKnight.vfx.StopImageEchoEffect();
             dashPerformed = true;
             anim.SetBool("DashAttackPerformed", true);

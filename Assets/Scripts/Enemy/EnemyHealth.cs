@@ -2,13 +2,11 @@ using System;
 using UnityEngine;
 
 public class EnemyHealth : EntityHealth {
-    public static event Action<float> OnDamageTaken;
+    public static event Action<float, Transform> OnDamageTaken;
     public static event Action OnEnemyDeath;
+    public static event Action<Enemy> OnEnemyKilled;
 
     private Enemy enemy;
-
-    private bool isFirstAttack = false;
-    private float damageMultiplier;
 
     protected override void Awake() {
         base.Awake();
@@ -17,46 +15,30 @@ public class EnemyHealth : EntityHealth {
     }
 
     public override void TakeDamage(Damage damage, Transform damageDealer) {
-        if (isFirstAttack) {
-            damage = new Damage(damage.value * damageMultiplier, damage.isCrit);
-            isFirstAttack = false;
-        }
-
         base.TakeDamage(damage, damageDealer);
 
         if (isDead) {
-            OnEnemyDeath?.Invoke();
+            return;
         }
-
-        float finalDamage = CalculateFinalDamage(damage);
-        OnDamageTaken?.Invoke(finalDamage);
 
         if (damageDealer.GetComponent<Player>() != null) {
             enemy.TryToEnterBattleState(damageDealer);
         }
     }
 
-    private float CalculateFinalDamage(Damage damage) {
-        float mitigation = stats.GetArmorMitigation();
-        return damage.value * (1 - mitigation);
+    public override void ReduceHP(float reducedHP) {
+        bool wasDead = isDead;
+        base.ReduceHP(reducedHP);
+
+        if (!wasDead && isDead) {
+            OnEnemyDeath?.Invoke();
+            OnEnemyKilled?.Invoke(enemy);
+        }
     }
 
-    private void SetFirstAttack(float damageMultiplier) {
-        isFirstAttack = true;
-        this.damageMultiplier = damageMultiplier;
-    }
-
-    private void ResetFirstAttack() {
-        isFirstAttack = false;
-    }
-
-    private void OnEnable() {
-        SkillTimeControl.OnSetFirstAttack += SetFirstAttack;
-        SkillTimeControl.OnResetFirstAttack += ResetFirstAttack;
-    }
-
-    private void OnDisable() {
-        SkillTimeControl.OnSetFirstAttack -= SetFirstAttack;
-        SkillTimeControl.OnResetFirstAttack -= ResetFirstAttack;
+    protected override float CalculateReducedHP(Damage damage, Transform damageDealer) {
+        float reducedHP = base.CalculateReducedHP(damage, damageDealer);
+        OnDamageTaken?.Invoke(reducedHP, damageDealer);
+        return reducedHP;
     }
 }

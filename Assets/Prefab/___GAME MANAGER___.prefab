@@ -125,9 +125,13 @@ MonoBehaviour:
   fadeDuration: 1
   scenesThatIncreaseBossLevel:
   - EliteLevel_Repeat_1
-  - NormalLevel_Repeat_1
   - EliteLevel_Repeat_2
   - EliteLevel_Repeat_3
+  - EliteLevel_Repeat_4
+  - NormalLevel_Repeat_1
+  - NormalLevel_Repeat_2
+  - NormalLevel_Repeat_3
+  - NormalLevel_Repeat_4
   isChangeScene: 0
 --- !u!114 &7616256750613471219
 MonoBehaviour:

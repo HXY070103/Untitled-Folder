@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEngine.EventSystems;
 
-public class UI_UpgradeOption : MonoBehaviour
+public class UI_UpgradeOption : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI descriptionText;
@@ -11,10 +12,13 @@ public class UI_UpgradeOption : MonoBehaviour
 
     private ChestUpgradeOption currentOption;
     private UI_ChestReward rewardUI;
+    private Color currentBaseColor;
 
     [Header("Click Effect")]
     [SerializeField] private Image backgroundImage;
     [SerializeField] private Color normalColor = Color.white;
+    [SerializeField] private Color betterColor = Color.green;
+    [SerializeField] private Color highlightColor = new Color(1f, 0.85f, 0.25f);
     [SerializeField] private Color clickColor = new Color(1f, 0.85f, 0.25f);
     [SerializeField] private float clickEffectDuration = 0.2f;
 
@@ -28,16 +32,39 @@ public class UI_UpgradeOption : MonoBehaviour
 
         if (backgroundImage != null)
         {
-            backgroundImage.color = normalColor;
+            if (option.optionType == ChestUpgradeOptionType.Skill && option.isBetter)
+            {
+                currentBaseColor = betterColor;
+            }
+            else
+            {
+                currentBaseColor = normalColor;
+            }
+            backgroundImage.color = currentBaseColor;
         }
         button.interactable = true;
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OnClick);
     }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (backgroundImage != null && button.interactable)
+        {
+            backgroundImage.color = highlightColor;
+        }
+    }
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (backgroundImage != null && button.interactable)
+        {
+            backgroundImage.color = currentBaseColor;
+        }
+    }
 
     private void OnClick()
     {
+        AudioManager.instance.PlayGlobalSFX("Button_Click");
         if (currentOption == null)
             return;
         button.interactable = false;

@@ -17,6 +17,7 @@ public class ChestUpgradeOption
     public PlayerStats playerStats;
     public SkillBase skill;
     public SkillUpgradeDisplayData skillUpgrade;
+    public bool isBetter;
 
     public string GetTitle()
     {
@@ -61,5 +62,9 @@ public class ChestUpgradeOption
 
         vfx.GenerateParticleEffect(Color.yellow);
         skill.UnlockSkillUpgrade(skillUpgrade.upgradeName);
+        if (skill is SkillLifeSteal lifeSteal)
+        {
+            lifeSteal.OnUpgradeUnlocked(skillUpgrade.upgradeName);
+        }
     }
 }

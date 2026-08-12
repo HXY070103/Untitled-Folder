@@ -99,6 +99,7 @@ MonoBehaviour:
   respawnPoint: {fileID: 0}
   canBeTrigger: 1
   isBossWinExit: 0
+  interactAction: {fileID: 5263305389448151527, guid: 313d9aa86370c42539d457e1a8634621, type: 3}
 --- !u!1 &3686011917976634005
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,8 +225,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 5.72, y: 0.21}
-  m_SizeDelta: {x: 20, y: 5}
+  m_AnchoredPosition: {x: 10.3, y: 0.3}
+  m_SizeDelta: {x: 100, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &1850521864104702964
 MeshRenderer:
@@ -252,7 +253,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -8065883861848785263, guid: 49edb30b39a364338bd0f2b313014934, type: 2}
+  - {fileID: -8065883861848785263, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -296,10 +297,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Exit
+  m_text: Press E to exit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 49edb30b39a364338bd0f2b313014934, type: 2}
-  m_sharedMaterial: {fileID: -8065883861848785263, guid: 49edb30b39a364338bd0f2b313014934, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
+  m_sharedMaterial: {fileID: -8065883861848785263, guid: 84bdc42b70bb5e54aa18bb33c1fa834e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

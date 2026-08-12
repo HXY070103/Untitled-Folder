@@ -8,8 +8,4 @@ public class PlayerAnimationTrigger : EntityAnimationTrigger {
 
         player = GetComponentInParent<Player>();
     }
-
-    private void ApplyAttackMovement() {
-        player.heavyAttackState.ApplyAttackMovement();
-    }
 }

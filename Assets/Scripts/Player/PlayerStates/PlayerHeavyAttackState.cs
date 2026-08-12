@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHeavyAttackState : PlayerState {
     private SkillPhase phase;
-    private float attackMovementTimer;
+
+    private float originalGravityScale;
     private int attackDir;
+    private HashSet<Transform> targets = new HashSet<Transform>();
 
     public PlayerHeavyAttackState(Player player, StateMachine stateMachine, string animBoolName) : 
         base(player, stateMachine, animBoolName) {
@@ -13,71 +16,106 @@ public class PlayerHeavyAttackState : PlayerState {
     public override void Enter() {
         base.Enter();
 
-        phase.InterruptSkill();
-        IncreaseDamage();
-        HandleInstantKill();
-        StartHandleBonusPhase();
+        player.gameObject.layer = LayerMask.NameToLayer("Untargetable");
 
+        vfx.DoImageEchoEffect(float.PositiveInfinity);
+        phase.InterruptSkill();
+        StartHeavyAttack();
+
+        originalGravityScale = rb.gravityScale;
+        rb.gravityScale = 0;
         attackDir = player.moveInput.x != 0 ? (int) player.moveInput.x : player.facingDir;
     }
 
     public override void Update() {
         base.Update();
 
-        HandleAttackMovement();
+        CancelAttackIfNeeded();
+
+        float xVelocity = attackDir * phase.heavyAttackSpeed;
+        player.Move(xVelocity, 0);
+
+        AddTarget();
 
         if (triggerCalled) {
-            stateMachine.ChangeState(player.idleState);
+            HandleStateExit();
         }
     }
 
     public override void Exit() {
         base.Exit();
 
-        ResetDamage();
-        player.UpdateHeavyAttack();
-        EndHandleBonusPhase();
+        player.gameObject.layer = LayerMask.NameToLayer("Player");
+
+        rb.gravityScale = originalGravityScale;
+        player.Move(0, 0);
+
+        vfx.StopImageEchoEffect();
+        EndHeavyAttack();
     }
 
-    private void StartHandleBonusPhase() {
-        if (phase.UnLocked("Shadow Execution")) {
-            phase.EnableBonusPhase();
+    private void HandleStateExit() {
+        if (player.groundDetected) {
+            stateMachine.ChangeState(player.idleState);
+        } else {
+            stateMachine.ChangeState(player.fallState);
         }
     }
 
-    private void EndHandleBonusPhase() {
-        if (phase.UnLocked("Shadow Execution")) {
+    private void CancelAttackIfNeeded() {
+        if (player.wallDetected) {
+            if (player.groundDetected) {
+                stateMachine.ChangeState(player.idleState);
+            } else {
+                stateMachine.ChangeState(player.wallSlideState);
+            }
+        }
+    }
+
+    private void AddTarget() {
+        Collider2D[] colliders = player.combat.GetDetectedColliders(player.combat.whatIsTarget);
+
+        foreach (Collider2D collider in colliders) {
+            Transform target = collider.transform;
+            targets.Add(target);
+        }
+    }
+
+    private void StartHeavyAttack() {
+        if (phase.Unlocked("Shadow Assassination")) {
+            player.combat.SetCanExecute(true);
+        }
+
+        player.stats.damage.AddMultiplier(phase.GetDamageMultiplier(), "HeavyAttack");
+    }
+
+    private void EndHeavyAttack() {
+        PerformAttack();
+        vfx.DoGlobalPause();
+
+        if (phase.Unlocked("Shadow Assassination")) {
+            player.combat.SetCanExecute(false);
+        }
+
+        player.stats.damage.RemoveMultiplier("HeavyAttack");
+        player.UpdateHeavyAttack();
+    }
+
+    private void PerformAttack() {
+        bool chainPhantasmUnlocked = phase.Unlocked("Chain Phantasm");
+        if (chainPhantasmUnlocked) {
+            phase.EnableBonusPhase();
+        }
+
+        foreach (Transform target in targets) {
+            player.combat.PerformAttackOnTarget(target);
+        }
+
+        if (chainPhantasmUnlocked) {
             phase.DisableBonusPhase();
             phase.TryToEnterBonusPhase();
         }
-    }
 
-    private void HandleInstantKill() {
-        if (phase.UnLocked("Shadow Assassination")) {
-            player.combat.SetNextAttackToInstantKill();
-        }
-    }
-
-    private void IncreaseDamage() {
-        float baseDamage = player.stats.damage.GetValue();
-        float bonusDamage = baseDamage * (phase.GetDamageMultiplier() - 1);
-        player.stats.damage.AddModifier(bonusDamage, "HeavyAttack");
-    }
-
-    private void ResetDamage() {
-        player.stats.damage.RemoveModifier("HeavyAttack");
-    }
-
-    public void ApplyAttackMovement() {
-        attackMovementTimer = player.attackMovementDuration;
-        player.Move(attackDir * player.heavyAttackSpeed.x, player.heavyAttackSpeed.y);
-    }
-
-    private void HandleAttackMovement() {
-        attackMovementTimer -= Time.deltaTime;
-
-        if (attackMovementTimer < 0) {
-            player.Move(0, rb.linearVelocity.y);
-        }
+        targets.Clear();
     }
 }

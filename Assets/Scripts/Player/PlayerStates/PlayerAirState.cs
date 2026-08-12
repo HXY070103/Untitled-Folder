@@ -16,13 +16,21 @@ public class PlayerAirState : PlayerState {
             player.Move(xVelocity, rb.linearVelocity.y);
         }
 
-        if (player.CanAttack && input.Player.Attack.WasPressedThisFrame()) {
-            stateMachine.ChangeState(player.jumpAttackState);
+        if (player.canAttack && input.Player.Attack.WasPressedThisFrame()) {
+            HandleAttack();
         }
     }
 
     public override void Exit() {
         base.Exit();
+    }
+
+    private void HandleAttack() {
+        if (player.isHeavyAttack) {
+            stateMachine.ChangeState(player.heavyAttackState);
+        } else {
+            stateMachine.ChangeState(player.jumpAttackState);
+        }
     }
 }
  
